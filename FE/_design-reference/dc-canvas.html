@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#F0F2F3;font-family:'Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0A8873;text-decoration:none}a:hover{color:#00C7A9}
+@keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes dropIn{from{transform:translateY(-24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-11px) rotate(3deg)}}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(203,224,75,.45)}70%{box-shadow:0 0 0 16px rgba(203,224,75,0)}100%{box-shadow:0 0 0 0 rgba(203,224,75,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fly{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+@keyframes wave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+</style></helmet>
+<div style="min-height:100vh;padding:52px 56px 80px;box-sizing:border-box;color:#16191C;position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;right:0;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(0,201,167,.16),transparent 70%);pointer-events:none"></div>
+
+  <div style="position:relative;max-width:1740px;margin:0 auto;display:flex;flex-direction:column;gap:34px">
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap">
+      <div style="max-width:870px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="assets/im-logo-t.png" alt="iM" style="height:22px;width:auto;display:block">
+          <span style="font-size:13px;font-weight:900;letter-spacing:.16em;color:#077264">iM GOAL · v8 · 유즈케이스 3종을 v7 디자인으로</span>
+        </div>
+        <h1 style="margin:0;font-size:43px;line-height:1.19;font-weight:900;letter-spacing:-.038em;text-wrap:pretty">유즈케이스 <span style="color:#00C7A9">3종</span>이<br>이 디자인에서 이렇게 흐릅니다</h1>
+        <p style="margin:0;font-size:16.5px;line-height:1.72;color:rgba(22,25,28,.62);text-wrap:pretty">세 페르소나가 공통 루프를 함께 씁니다 — <b style="color:#16191C">① 목표설정 → ② 60초 감지 → ③ 원인 우선순위 → ④ 개인화 미션 + iMKRW → ⑤ 3단계 회복 검증 → ⑥ 등급 분기 → ⑦ FCPS 반영 → ⑧ 경로 재계산.</b> <b style="color:#077264">A</b> 신파일러는 ①에서, <b style="color:#2E6BD0">B</b> 소상공인은 ②에서, <b style="color:#6E7A0A">C</b> 리볼빙 청년은 ②에서 진입하고, ⑤~⑥에서 회복미션 단독 / 지원제도매칭 동시발동으로 갈라집니다. 화면 언어는 v7의 <b style="color:#16191C">천공 탑승권</b>을 그대로 씁니다.</p>
+      </div>
+      <div style="display:flex;gap:9px">
+        <div style="background:#00C7A9;border-radius:16px;padding:14px 18px;min-width:104px;color:#16191C"><div style="font-size:11.5px;font-weight:900;opacity:.6">BRAND</div><div style="font-size:17px;font-weight:900;margin-top:3px">iM 민트</div></div>
+        <div style="background:#E2F15E;border-radius:16px;padding:14px 18px;min-width:104px;color:#16191C"><div style="font-size:11.5px;font-weight:900;opacity:.62">ACCENT</div><div style="font-size:17px;font-weight:900;margin-top:3px">iM 라임</div></div>
+        <div style="background:#16191C;border-radius:16px;padding:14px 18px;min-width:104px;color:#fff"><div style="font-size:11.5px;font-weight:900;color:rgba(255,255,255,.5)">INK</div><div style="font-size:17px;font-weight:900;margin-top:3px">잉크 블랙</div></div>
+        <div style="background:#fff;border:1px solid rgba(22,25,28,.12);border-radius:16px;padding:14px 18px;min-width:104px;color:#16191C"><div style="font-size:11.5px;font-weight:900;opacity:.62">TICKET</div><div style="font-size:17px;font-weight:900;margin-top:3px">천공 스텁</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:34px;align-items:flex-start;flex-wrap:wrap">
+
+      <div style="width:336px;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+          <div style="{{ g.headerStyle }}">
+            <div style="{{ g.headerBarStyle }}"></div>
+            <span style="flex:1">{{ g.name }}</span>
+            <span style="{{ g.countStyle }}">{{ g.count }}</span>
+          </div>
+          <sc-for list="{{ g.items }}" as="s" hint-placeholder-count="4">
+            <div onClick="{{ s.go }}" style="{{ s.style }}">
+              <div style="{{ s.numStyle }}">{{ s.num }}</div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+                <div style="{{ s.titleStyle }}">{{ s.title }}</div>
+                <div style="{{ s.descStyle }}">{{ s.desc }}</div>
+              </div>
+              <div style="{{ s.markStyle }}">{{ s.mark }}</div>
+            </div>
+          </sc-for>
+        </sc-for>
+      </div>
+
+      <div style="flex:none">
+        <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ frameDark }}" hint-size="402px,874px">
+
+          <sc-if value="{{ isLogin }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-70px;right:-90px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#53E1E5,#00A88F 72%);opacity:.35"></div>
+              <img src="assets/dandi-t.png" alt="단디" style="position:absolute;top:76px;right:16px;height:132px;width:auto;animation:bob 4.5s ease-in-out infinite;filter:drop-shadow(0 10px 22px rgba(22,25,28,.18))">
+              <img src="assets/ddokdi-t.png" alt="똑디" style="position:absolute;top:118px;right:112px;height:104px;width:auto;animation:bob 5.2s ease-in-out .6s infinite;filter:drop-shadow(0 10px 22px rgba(22,25,28,.14))">
+              <div style="position:relative;padding:78px 26px 34px;height:100%;box-sizing:border-box;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;gap:9px">
+                  <img src="assets/im-logo-t.png" alt="iM" style="height:20px;width:auto;display:block">
+                  <span style="font-size:15px;font-weight:900;letter-spacing:.12em">iM GOAL</span>
+                </div>
+                <div style="flex:1"></div>
+                <div style="font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">탑승 수속을 시작합니다,</div>
+                <div style="margin-top:4px;font-size:38px;font-weight:900;line-height:1.14;letter-spacing:-.02em;white-space:nowrap">여권을<br>확인할게요</div>
+                <div style="margin-top:26px;font-size:12.5px;font-weight:900;letter-spacing:.06em;color:rgba(22,25,28,.61)">이메일 주소</div>
+                <div style="margin-top:8px;height:58px;border-radius:18px;background:rgba(22,25,28,.09);border:1px solid rgba(22,25,28,.14);display:flex;align-items:center;padding:0 18px;font-size:15px;font-weight:700;color:rgba(22,25,28,.58)">example@email.com</div>
+                <div style="margin-top:16px;font-size:12.5px;font-weight:900;letter-spacing:.06em;color:rgba(22,25,28,.61)">비밀번호</div>
+                <div style="margin-top:8px;height:58px;border-radius:18px;background:rgba(22,25,28,.09);border:1px solid rgba(22,25,28,.14);display:flex;align-items:center;padding:0 18px;font-size:15px;font-weight:700;color:rgba(22,25,28,.58)">••••••••</div>
+                <div style="margin-top:16px;display:flex;justify-content:center;gap:14px;font-size:13.5px;font-weight:700;color:rgba(22,25,28,.58)"><span>비밀번호 찾기</span><span style="opacity:.3">|</span><span>회원가입</span></div>
+                <div style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:12.5px;font-weight:900">신용조회 기록 없음</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">수속 3분</div>
+                </div>
+                <div onClick="{{ toEmpty }}" style="margin-top:20px;height:64px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:11px;cursor:pointer">탑승 수속 시작 <span style="width:30px;height:30px;border-radius:50%;background:#F0F2F3;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isEmpty }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column;position:relative;overflow:hidden">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:8px"><img src="assets/im-logo-t.png" alt="iM" style="height:18px;width:auto;display:block"><span style="font-size:14.5px;font-weight:900;letter-spacing:.1em">iM GOAL</span></div>
+                  <div onClick="{{ toSettings }}" style="width:40px;height:40px;border-radius:50%;background:#E0F7F3;border:1px solid rgba(0,199,169,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="assets/dandi-t.png" alt="단디" style="height:34px;width:auto;display:block;margin-bottom:-4px"></div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">김서준님, 반갑습니다</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">아직 등록된<br>여정이 없어요</div>
+              </div>
+              <div style="flex:1;padding:22px 22px 120px">
+                <div style="position:relative">
+                  <div style="background:#fff;border-radius:28px 28px 0 0;padding:24px;color:#16191C">
+                    <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">BOARDING PASS · 미발권</div>
+                    <div style="margin-top:16px;display:flex;align-items:center;gap:12px">
+                      <div style="flex:1"><div style="font-size:30px;font-weight:900;letter-spacing:-.04em">NOW</div><div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">오늘</div></div>
+                      <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:4px">
+                        <div style="font-size:17px;color:#C9D6D2">✈</div>
+                        <div style="width:56px;height:2px;background:repeating-linear-gradient(90deg,#DDE6E3 0 5px,transparent 5px 10px)"></div>
+                      </div>
+                      <div style="flex:1;text-align:right"><div style="font-size:30px;font-weight:900;letter-spacing:-.04em;color:#C9D6D2">???</div><div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.58);margin-top:1px">목적지 미정</div></div>
+                    </div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                    <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#fff;border-radius:0 0 28px 28px;padding:22px 24px 24px;color:#16191C;text-align:center">
+                    <div style="font-size:16.5px;font-weight:900;letter-spacing:-.02em">목적지를 정하면 하루 연료가 계산돼요</div>
+                    <div style="margin-top:7px;font-size:13.5px;line-height:1.65;font-weight:500;color:rgba(22,25,28,.66)">소비 습관을 분석해 가장 무리 없는<br>저축 경로를 찾아드립니다.</div>
+                    <div onClick="{{ toInput }}" style="margin-top:18px;height:56px;border-radius:99px;background:#16191C;color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">목적지 설정하러 가기 <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                  </div>
+                </div>
+                <div style="margin-top:16px;background:rgba(22,25,28,.08);border-radius:24px;padding:20px;font-size:13.5px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.6)">목적지가 없어도 소비분석은 볼 수 있어요. 하단 탭에서 지난 3개월 소비 흐름을 확인해 보세요.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isInput }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;padding:70px 22px 34px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div onClick="{{ toEmpty }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 홈</div>
+                <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">CHECK-IN · 1/3</div>
+              </div>
+              <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">말해도, 직접 입력해도 됩니다</div>
+              <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">어떤 금융 목표를<br>세울까요?</div>
+              <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ inputModes }}" as="m" hint-placeholder-count="4">
+                  <div onClick="{{ m.go }}" style="{{ m.style }}">
+                    <div style="{{ m.iconStyle }}">{{ m.icon }}</div>
+                    <div style="flex:1"><div style="font-size:16.5px;font-weight:900;letter-spacing:-.015em">{{ m.title }}</div><div style="margin-top:2px;font-size:12.5px;font-weight:700;opacity:.55">{{ m.desc }}</div></div>
+                    <div style="{{ m.arrowStyle }}">›</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px;background:rgba(22,25,28,.07);border-radius:24px;padding:18px;font-size:13px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.66)">어떤 방식이든 결과는 같은 티켓 한 장입니다. 금액·기간을 모르면 AI가 소비 내역에서 추정합니다.</div>
+              <div style="flex:1"></div>
+              <div onClick="{{ toAnalyze }}" style="height:58px;border-radius:99px;border:1.5px dashed rgba(22,25,28,.3);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:rgba(22,25,28,.6);cursor:pointer">숫자를 직접 입력하기</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isVoice }}">
+            <div style="height:100%;background:#EDEFF1;box-sizing:border-box;padding:70px 22px 34px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div onClick="{{ toInput }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.14);font-size:13px;font-weight:900;cursor:pointer">‹ 입력 방식</div>
+                <div style="display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900"><span style="width:8px;height:8px;border-radius:50%;background:#16191C;animation:ringPulse 1.6s infinite"></span>LISTENING</div>
+              </div>
+              <div style="margin-top:20px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">편하게 말씀하세요,</div>
+              <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">듣고 있어요</div>
+
+              <div style="margin-top:28px;height:104px;display:flex;align-items:center;justify-content:center;gap:5px">
+                <sc-for list="{{ waveBars }}" as="w" hint-placeholder-count="26">
+                  <div style="{{ w.style }}"></div>
+                </sc-for>
+              </div>
+
+              <div style="margin-top:24px;background:#fff;border-radius:28px;padding:24px;color:#16191C">
+                <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">인식된 문장</div>
+                <div style="margin-top:9px;font-size:21px;font-weight:900;line-height:1.5;letter-spacing:-.025em">"2년 안에 전세보증금<br>3,000만원 모으고 싶어요"</div>
+                <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(22,25,28,.08);display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;gap:10px"><div style="padding:5px 11px;border-radius:99px;background:#E0F7F3;font-size:11.5px;font-weight:900;color:#0A8873">기간</div><span style="font-size:15.5px;font-weight:900">24개월 · 2028년 8월까지</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><div style="padding:5px 11px;border-radius:99px;background:#E0F7F3;font-size:11.5px;font-weight:900;color:#0A8873">목표 유형</div><span style="font-size:15.5px;font-weight:900">주거 · 전세보증금</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><div style="padding:5px 11px;border-radius:99px;background:#E0F7F3;font-size:11.5px;font-weight:900;color:#0A8873">금액</div><span style="font-size:15.5px;font-weight:900">30,000,000원</span></div>
+                </div>
+              </div>
+              <div style="flex:1"></div>
+              <div onClick="{{ toAnalyze }}" style="height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">이대로 항로 계산하기</div>
+              <div style="margin-top:12px;text-align:center;font-size:13.5px;font-weight:700;color:rgba(22,25,28,.58)">다시 말하기</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isAnalyze }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;padding:74px 22px 34px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">CHECK-IN · 2/3</div>
+                <div style="width:38px;height:38px;border-radius:50%;background:#00C7A9"></div>
+              </div>
+              <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">AI가 항로를 계산하고 있어요,</div>
+              <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">12개월 내역을<br>읽고 있어요</div>
+              <div style="margin-top:24px;background:#fff;border-radius:30px;padding:24px;color:#16191C">
+                <div style="display:flex;align-items:center;gap:18px">
+                  <div style="position:relative;width:120px;height:120px;border-radius:50%;background:conic-gradient(#16191C 0turn 0.68turn,#E6EDEA 0.68turn 1turn);display:flex;align-items:center;justify-content:center;flex:none">
+                    <div style="width:94px;height:94px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                      <div style="font-size:29px;font-weight:900;letter-spacing:-.03em">68<span style="font-size:15px">%</span></div>
+                      <div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.61)">40초 남음</div>
+                    </div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;align-items:center;gap:9px"><div style="width:22px;height:22px;border-radius:7px;background:#00C7A9"></div><span style="font-size:13.5px;font-weight:900">고정비 · 예산</span></div>
+                    <div style="display:flex;align-items:center;gap:9px"><div style="width:22px;height:22px;border-radius:7px;background:#00C7A9"></div><span style="font-size:13.5px;font-weight:900">소비 우선순위</span></div>
+                    <div style="display:flex;align-items:center;gap:9px"><div style="width:22px;height:22px;border-radius:7px;background:#E6EDEA;display:flex;align-items:center;justify-content:center"><div style="width:11px;height:11px;border-radius:50%;border:2px solid #16191C;border-top-color:transparent;animation:spin 1s linear infinite"></div></div><span style="font-size:13.5px;font-weight:900;color:rgba(22,25,28,.63)">기간 실현 가능성</span></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:14px;background:rgba(203,224,75,.09);border:1.5px dashed rgba(203,224,75,.45);border-radius:26px;padding:18px;font-size:13.5px;line-height:1.65;font-weight:700;color:rgba(22,25,28,.7)"><span style="color:#00C7A9">캐릭터 슬롯 ①</span> · 계산 중 단디·똑디가 항로도를 펼치는 2초 루프</div>
+              <div style="flex:1"></div>
+              <div onClick="{{ toPlan }}" style="height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">계산 결과 보기</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPlan }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;padding:70px 22px 34px;display:flex;flex-direction:column;overflow:auto;animation:slideUp .4s ease both">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex:none">
+                <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:13px;font-weight:900">발권 완료 · 3/3</div>
+                <div style="width:38px;height:38px;border-radius:50%;background:#00C7A9"></div>
+              </div>
+              <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6);flex:none">티켓이 나왔어요,</div>
+              <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px;flex:none">24개월 여정</div>
+
+              <div style="margin-top:20px;position:relative;flex:none">
+                <div style="background:#fff;border-radius:28px 28px 0 0;padding:24px;color:#16191C">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">iM GOAL AIRLINES</div>
+                    <div style="font-size:11.5px;font-weight:900;color:#0A8873">GOAL 0725</div>
+                  </div>
+                  <div style="margin-top:16px;display:flex;align-items:center;gap:14px">
+                    <div style="flex:1"><div style="font-size:32px;font-weight:900;letter-spacing:-.04em">NOW</div><div style="font-size:12px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">2026년 8월</div></div>
+                    <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:4px">
+                      <div style="font-size:17px;color:#16191C;animation:fly 3s ease-in-out infinite">✈</div>
+                      <div style="width:58px;height:2px;background:repeating-linear-gradient(90deg,#C9D6D2 0 5px,transparent 5px 10px)"></div>
+                      <div style="font-size:11px;font-weight:900;color:rgba(22,25,28,.58)">24개월</div>
+                    </div>
+                    <div style="flex:1;text-align:right"><div style="font-size:32px;font-weight:900;letter-spacing:-.04em;color:#0A8873">TRV</div><div style="font-size:12px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">2028년 8월</div></div>
+                  </div>
+                </div>
+                <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                  <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                  <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                  <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                </div>
+                <div style="background:#fff;border-radius:0 0 28px 28px;padding:22px 24px 24px;color:#16191C">
+                  <div style="display:flex;gap:20px">
+                    <div style="flex:1"><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">목표</div><div style="font-size:16.5px;font-weight:900;margin-top:3px">전세보증금 3,000만원</div></div>
+                    <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">월 저축</div><div style="font-size:16.5px;font-weight:900;margin-top:3px">83.3만원</div></div>
+                  </div>
+                  <div style="margin-top:18px;background:#16191C;border-radius:22px;padding:18px;color:#fff">
+                    <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#00C7A9">하루 연료 · DAILY FUEL</div>
+                    <div style="display:flex;align-items:baseline;gap:6px;margin-top:4px"><span style="font-size:40px;font-weight:900;letter-spacing:-.04em">27,400</span><span style="font-size:17px;font-weight:900">원</span></div>
+                    <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14);font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.65)">월소득 250만 − 고정비 84만 − 저축 83.3만<br>= 82.7만원 ÷ 30일 (안전마진 적용)</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:16px;background:rgba(22,25,28,.08);border-radius:24px;padding:20px;flex:none">
+                <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">함께 설정할까요?</div>
+                <div style="margin-top:12px;display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900">✓</div><span style="font-size:14.5px;font-weight:900">급여일 자동 분배 (매월 25일)</span></div>
+                  <div style="display:flex;align-items:center;gap:12px"><div style="width:34px;height:34px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900">✓</div><span style="font-size:14.5px;font-weight:900">항로 이탈 시 즉시 알림</span></div>
+                </div>
+              </div>
+
+              <div onClick="{{ finishGoal }}" style="margin-top:16px;height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none">이 티켓으로 탑승하기</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column;position:relative;overflow:hidden">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:9px;min-width:0">
+                    <img src="assets/im-logo-t.png" alt="iM" style="height:17px;width:auto;display:block;flex:none">
+                    <div style="display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;white-space:nowrap">GOAL 0725 · {{ pGoalName }} <span style="opacity:.5">▾</span></div>
+                  </div>
+                  <div onClick="{{ toSettings }}" style="flex:none;width:40px;height:40px;border-radius:50%;background:#E0F7F3;border:1px solid rgba(0,199,169,.35);cursor:pointer;display:flex;align-items:flex-end;justify-content:center;overflow:hidden"><img src="assets/dandi-t.png" alt="단디" style="height:34px;width:auto;display:block;margin-bottom:-3px"></div>
+                </div>
+                <div style="margin-top:14px;display:flex;gap:6px">
+                  <sc-for list="{{ personas }}" as="p" hint-placeholder-count="3">
+                    <div onClick="{{ p.pick }}" style="{{ p.style }}">{{ p.label }}</div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">{{ homeSub }}</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">{{ homeHeadline }}</div>
+              </div>
+
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="position:relative">
+                  <div style="background:#fff;border-radius:28px 28px 0 0;padding:22px 24px 20px;color:#16191C">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">BOARDING PASS · TODAY</div>
+                      <div style="{{ gradeChipStyle }}">{{ gradeLabel }}</div>
+                    </div>
+                    <div style="margin-top:16px;display:flex;align-items:center;gap:12px">
+                      <div style="flex:1"><div style="font-size:30px;font-weight:900;letter-spacing:-.04em">NOW</div><div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">{{ pNow }}</div></div>
+                      <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:4px">
+                        <div style="{{ planeStyle }}">✈</div>
+                        <div style="width:56px;height:2px;background:repeating-linear-gradient(90deg,#C9D6D2 0 5px,transparent 5px 10px)"></div>
+                        <div style="{{ etaBadgeStyle }}">{{ etaDate }}</div>
+                      </div>
+                      <div style="flex:1;text-align:right"><div style="font-size:30px;font-weight:900;letter-spacing:-.04em;color:#0A8873">{{ pDest }}</div><div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">{{ pGoal }}</div></div>
+                    </div>
+                    <div style="margin-top:18px;height:11px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="{{ tripBarStyle }}"></div></div>
+                    <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63)"><span>{{ tripAmountLabel }}</span><sc-if value="{{ isDelayed }}"><span style="{{ delayChipStyle }}">{{ delayNote }}</span></sc-if><sc-if value="{{ notDelayed }}"><span>{{ etaNote }}</span></sc-if></div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                    <div style="{{ punchLeftStyle }}"></div>
+                    <div style="{{ punchRightStyle }}"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#fff;border-radius:0 0 28px 28px;padding:20px 24px 24px;color:#16191C">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                      <div style="min-width:0">
+                        <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">{{ fuelLabel }}</div>
+                        <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px;white-space:nowrap"><span style="{{ fuelNumStyle }}">{{ remaining }}</span><span style="font-size:17px;font-weight:900">원</span></div>
+                      </div>
+                      <div style="flex:none;text-align:right;white-space:nowrap">
+                        <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">SEAT</div>
+                        <div style="font-size:22px;font-weight:900;letter-spacing:-.02em;margin-top:2px">{{ pDday }}</div>
+                      </div>
+                    </div>
+                    <div style="margin-top:16px;height:12px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="{{ fuelBarStyle }}"></div></div>
+                    <div style="margin-top:16px;height:42px;background:repeating-linear-gradient(90deg,#16191C 0 2px,transparent 2px 4px,#16191C 4px 7px,transparent 7px 9px,#16191C 9px 10px,transparent 10px 14px);opacity:.85"></div>
+                    <div onClick="{{ toDetail }}" style="margin-top:16px;height:52px;border-radius:99px;background:#16191C;color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">{{ ticketCta }} <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                  </div>
+                </div>
+
+                <div style="margin-top:20px;font-size:18px;font-weight:900;letter-spacing:-.02em">진행 중인 항목</div>
+                <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+                  <div onClick="{{ toToken }}" style="background:#00C7A9;border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;color:#16191C">
+                    <div style="width:44px;height:44px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">₩</div>
+                    <div style="flex:1"><div style="font-size:16px;font-weight:900;letter-spacing:-.015em">저축 보증금 30,000원 예치 중</div><div style="font-size:12.5px;font-weight:700;opacity:.6;margin-top:2px">9/14일 진행 · 목표 달성 시 전액 환급</div></div>
+                    <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                  </div>
+                  <sc-if value="{{ notFueled }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ toSalary }}" style="background:rgba(22,25,28,.09);border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+                      <div style="width:44px;height:44px;border-radius:50%;background:#7DB5FF;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">급</div>
+                      <div style="flex:1"><div style="font-size:16px;font-weight:900;letter-spacing:-.015em">급여 입금 감지 · {{ payAmount }}원</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:2px">3계좌 자동 분배 확인하기</div></div>
+                      <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                    </div>
+                  </sc-if>
+                  <div>
+                    <div onClick="{{ toSalary }}" style="background:#fff;border:1px solid rgba(22,25,28,.10);border-radius:26px;padding:18px 20px;cursor:pointer;box-shadow:0 1px 2px rgba(22,25,28,.05)">
+                      <div style="display:flex;align-items:center;gap:12px">
+                        <div style="{{ acctIconStyle }}">{{ acctIcon }}</div>
+                        <div style="flex:1;min-width:0"><div style="font-size:15.5px;font-weight:900;letter-spacing:-.015em">{{ acctTitle }}</div><div style="font-size:12px;font-weight:700;color:rgba(22,25,28,.63);margin-top:2px">{{ acctSub }}</div></div>
+                        <div style="{{ acctBadgeStyle }}">{{ acctBadge }}</div>
+                      </div>
+                      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(22,25,28,.10);display:flex;flex-direction:column;gap:11px">
+                        <sc-for list="{{ fuelAccounts }}" as="a" hint-placeholder-count="3">
+                          <div style="display:flex;align-items:center;gap:10px">
+                            <div style="{{ a.dotStyle }}"></div>
+                            <div style="flex:1;min-width:0">
+                              <div style="font-size:13.5px;font-weight:900;letter-spacing:-.01em">{{ a.name }}</div>
+                              <div style="font-size:11.5px;font-weight:700;color:rgba(22,25,28,.58);margin-top:1px">{{ a.desc }}</div>
+                            </div>
+                            <div style="flex:none;text-align:right;white-space:nowrap">
+                              <div style="font-size:14px;font-weight:900">{{ a.amount }}</div>
+                              <div style="{{ a.deltaStyle }}">{{ a.delta }}</div>
+                            </div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                  <div onClick="{{ toMileage }}" style="background:rgba(22,25,28,.09);border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+                    <div style="width:44px;height:44px;border-radius:50%;background:#DDF6F1;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;flex:none"><img src="assets/ddokdi-t.png" alt="똑디" style="height:40px;width:auto;display:block;animation:bob 5s ease-in-out infinite"></div>
+                    <div style="flex:1"><div style="font-size:16px;font-weight:900;letter-spacing:-.015em">리워드 포인트 612점 <span style="color:#077264">+18</span></div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:2px">실버 등급 · 골드까지 88점</div></div>
+                    <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                  </div>
+                </div>
+
+                <div onClick="{{ pTrigger }}" style="margin-top:18px;height:52px;border-radius:99px;border:1.5px dashed rgba(22,25,28,.28);display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:900;color:rgba(22,25,28,.66);cursor:pointer">{{ pTriggerLabel }}</div>
+                <div style="margin-top:7px;text-align:center;font-size:11.5px;font-weight:700;color:rgba(22,25,28,.5)">{{ pushHint }}</div>
+              </div>
+
+              <sc-if value="{{ alertOn }}">
+                <div style="position:absolute;top:56px;left:14px;right:14px;background:#16191C;border-radius:26px;padding:16px 18px;animation:dropIn .35s ease both;z-index:7;box-shadow:0 16px 36px rgba(0,0,0,.45);color:#fff">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:9px;height:9px;border-radius:50%;background:#FF7A5C;animation:ringPulse 1.8s infinite"></div>
+                    <span style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#D0512E">{{ alertTag }}</span>
+                  </div>
+                  <div style="margin-top:8px;display:flex;align-items:flex-end;gap:12px">
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:17px;font-weight:900">{{ alertHead }}</div>
+                      <div style="margin-top:4px;font-size:14px;color:rgba(255,255,255,.6)">{{ alertDelayNote }}</div>
+                    </div>
+                    <img src="assets/dandi-t.png" alt="단디" style="flex:none;height:56px;width:auto;display:block;margin-bottom:-16px;animation:bob 3.4s ease-in-out infinite">
+                  </div>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:34px 34px 0 0;padding:26px 24px 40px;box-shadow:0 -16px 46px rgba(0,0,0,.35);animation:slideUp .4s ease both;z-index:8;color:#16191C">
+                  <div style="width:44px;height:5px;border-radius:99px;background:rgba(22,25,28,.12);margin:0 auto 20px"></div>
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <div style="{{ alertIconStyle }}">{{ alertIcon }}</div>
+                    <div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:900">{{ alertTxnName }}</div><div style="font-size:13px;font-weight:700;color:rgba(22,25,28,.61);margin-top:2px">{{ alertTxnSub }}</div></div>
+                    <div style="flex:none;white-space:nowrap;font-size:20px;font-weight:900;letter-spacing:-.02em">{{ alertTxnAmt }}</div>
+                  </div>
+                  <div style="margin-top:16px;background:#FFEFEA;border-radius:24px;padding:18px">
+                    <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#C4472A">{{ alertRiskTag }}</div>
+                    <div style="margin-top:8px;font-size:15px;line-height:1.7;font-weight:700;color:#3A1A11">{{ alertRiskBody }}</div>
+                  </div>
+                  <div style="margin-top:16px;display:flex;flex-direction:column;gap:9px">
+                    <div onClick="{{ toAlertMission }}" style="height:58px;border-radius:99px;background:#16191C;color:#fff;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">AI 에이전트 제안 보기</div>
+                    <div onClick="{{ toAlertCause }}" style="height:56px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">왜 이탈했는지 보기</div>
+                    <div onClick="{{ dismiss }}" style="height:50px;border-radius:99px;background:rgba(22,25,28,.06);color:rgba(22,25,28,.6);font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">나중에 확인</div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDetail }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">{{ pDday }}</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">GOAL 0725 · {{ pGoalName }}</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">여정 상세</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="background:#fff;border-radius:30px;padding:24px;color:#16191C">
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <div style="min-width:0"><div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">모인 금액</div><div style="margin-top:3px;font-size:30px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">{{ pSaved }}</div></div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px"><div style="flex:none;font-size:12.5px;font-weight:900;color:rgba(22,25,28,.58)">목표</div><div style="flex:none;font-size:18px;font-weight:900;white-space:nowrap">{{ pTarget }}</div></div>
+                  </div>
+                  <div style="margin-top:16px;height:12px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="{{ tripBarInnerStyle }}"></div></div>
+                  <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:12.5px;font-weight:900;color:rgba(22,25,28,.63)"><span>{{ tripPctLabel }}</span><span>{{ tripLeftLabel }}</span></div>
+                </div>
+
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:30px;padding:24px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#077264">페이스 추이 · 주별 저축</div>
+                    <div style="padding:5px 11px;border-radius:99px;background:rgba(203,224,75,.16);font-size:11.5px;font-weight:900;color:#5A6608">양호</div>
+                  </div>
+                  <div style="margin-top:18px;display:flex;gap:8px;align-items:flex-end;height:110px">
+                    <sc-for list="{{ paceBars }}" as="p" hint-placeholder-count="8">
+                      <div style="{{ p.style }}"></div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(22,25,28,.58)"><span>6월 1주</span><span>목표 페이스</span><span>이번 주</span></div>
+                  <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(22,25,28,.12);display:flex;gap:22px">
+                    <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">주 평균</div><div style="font-size:19px;font-weight:900;margin-top:3px">{{ pWeekAvg }}</div></div>
+                    <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">필요 페이스</div><div style="font-size:19px;font-weight:900;margin-top:3px;color:#077264">{{ pNeedPace }}</div></div>
+                  </div>
+                </div>
+
+                <div style="margin-top:14px;background:#16191C;border-radius:30px;padding:24px;color:#fff">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#00C7A9">AI 도착 예측</div>
+                  <div style="margin-top:10px;font-size:20px;font-weight:900;letter-spacing:-.025em;line-height:1.45">지금 페이스면<br>예정보다 앞서 도착합니다</div>
+                  <div style="margin-top:16px;display:flex;gap:10px">
+                    <div style="flex:1;background:rgba(255,255,255,.1);border-radius:20px;padding:16px"><div style="font-size:11.5px;font-weight:900;color:rgba(255,255,255,.5)">계획 도착</div><div style="font-size:18px;font-weight:900;margin-top:3px">{{ pEtaPlan }}</div></div>
+                    <div style="flex:1;background:#00C7A9;border-radius:20px;padding:16px;color:#16191C"><div style="font-size:11.5px;font-weight:900;opacity:.6">예측 도착</div><div style="font-size:18px;font-weight:900;margin-top:3px">{{ pEtaAI }}</div></div>
+                  </div>
+                </div>
+
+                <div onClick="{{ toSalary }}" style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#7DB5FF;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">급</div>
+                  <div style="flex:1"><div style="font-size:16px;font-weight:900">연료 보급 설정</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:2px">매월 25일 · 3계좌 자동 분배</div></div>
+                  <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSalary }}">
+            <div style="height:100%;background:#EDEFF1;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.14);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">정기 입금 감지</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">7월 급여가 들어왔어요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">연료를 보급할까요?</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 34px">
+                <div style="background:#fff;border-radius:30px;padding:24px;color:#16191C">
+                  <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">입금액</div>
+                  <div style="margin-top:4px;display:flex;align-items:baseline;gap:6px"><span style="font-size:42px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">{{ payAmount }}</span><span style="font-size:18px;font-weight:900">원</span></div>
+                  <div style="margin-top:4px;font-size:13px;font-weight:700;color:rgba(22,25,28,.63)">iM뱅크 급여통장 · 7월 25일 09:12</div>
+                  <div style="margin-top:20px;height:14px;border-radius:99px;overflow:hidden;display:flex">
+                    <div style="width:56%;background:#16191C"></div>
+                    <div style="width:9%;background:#00C7A9"></div>
+                    <div style="width:35%;background:#7DB5FF"></div>
+                  </div>
+                  <div style="margin-top:18px;display:flex;flex-direction:column;gap:13px">
+                    <sc-for list="{{ splits }}" as="sp" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ sp.dotStyle }}"></div>
+                        <div style="flex:1"><div style="font-size:15.5px;font-weight:900">{{ sp.name }}</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.61);margin-top:1px">{{ sp.desc }}</div></div>
+                        <div style="flex:none;text-align:right;white-space:nowrap"><div style="font-size:17px;font-weight:900">{{ sp.amount }}</div><div style="font-size:12px;font-weight:900;color:rgba(22,25,28,.58);margin-top:1px">{{ sp.pct }}</div></div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.1);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#077264">이 분배가 여정에 주는 영향</div>
+                  <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:14.5px;font-weight:700;color:rgba(22,25,28,.6)">모인 금액</span><span style="font-size:16px;font-weight:900">400,000 → 600,000원</span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:14.5px;font-weight:700;color:rgba(22,25,28,.6)">진행률</span><span style="font-size:16px;font-weight:900;color:#077264">66.7% → 100%</span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:14.5px;font-weight:700;color:rgba(22,25,28,.6)">하루 연료</span><span style="font-size:16px;font-weight:900">8,000 → 8,600원</span></div>
+                  </div>
+                </div>
+                <div onClick="{{ doFuel }}" style="margin-top:16px;height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">이대로 연료 보급하기</div>
+                <div style="margin-top:12px;text-align:center;font-size:13.5px;font-weight:700;color:rgba(22,25,28,.61)">비율 직접 조정하기</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSpend }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">2026년 7월</div>
+                  <div onClick="{{ toSettings }}" style="width:38px;height:38px;border-radius:50%;background:#00C7A9;cursor:pointer"></div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">연료를 어디에 썼나요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">소비 분석</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="background:#fff;border-radius:30px;padding:24px;color:#16191C">
+                  <div style="display:flex;align-items:center;gap:20px">
+                    <div style="position:relative;width:132px;height:132px;border-radius:50%;flex:none;background:conic-gradient(#16191C 0turn .32turn,#00C7A9 .32turn .55turn,#7DB5FF .55turn .72turn,#C9A052 .72turn .87turn,#E6EDEA .87turn 1turn);display:flex;align-items:center;justify-content:center">
+                      <div style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                        <div style="font-size:11px;font-weight:900;color:rgba(22,25,28,.58)">이번 달</div>
+                        <div style="font-size:21px;font-weight:900;letter-spacing:-.03em;margin-top:2px">982,000</div>
+                        <div style="font-size:11px;font-weight:900;color:rgba(22,25,28,.58)">원</div>
+                      </div>
+                    </div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:9px">
+                      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+                        <div style="display:flex;align-items:center;gap:9px">
+                          <div style="{{ c.dotStyle }}"></div>
+                          <span style="flex:1;font-size:13.5px;font-weight:900">{{ c.name }}</span>
+                          <span style="font-size:13px;font-weight:900;color:rgba(22,25,28,.61)">{{ c.pct }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">주차별 비교</div>
+                  <div style="margin-top:18px;display:flex;gap:10px;align-items:flex-end;height:104px">
+                    <sc-for list="{{ weeks }}" as="w" hint-placeholder-count="4">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+                        <div style="{{ w.barStyle }}"></div>
+                        <span style="{{ w.labelStyle }}">{{ w.label }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(22,25,28,.12);font-size:14px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.62)">이번 주가 4주 중 가장 높습니다. 배달 지출이 <b style="color:#D0512E">+34.5%</b> 늘어난 것이 주된 원인입니다.</div>
+                </div>
+
+                <div onClick="{{ toCategory }}" style="margin-top:12px;background:#00C7A9;border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;color:#16191C">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">▥</div>
+                  <div style="flex:1"><div style="font-size:16px;font-weight:900">카테고리별 자세히 보기</div><div style="font-size:12.5px;font-weight:700;opacity:.6;margin-top:2px">이번 주 245,000원 · 5개 항목</div></div>
+                  <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                </div>
+                <div onClick="{{ toCalendar }}" style="margin-top:10px;background:rgba(22,25,28,.09);border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#7DB5FF;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">▤</div>
+                  <div style="flex:1"><div style="font-size:16px;font-weight:900">소비 달력</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:2px">날짜별 연료 사용량 한눈에</div></div>
+                  <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCategory }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toSpend }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 소비분석</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:12.5px;font-weight:900">7월 3주</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">이번 주 245,000원</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">카테고리별 소비</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ catRows }}" as="c" hint-placeholder-count="5">
+                    <div style="{{ c.cardStyle }}">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ c.iconStyle }}">{{ c.icon }}</div>
+                        <div style="flex:1"><div style="font-size:16.5px;font-weight:900;letter-spacing:-.02em">{{ c.name }}</div><div style="margin-top:2px;font-size:12.5px;font-weight:700;opacity:.55">{{ c.count }}</div></div>
+                        <div style="flex:none;text-align:right;white-space:nowrap"><div style="font-size:18px;font-weight:900">{{ c.amount }}</div><div style="{{ c.deltaStyle }}">{{ c.delta }}</div></div>
+                      </div>
+                      <div style="{{ c.barWrapStyle }}"><div style="{{ c.barStyle }}"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:26px;padding:20px;font-size:13.5px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.6)">배달 카테고리만 흰 카드로 강조했습니다. 이 항목이 이번 주 이탈의 1순위 원인입니다.</div>
+                <div onClick="{{ toCause }}" style="margin-top:14px;height:60px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:16.5px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">이탈 원인 분석 보기 <span style="width:26px;height:26px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCalendar }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toSpend }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 소비분석</div>
+                  <div style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900"><span style="opacity:.4">‹</span>7월<span style="opacity:.4">›</span></div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">연료를 아낀 날은 민트색이에요</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">소비 달력</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="background:#fff;border-radius:30px;padding:22px;color:#16191C">
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:11px;font-weight:900;color:rgba(22,25,28,.56);text-align:center">
+                    <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+                  </div>
+                  <div style="margin-top:8px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px">
+                    <sc-for list="{{ calCells }}" as="d" hint-placeholder-count="35">
+                      <div style="{{ d.style }}"><span style="{{ d.numStyle }}">{{ d.day }}</span><span style="{{ d.amtStyle }}">{{ d.amt }}</span></div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(22,25,28,.08);display:flex;gap:14px;font-size:11.5px;font-weight:900">
+                    <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:4px;background:#00C7A9"></div><span style="color:rgba(22,25,28,.63)">연료 절약</span></div>
+                    <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:4px;background:#E9ECEE"></div><span style="color:rgba(22,25,28,.63)">보통</span></div>
+                    <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:4px;background:#C4472A"></div><span style="color:rgba(22,25,28,.63)">초과</span></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">7월 18일 · 주요 내역</div>
+                  <div style="margin-top:14px;display:flex;flex-direction:column;gap:14px">
+                    <sc-for list="{{ txns }}" as="t" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ t.iconStyle }}">{{ t.icon }}</div>
+                        <div style="flex:1"><div style="font-size:15.5px;font-weight:900">{{ t.name }}</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.61);margin-top:1px">{{ t.meta }}</div></div>
+                        <div style="flex:none;white-space:nowrap;font-size:16px;font-weight:900">{{ t.amount }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMissionDetail }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:12.5px;font-weight:900">미션 DB 630건</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">AI 에이전트가 골라낸,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">구간 탑승권</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="position:relative">
+                  <div style="background:#fff;border-radius:28px 28px 0 0;padding:22px 24px;color:#16191C">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">LEG 04 · 회복 구간</div>
+                      <div style="padding:5px 11px;border-radius:99px;background:#E0F7F3;font-size:11.5px;font-weight:900;color:#0A8873">난이도 보통</div>
+                    </div>
+                    <div style="margin-top:12px;font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.3">배달 주문을<br>주 1회로 줄이기</div>
+                    <div style="margin-top:14px;display:flex;gap:20px">
+                      <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">기간</div><div style="font-size:17px;font-weight:900;margin-top:2px">{{ missionDays }}일</div></div>
+                      <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">절약 연료</div><div style="font-size:17px;font-weight:900;margin-top:2px">{{ missionSave }}</div></div>
+                      <div><div style="font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">도착일</div><div style="font-size:17px;font-weight:900;margin-top:2px;color:#0A8873">8/16</div></div>
+                    </div>
+                    <div style="margin-top:16px">
+                      <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)"><span>기간 조정</span><span>7 · 14 · 21 · 28일</span></div>
+                      <div style="margin-top:10px;display:flex;gap:7px">
+                        <sc-for list="{{ dayOptions }}" as="d" hint-placeholder-count="4">
+                          <div onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.label }}</div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                    <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#fff;border-radius:0 0 28px 28px;padding:20px 24px 24px;color:#16191C">
+                    <div style="display:flex;flex-direction:column;gap:9px">
+                      <div style="background:#E0F7F3;border-radius:20px;padding:15px">
+                        <div style="font-size:11px;font-weight:900;letter-spacing:.08em;color:#0A8873">① 왜 이 구간인가요</div>
+                        <div style="margin-top:6px;font-size:14.5px;line-height:1.65;font-weight:500">배달 지출이 4주 평균 대비 34.5% 늘었고, 하루 연료 8,000원을 이번 주 3회 초과했습니다.</div>
+                      </div>
+                      <div style="background:#F2F5F4;border-radius:20px;padding:15px">
+                        <div style="font-size:11px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">② 어떻게 하나요</div>
+                        <div style="margin-top:6px;font-size:14.5px;line-height:1.65;font-weight:500">배달앱 알림을 끄고 주 1회만 허용합니다. 결제 내역으로 자동 확인되니 인증은 필요 없습니다.</div>
+                      </div>
+                    </div>
+                    <div onClick="{{ toToken }}" style="margin-top:16px;height:56px;border-radius:99px;background:#16191C;color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">보증금 걸고 탑승하기 <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                    <div onClick="{{ accept }}" style="{{ acceptStyle }}">{{ acceptLabel }}</div>
+                  </div>
+                </div>
+                <div style="margin-top:18px;font-size:18px;font-weight:900;letter-spacing:-.02em">이 티켓을 만든 근거</div>
+                <div style="margin-top:12px;background:rgba(22,25,28,.08);border-radius:26px;padding:20px">
+                  <div style="display:flex;flex-wrap:wrap;gap:7px">
+                    <sc-for list="{{ profile }}" as="p" hint-placeholder-count="7">
+                      <div style="padding:9px 14px;border-radius:99px;background:rgba(203,224,75,.22);font-size:13px;font-weight:900;color:#5A6608">{{ p.text }}</div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCause }}">
+            <div style="height:100%;background:#EDEFF1;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.14);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#FF7A5C;color:#2B0B03;font-size:12.5px;font-weight:900">✚ 확장 기능</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">난기류 원인을 분석했어요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">왜 이탈했나요?</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 120px">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ causes }}" as="c" hint-placeholder-count="4">
+                    <div style="{{ c.style }}">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ c.rankStyle }}">{{ c.rank }}</div>
+                        <div style="flex:1"><div style="font-size:16.5px;font-weight:900;letter-spacing:-.015em">{{ c.name }}</div><div style="margin-top:3px;font-size:12.5px;font-weight:700;opacity:.55">{{ c.type }} · 기여도 {{ c.weight }}</div></div>
+                        <div style="{{ c.deltaStyle }}">{{ c.delta }}</div>
+                      </div>
+                      <div style="{{ c.barWrapStyle }}"><div style="{{ c.barStyle }}"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.09);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#077264">1순위 원인이 항로에 미친 영향</div>
+                  <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:rgba(22,25,28,.66)">하루 연료</div>
+                      <div style="margin-top:5px;display:flex;align-items:baseline;gap:10px"><span style="font-size:21px;font-weight:900;color:rgba(22,25,28,.56)">8,000원</span><span style="color:rgba(22,25,28,.56)">→</span><span style="font-size:26px;font-weight:900;color:#D0512E">6,400원</span></div>
+                    </div>
+                    <div style="height:1px;background:rgba(22,25,28,.12)"></div>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:rgba(22,25,28,.66)">도착 예정일</div>
+                      <div style="margin-top:5px;display:flex;align-items:baseline;gap:10px"><span style="font-size:21px;font-weight:900;color:rgba(22,25,28,.56)">8월 16일</span><span style="color:rgba(22,25,28,.56)">→</span><span style="font-size:26px;font-weight:900;color:#D0512E">8월 22일</span></div>
+                      <div style="margin-top:6px;font-size:13px;font-weight:900;color:#D0512E">6일 지연</div>
+                    </div>
+                  </div>
+                </div>
+                <div onClick="{{ toMissionDetail }}" style="margin-top:16px;height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">항로 복귀 미션 받기</div>
+                <div style="margin-top:12px;font-size:12.5px;line-height:1.65;font-weight:700;color:rgba(22,25,28,.61)">기여도 차이가 작은 원인은 상위 항목으로 묶어 보여줍니다. 이 수치는 공식 신용점수 산정에 사용되지 않습니다.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isVerify }}">
+            <div style="height:100%;background:#EDEFF1;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:13px;font-weight:900">회복 진행 중</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.14);font-size:12.5px;font-weight:900">✚ 확장 기능</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">미션 완료 ≠ 도착,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">경유 게이트 3곳</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 120px">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ levels }}" as="l" hint-placeholder-count="3">
+                    <div style="{{ l.style }}">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ l.dotStyle }}">{{ l.icon }}</div>
+                        <div style="flex:1"><div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;opacity:.55">{{ l.level }}</div><div style="margin-top:3px;font-size:17px;font-weight:900;letter-spacing:-.02em">{{ l.title }}</div></div>
+                        <div style="{{ l.tagStyle }}">{{ l.tag }}</div>
+                      </div>
+                      <div style="margin-top:12px;font-size:14px;line-height:1.65;opacity:.7">{{ l.body }}</div>
+                      <div style="{{ l.barWrapStyle }}"><div style="{{ l.barStyle }}"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:14px;background:#fff;border-radius:28px;padding:22px;color:#16191C">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">탑승 전후 비교</div>
+                  <div style="margin-top:14px;display:flex;flex-direction:column;gap:13px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:14.5px;font-weight:700;opacity:.65">주간 배달비</span><span style="flex:none;white-space:nowrap;font-size:16px;font-weight:900">91,000 → 58,000원</span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:14.5px;font-weight:700;opacity:.65">하루 연료</span><span style="flex:none;white-space:nowrap;font-size:16px;font-weight:900">6,400 → 8,200원</span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:14.5px;font-weight:700;opacity:.65">도착 예정일</span><span style="flex:none;white-space:nowrap;font-size:16px;font-weight:900;color:#0A8873">8/22 → 8/14</span></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;border-radius:28px;border:1.5px dashed rgba(203,224,75,.5);background:rgba(203,224,75,.08);padding:20px;display:flex;align-items:center;gap:16px">
+                  <div style="position:relative;width:104px;height:84px;flex:none;display:flex;align-items:flex-end;justify-content:center;gap:2px">
+                    <img src="assets/dandi-t.png" alt="단디" style="height:66px;width:auto;display:block;animation:bob 4.2s ease-in-out infinite">
+                    <img src="assets/ddokdi-t.png" alt="똑디" style="height:78px;width:auto;display:block;animation:bob 4.2s ease-in-out .5s infinite">
+                  </div>
+                  <div style="flex:1">
+                    <div style="font-size:10.5px;font-weight:900;letter-spacing:.08em;color:#077264">단디 · 똑디</div>
+                    <div style="margin-top:6px;font-size:15px;font-weight:900;line-height:1.45">게이트 3 통과 순간<br>축하 점프 0.8초</div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;font-size:12.5px;line-height:1.65;color:rgba(22,25,28,.61)">지속 기간 중 이탈이 재발하면 "재개입 필요"로 바뀌고 새 구간이 만들어집니다.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isToken }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">iMKRW 스마트계약</div>
+                  <div onClick="{{ toSettings }}" style="width:38px;height:38px;border-radius:50%;background:#7DB5FF;cursor:pointer"></div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">동의 없이는 예치되지 않아요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">보증금 티켓</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="position:relative">
+                  <div style="background:#fff;border-radius:28px 28px 0 0;padding:22px 24px;color:#16191C">
+                    <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">DEPOSIT · LEG 04</div>
+                    <div style="margin-top:6px;display:flex;align-items:baseline;gap:6px"><span style="font-size:42px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">{{ depositAmount }}</span><span style="font-size:17px;font-weight:900">iMKRW</span></div>
+                    <div style="margin-top:14px;display:flex;gap:8px">
+                      <sc-for list="{{ depositOptions }}" as="d" hint-placeholder-count="3">
+                        <div onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.label }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                    <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#fff;border-radius:0 0 28px 28px;padding:20px 24px 24px;color:#16191C">
+                    <div style="display:flex;gap:9px">
+                      <div style="flex:1;background:#E0F7F3;border-radius:20px;padding:16px">
+                        <div style="font-size:11px;font-weight:900;letter-spacing:.06em;color:#0A8873">도착하면</div>
+                        <div style="margin-top:7px;font-size:14.5px;line-height:1.55;font-weight:900">전액 반환<br>+ 우대금리 0.3%</div>
+                      </div>
+                      <div style="flex:1;background:#FFEFEA;border-radius:20px;padding:16px">
+                        <div style="font-size:11px;font-weight:900;letter-spacing:.06em;color:#C4472A">이탈하면</div>
+                        <div style="margin-top:7px;font-size:14.5px;line-height:1.55;font-weight:900;color:#3A1A11">내 목표 계좌로<br>자동 이동</div>
+                      </div>
+                    </div>
+                    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
+                      <span style="font-size:13.5px;font-weight:900;color:rgba(22,25,28,.63)">진행 중인 예치</span>
+                      <span style="font-size:13.5px;font-weight:900;color:#0A8873">9 / 14일</span>
+                    </div>
+                    <div style="margin-top:10px;height:12px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="width:64%;height:100%;background:#00C7A9"></div></div>
+                    <div style="margin-top:16px;height:40px;background:repeating-linear-gradient(90deg,#16191C 0 2px,transparent 2px 4px,#16191C 4px 7px,transparent 7px 9px,#16191C 9px 10px,transparent 10px 14px);opacity:.85"></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:26px;padding:20px;font-size:13px;line-height:1.7;font-weight:700;color:rgba(22,25,28,.66)">예치·반환 처리에 오류가 생기면 상태를 표시하고 재처리를 도와드립니다. 금액과 반환 기준은 금융·법무 검토 후 확정됩니다.</div>
+                <div onClick="{{ toRelease }}" style="margin-top:14px;height:62px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">해제 · 환원 화면 보기</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isRelease }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toToken }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 보증금</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">구간 완주</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">LEG 04를 완주했어요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">보증금을 돌려드려요</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 120px">
+                <div style="background:#00C7A9;border-radius:30px;padding:24px;color:#16191C">
+                  <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;opacity:.6">환원 금액</div>
+                  <div style="margin-top:4px;display:flex;align-items:baseline;gap:6px"><span style="font-size:44px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">30,000</span><span style="font-size:18px;font-weight:900">원</span></div>
+                  <div style="margin-top:14px;font-size:14px;line-height:1.65;font-weight:700;opacity:.7">iMKRW 30,000 소각 → 원화 30,000원이 목표 계좌로 이체됩니다.</div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">처리 단계</div>
+                  <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+                    <div style="display:flex;align-items:center;gap:13px"><div style="width:36px;height:36px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900">✓</div><div style="flex:1"><div style="font-size:15px;font-weight:900">스마트계약 조건 충족 확인</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.61);margin-top:1px">결제 내역 기준 자동 판정</div></div></div>
+                    <div style="display:flex;align-items:center;gap:13px"><div style="width:36px;height:36px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900">✓</div><div style="flex:1"><div style="font-size:15px;font-weight:900">iMKRW 소각</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.61);margin-top:1px">토큰 잔액 30,000 → 0</div></div></div>
+                    <div style="display:flex;align-items:center;gap:13px"><div style="width:36px;height:36px;border-radius:50%;background:rgba(22,25,28,.14);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;border-radius:50%;border:2px solid #00C7A9;border-top-color:transparent;animation:spin 1s linear infinite"></div></div><div style="flex:1"><div style="font-size:15px;font-weight:900">원화 이체</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.61);margin-top:1px">iM뱅크 목표 계좌 · 처리 중</div></div></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:#16191C;border-radius:28px;padding:22px;color:#fff">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#00C7A9">함께 적립된 마일리지</div>
+                  <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px"><span style="font-size:32px;font-weight:900;letter-spacing:-.035em">+18</span><span style="font-size:15px;font-weight:900;opacity:.6">FCPS · 실버 612점</span></div>
+                  <div onClick="{{ toMileage }}" style="margin-top:16px;height:52px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:15.5px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">마일리지 보기 <span style="width:26px;height:26px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                </div>
+                <div onClick="{{ toVerify }}" style="margin-top:12px;height:58px;border-radius:99px;border:1.5px dashed rgba(22,25,28,.3);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:rgba(22,25,28,.6);cursor:pointer">✚ 경유 게이트로 회복 검증하기</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMileage }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">최근 6개월</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">✚ 확장 기능</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">신용조회 없이 쌓은,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">나의 마일리지</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 120px">
+                <div style="position:relative">
+                  <div style="background:#00C7A9;border-radius:28px 28px 0 0;padding:22px 24px;color:#16191C">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;opacity:.6">iM GOAL MILEAGE CLUB</div>
+                      <div style="padding:5px 11px;border-radius:99px;background:#16191C;color:#00C7A9;font-size:11.5px;font-weight:900">SILVER</div>
+                    </div>
+                    <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px"><span style="font-size:56px;font-weight:900;letter-spacing:-.055em">612</span><span style="font-size:15px;font-weight:900">FCPS · 3개월 +54</span></div>
+                    <div style="margin-top:14px;display:flex;gap:7px;align-items:flex-end;height:62px">
+                      <div style="flex:1;height:44%;border-radius:7px 7px 0 0;background:rgba(22,25,28,.18)"></div>
+                      <div style="flex:1;height:52%;border-radius:7px 7px 0 0;background:rgba(22,25,28,.22)"></div>
+                      <div style="flex:1;height:49%;border-radius:7px 7px 0 0;background:rgba(22,25,28,.26)"></div>
+                      <div style="flex:1;height:68%;border-radius:7px 7px 0 0;background:rgba(22,25,28,.34)"></div>
+                      <div style="flex:1;height:84%;border-radius:7px 7px 0 0;background:rgba(22,25,28,.63)"></div>
+                      <div style="flex:1;height:100%;border-radius:7px 7px 0 0;background:#16191C"></div>
+                    </div>
+                    <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:11.5px;font-weight:900;opacity:.6"><span>2월</span><span>7월</span></div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#00C7A9;display:flex;align-items:center">
+                    <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,rgba(22,25,28,.25) 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#00C7A9;border-radius:0 0 28px 28px;padding:20px 24px 24px;color:#16191C">
+                    <div style="font-size:12px;font-weight:900;letter-spacing:.08em;opacity:.6">골드 등급까지</div>
+                    <div style="margin-top:6px;display:flex;align-items:baseline;gap:8px"><span style="font-size:28px;font-weight:900;letter-spacing:-.03em">88점</span><span style="font-size:14px;font-weight:900;opacity:.6">남았어요</span></div>
+                    <div style="margin-top:12px;height:11px;border-radius:99px;background:rgba(22,25,28,.15);overflow:hidden"><div style="width:66%;height:100%;background:#16191C"></div></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">마일리지를 쌓은 행동</div>
+                  <div style="margin-top:16px;display:flex;flex-direction:column;gap:15px">
+                    <sc-for list="{{ fcpsFactors }}" as="f" hint-placeholder-count="4">
+                      <div style="display:flex;align-items:center;gap:12px">
+                        <div style="flex:1">
+                          <div style="font-size:15px;font-weight:900">{{ f.name }}</div>
+                          <div style="margin-top:8px;height:9px;border-radius:99px;background:rgba(22,25,28,.14);overflow:hidden"><div style="{{ f.barStyle }}"></div></div>
+                        </div>
+                        <span style="{{ f.tagStyle }}">{{ f.tag }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div onClick="{{ toProducts }}" style="margin-top:14px;background:#7DB5FF;border-radius:28px;padding:22px;color:#16191C;cursor:pointer">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.1em;opacity:.55">실버 등급 라운지</div>
+                  <div style="margin-top:8px;font-size:19px;font-weight:900;letter-spacing:-.025em;line-height:1.4">612점으로 열린<br>iM 상품 4개 보기</div>
+                  <div style="margin-top:14px;height:50px;border-radius:99px;background:#16191C;color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px">라운지 입장 <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                </div>
+                <div style="margin-top:14px;font-size:12.5px;line-height:1.7;color:rgba(22,25,28,.58)">FCPS는 공식 신용점수와 다르며, 동의 시 여신심사 보조자료로만 활용됩니다.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProducts }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toMileage }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 마일리지</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">✚ SILVER 라운지</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">추천 이유부터 말씀드려요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">지금 맞는 iM 상품</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 120px">
+                <div style="display:flex;gap:8px">
+                  <sc-for list="{{ productTabs }}" as="t" hint-placeholder-count="3">
+                    <div onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:12px;display:flex;flex-direction:column;gap:11px">
+                  <sc-for list="{{ imProducts }}" as="p" hint-placeholder-count="4">
+                    <div style="{{ p.cardStyle }}">
+                      <div style="display:flex;align-items:center;gap:13px">
+                        <div style="{{ p.iconStyle }}">{{ p.icon }}</div>
+                        <div style="flex:1">
+                          <div style="{{ p.tagStyle }}">{{ p.tag }}</div>
+                          <div style="margin-top:5px;font-size:18.5px;font-weight:900;letter-spacing:-.025em;line-height:1.3">{{ p.name }}</div>
+                        </div>
+                      </div>
+                      <div style="{{ p.reasonStyle }}">
+                        <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;opacity:.55">왜 추천됐나요</div>
+                        <div style="margin-top:6px;font-size:14.5px;line-height:1.65;font-weight:500">{{ p.reason }}</div>
+                      </div>
+                      <div style="margin-top:14px;display:flex;gap:22px">
+                        <div><div style="font-size:11.5px;font-weight:700;opacity:.55">{{ p.k1 }}</div><div style="font-size:18px;font-weight:900;margin-top:2px">{{ p.v1 }}</div></div>
+                        <div><div style="font-size:11.5px;font-weight:700;opacity:.55">{{ p.k2 }}</div><div style="font-size:18px;font-weight:900;margin-top:2px">{{ p.v2 }}</div></div>
+                      </div>
+                      <div style="margin-top:16px;display:flex;gap:8px">
+                        <div style="{{ p.ctaStyle }}">{{ p.cta }}</div>
+                        <div style="{{ p.subCtaStyle }}">근거 전문</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div onClick="{{ toSupport }}" style="margin-top:12px;background:rgba(255,122,92,.16);border:1px solid rgba(255,122,92,.4);border-radius:26px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#FF7A5C;color:#2B0B03;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">!</div>
+                  <div style="flex:1"><div style="font-size:16px;font-weight:900">상환이 부담되시나요?</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.66);margin-top:2px">비상 착륙 안내 · 지원제도 매칭</div></div>
+                  <div style="width:32px;height:32px;border-radius:50%;background:rgba(22,25,28,.14);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">›</div>
+                </div>
+                <div style="margin-top:14px;background:rgba(22,25,28,.08);border-radius:26px;padding:20px;font-size:12.5px;line-height:1.7;font-weight:700;color:rgba(22,25,28,.63)">금리·한도·정부 기여금은 심사와 정책 결과에 따라 달라집니다. 추천은 마이데이터 항목과 FCPS 행동 데이터를 근거로 하며, 가입을 강요하지 않습니다.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSupport }}">
+            <div style="height:100%;background:#FF7A5C;box-sizing:border-box;display:flex;flex-direction:column;color:#2B0B03">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toProducts }}" style="padding:9px 15px;border-radius:99px;background:rgba(255,255,255,.9);font-size:13px;font-weight:900;cursor:pointer">‹ 라운지</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#2B0B03;color:#FFD9CF;font-size:12.5px;font-weight:900">✚ 확장 기능</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;opacity:.6">혼자 두지 않아요,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">비상 착륙 안내</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 34px">
+                <div style="background:#16191C;border-radius:32px;padding:24px;color:#fff">
+                  <div style="display:flex;align-items:center;gap:13px">
+                    <div style="width:44px;height:44px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900">A</div>
+                    <div style="flex:1"><div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#00C7A9">항로 A · 스스로 복귀</div><div style="margin-top:3px;font-size:20px;font-weight:900;letter-spacing:-.025em">회복 구간 미션</div></div>
+                  </div>
+                  <div style="margin-top:12px;font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.7)">한도 소진율 82% 원인을 겨냥한 3주 회복 구간이 준비됐습니다.</div>
+                  <div onClick="{{ toMissionDetail }}" style="margin-top:16px;height:54px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">회복 구간 보기</div>
+                </div>
+                <div style="margin-top:12px;background:#fff;border-radius:32px;padding:24px">
+                  <div style="display:flex;align-items:center;gap:13px">
+                    <div style="width:44px;height:44px;border-radius:50%;background:#FF7A5C;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900">B</div>
+                    <div style="flex:1"><div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#C4472A">항로 B · 외부 지원</div><div style="margin-top:3px;font-size:20px;font-weight:900;letter-spacing:-.025em;color:#16191C">지원제도 매칭</div></div>
+                  </div>
+                  <div style="margin-top:12px;font-size:14.5px;line-height:1.65;font-weight:500;color:rgba(22,25,28,.6)">신청하지 않아도 서비스가 먼저 찾아 안내합니다. iM뱅크가 실제 취급하는 상품으로만 좁힙니다.</div>
+                  <div style="margin-top:16px;display:flex;gap:8px">
+                    <sc-for list="{{ bizTypes }}" as="b" hint-placeholder-count="2">
+                      <div onClick="{{ b.pick }}" style="{{ b.style }}">{{ b.label }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ supportProducts }}" as="p" hint-placeholder-count="3">
+                      <div style="background:#F5F8F7;border-radius:22px;padding:18px">
+                        <div style="display:flex;align-items:center;gap:11px">
+                          <div style="flex:1;font-size:16.5px;font-weight:900;letter-spacing:-.02em;color:#16191C">{{ p.name }}</div>
+                          <div style="{{ p.fitStyle }}">{{ p.fit }}</div>
+                        </div>
+                        <div style="margin-top:8px;font-size:13.5px;line-height:1.6;font-weight:500;color:rgba(22,25,28,.66)">{{ p.target }}</div>
+                        <div style="margin-top:12px;height:46px;border-radius:99px;background:#16191C;color:#fff;font-size:14.5px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ p.cta }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:rgba(255,255,255,.85);border-radius:26px;padding:20px;font-size:12.5px;line-height:1.7;font-weight:700">신용회복위원회 채무조정과 정부 정책서민금융은 공식 경로 안내로만 제공되며, 서비스가 직접 심사·연결하지 않습니다.</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSettings }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:12.5px;font-weight:900">MY PASSPORT</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">iM뱅크 주거래 · SILVER</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">김서준님</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 40px">
+                <div onClick="{{ toggleBig }}" style="{{ bigCardStyle }}">
+                  <div style="flex:1">
+                    <div style="font-size:18px;font-weight:900;letter-spacing:-.015em">큰 글씨 모드</div>
+                    <div style="margin-top:3px;font-size:13px;font-weight:700;opacity:.6">탑승권 연료 숫자를 34px → 44px로</div>
+                  </div>
+                  <div style="{{ bigTrackStyle }}"><div style="{{ bigKnobStyle }}"></div></div>
+                </div>
+                <div style="margin-top:12px;background:rgba(22,25,28,.08);border-radius:28px;padding:22px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">기내 안내방송 · 개입 강도</div>
+                  <div style="margin-top:12px;display:flex;gap:8px">
+                    <sc-for list="{{ intensities }}" as="i" hint-placeholder-count="3">
+                      <div onClick="{{ i.pick }}" style="{{ i.style }}">{{ i.label }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:12px;font-size:13.5px;line-height:1.65;font-weight:500;color:rgba(22,25,28,.6)">{{ intensityDesc }}</div>
+                </div>
+                <div style="margin-top:12px;background:rgba(22,25,28,.08);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:14px">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.63)">안심 장치</div>
+                  <div style="display:flex;align-items:center;gap:13px"><div style="width:40px;height:40px;border-radius:50%;background:#E0F7F3;color:#077264;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900">데</div><div style="flex:1"><div style="font-size:15.5px;font-weight:900">연동 데이터 관리</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">언제든 해지 · 즉시 삭제</div></div><span style="font-size:19px;opacity:.35">›</span></div>
+                  <div style="display:flex;align-items:center;gap:13px"><div style="width:40px;height:40px;border-radius:50%;background:#E0F7F3;color:#077264;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900">F</div><div style="flex:1"><div style="font-size:15.5px;font-weight:900">FCPS 제공 동의 관리</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">여신심사 보조자료 제공 여부</div></div><span style="font-size:19px;opacity:.35">›</span></div>
+                  <div onClick="{{ toSupport }}" style="display:flex;align-items:center;gap:13px;cursor:pointer"><div style="width:40px;height:40px;border-radius:50%;background:#FFD9CF;color:#C4472A;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900">비</div><div style="flex:1"><div style="font-size:15.5px;font-weight:900">비상 착륙 안내 다시 보기</div><div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.63);margin-top:1px">위험 등급일 때 자동으로 열립니다</div></div><span style="font-size:19px;opacity:.35">›</span></div>
+                </div>
+                <div style="margin-top:14px;height:66px;border-radius:99px;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;gap:12px;font-size:18px;font-weight:900;cursor:pointer"><span style="width:32px;height:32px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:15px">☎</span>전화 상담 1566-0000</div>
+                <div style="margin-top:12px;text-align:center;font-size:13px;font-weight:700;color:rgba(22,25,28,.58)">평일 09:00~18:00 · 대기 없이 담당자 연결</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showNav }}">
+            <div style="{{ navBarStyle }}">
+              <sc-for list="{{ navItems }}" as="nv" hint-placeholder-count="4">
+                <div onClick="{{ nv.go }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                  <div style="{{ nv.circleStyle }}">{{ nv.icon }}</div>
+                  <span style="{{ nv.labelStyle }}">{{ nv.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isConnect }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0;flex:none">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 뒤로</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900">CHECK-IN · 2/3</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">여권에 정보를 채웁니다</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">iM 자산 연결</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:20px 22px 34px;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ connectItems }}" as="c" hint-placeholder-count="4">
+                  <div style="{{ c.rowStyle }}">
+                    <div style="{{ c.markStyle }}">{{ c.mark }}</div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:15.5px;font-weight:900;letter-spacing:-.015em">{{ c.name }}</div>
+                      <div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.6);margin-top:2px">{{ c.desc }}</div>
+                    </div>
+                    <div style="{{ c.tagStyle }}">{{ c.tag }}</div>
+                  </div>
+                </sc-for>
+                <div style="background:rgba(22,25,28,.08);border-radius:26px;padding:20px;font-size:13px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.62)">연결은 조회 전용입니다. 신용조회 기록이 남지 않고, 언제든 설정에서 해제할 수 있어요.</div>
+                <div onClick="{{ toEmpty }}" style="margin-top:4px;height:56px;border-radius:99px;background:#16191C;color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">연결 완료 <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isEmptyTab }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0;flex:none">
+                <div style="display:flex;align-items:center;gap:9px;min-width:0">
+                  <img src="assets/im-logo-t.png" alt="iM" style="height:17px;width:auto;display:block;flex:none">
+                  <div style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;white-space:nowrap">목표 미등록</div>
+                </div>
+                <div style="margin-top:18px;font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16">{{ emptyTabName }}</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:22px 22px 120px">
+                <div style="background:#fff;border-radius:30px;padding:38px 26px;text-align:center">
+                  <div style="width:74px;height:74px;border-radius:50%;background:rgba(22,25,28,.06);display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(22,25,28,.35);margin:0 auto">{{ emptyTabIcon }}</div>
+                  <div style="margin-top:18px;font-size:19px;font-weight:900;letter-spacing:-.025em">{{ emptyTabTitle }}</div>
+                  <div style="margin-top:9px;font-size:14px;line-height:1.7;font-weight:500;color:rgba(22,25,28,.62)">{{ emptyTabDesc }}</div>
+                  <div onClick="{{ toInput }}" style="margin-top:20px;height:54px;border-radius:99px;background:#16191C;color:#fff;font-size:15.5px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">금융 목표 등록하기 <span style="width:26px;height:26px;border-radius:50%;background:#00C7A9;color:#16191C;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isArrived }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0;flex:none">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="padding:9px 15px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:12.5px;font-weight:900">ARRIVED</div>
+                </div>
+                <div style="margin-top:18px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">도착했습니다,</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.16;margin-top:1px">{{ pGoalName }} 완주</div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:18px 22px 34px">
+                <div style="position:relative">
+                  <div style="background:#fff;border-radius:28px 28px 0 0;padding:24px;color:#16191C;position:relative;overflow:hidden">
+                    <div style="position:absolute;top:16px;right:-14px;transform:rotate(-11deg);border:3px solid #00C7A9;color:#0A8873;border-radius:14px;padding:7px 16px;font-size:15px;font-weight:900;letter-spacing:.1em;opacity:.9">ARRIVED</div>
+                    <div style="font-size:11.5px;font-weight:900;letter-spacing:.1em;color:rgba(22,25,28,.58)">BOARDING PASS · 완료</div>
+                    <div style="margin-top:18px;font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">최종 도착 금액</div>
+                    <div style="margin-top:3px;font-size:38px;font-weight:900;letter-spacing:-.03em;white-space:nowrap">{{ pTarget }}</div>
+                    <div style="margin-top:14px;height:11px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="width:100%;height:100%;background:#00C7A9"></div></div>
+                    <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:12.5px;font-weight:900;color:rgba(22,25,28,.63)"><span>100% 비행 완료</span><span>{{ pEta }} 도착</span></div>
+                  </div>
+                  <div style="position:relative;height:26px;background:#fff;display:flex;align-items:center">
+                    <div style="position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:#F0F2F3"></div>
+                    <div style="flex:1;margin:0 20px;height:2px;background:repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)"></div>
+                  </div>
+                  <div style="background:#fff;border-radius:0 0 28px 28px;padding:20px 24px 24px;color:#16191C">
+                    <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">여정 기록</div>
+                    <div style="margin-top:14px;display:flex;flex-direction:column;gap:11px">
+                      <sc-for list="{{ arrivedRecords }}" as="r" hint-placeholder-count="4">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                          <span style="font-size:14px;font-weight:700;color:rgba(22,25,28,.62)">{{ r.label }}</span>
+                          <span style="font-size:14.5px;font-weight:900;white-space:nowrap">{{ r.value }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;background:#16191C;border-radius:30px;padding:24px;color:#fff">
+                  <div style="font-size:12px;font-weight:900;letter-spacing:.08em;color:#00C7A9">다음 여정 제안</div>
+                  <div style="margin-top:10px;font-size:19px;font-weight:900;line-height:1.45">이번에 만든 습관이면<br>다음 목표는 더 빠릅니다</div>
+                  <div style="margin-top:14px;font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.66)">완주 기록이 FCPS에 남아, 다음 목표에서는 더 낮은 금리의 iM 상품이 후보로 올라옵니다.</div>
+                </div>
+                <div onClick="{{ toInput }}" style="margin-top:14px;height:56px;border-radius:99px;background:#00C7A9;color:#16191C;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">다음 목표 발권하기 <span style="width:26px;height:26px;border-radius:50%;background:#16191C;color:#00C7A9;display:flex;align-items:center;justify-content:center;font-size:14px">›</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasPush }}">
+            <div style="position:absolute;top:52px;left:12px;right:12px;z-index:9;animation:dropIn .4s cubic-bezier(.2,.9,.3,1) both">
+              <div style="background:rgba(252,252,253,.94);backdrop-filter:blur(18px);border-radius:26px;padding:15px 16px;box-shadow:0 18px 44px rgba(22,25,28,.24)">
+                <div style="display:flex;align-items:center;gap:11px">
+                  <div style="{{ pushIconStyle }}">iM</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:13.5px;font-weight:900;letter-spacing:-.01em">{{ pushTitle }}</div>
+                    <div style="margin-top:3px;font-size:13px;line-height:1.5;font-weight:500;color:rgba(22,25,28,.72)">{{ pushBody }}</div>
+                  </div>
+                  <span style="flex:none;align-self:flex-start;font-size:11px;font-weight:700;color:rgba(22,25,28,.45)">{{ pushTime }}</span>
+                </div>
+                <div style="margin-top:13px;display:flex;gap:8px">
+                  <div onClick="{{ pushLater }}" style="flex:none;padding:0 18px;height:42px;border-radius:99px;background:rgba(22,25,28,.07);color:rgba(22,25,28,.62);font-size:13.5px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">나중에</div>
+                  <div onClick="{{ pushOpen }}" style="flex:1;height:42px;border-radius:99px;background:#16191C;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ pushAction }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isUC }}">
+            <div style="height:100%;background:#F0F2F3;box-sizing:border-box;display:flex;flex-direction:column">
+              <div style="padding:68px 22px 0;flex:none">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div onClick="{{ toHome }}" style="padding:9px 15px;border-radius:99px;background:rgba(22,25,28,.12);font-size:13px;font-weight:900;cursor:pointer">‹ 탑승권</div>
+                  <div style="{{ ucChipStyle }}">{{ ucLabel }}</div>
+                </div>
+                <div style="margin-top:16px;font-size:17px;font-weight:700;color:rgba(22,25,28,.6)">{{ ucSub }}</div>
+                <div style="font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-top:1px">{{ ucTitle }}</div>
+                <div style="margin-top:15px;display:flex;align-items:center;gap:10px">
+                  <div style="flex:1;display:flex;gap:4px">
+                    <sc-for list="{{ ucDots }}" as="d" hint-placeholder-count="6">
+                      <div style="{{ d.style }}"></div>
+                    </sc-for>
+                  </div>
+                  <span style="flex:none;font-size:11.5px;font-weight:900;color:rgba(22,25,28,.58)">{{ ucStep }}</span>
+                </div>
+              </div>
+              <div style="flex:1;overflow:auto;padding:16px 22px 34px;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ ucBlocks }}" as="b" hint-placeholder-count="3">
+                  <div style="{{ b.wrapStyle }}">
+                    <sc-if value="{{ b.isQ }}">
+                      <div style="{{ b.qStyle }}">{{ b.text }}</div>
+                    </sc-if>
+                    <sc-if value="{{ b.isB }}">
+                      <div style="display:flex;align-items:flex-end;gap:9px">
+                        <div style="{{ b.imgStyle }}"></div>
+                        <div style="{{ b.bubbleStyle }}">{{ b.text }}</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isC }}">
+                      <div style="{{ b.cardStyle }}">
+                        <sc-if value="{{ b.hasLabel }}">
+                          <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:rgba(22,25,28,.58)">{{ b.label }}</div>
+                        </sc-if>
+                        <sc-if value="{{ b.hasBig }}">
+                          <div style="margin-top:5px;display:flex;align-items:baseline;gap:5px"><span style="font-size:38px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">{{ b.bigVal }}</span><span style="font-size:17px;font-weight:900">{{ b.bigUnit }}</span></div>
+                        </sc-if>
+                        <sc-if value="{{ b.hasHead }}">
+                          <div style="font-size:19px;font-weight:900;letter-spacing:-.02em;line-height:1.4">{{ b.headline }}</div>
+                        </sc-if>
+                        <sc-if value="{{ b.hasBar }}">
+                          <div style="margin-top:14px;height:11px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="{{ b.barStyle }}"></div></div>
+                        </sc-if>
+                        <sc-if value="{{ b.hasRows }}">
+                          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(22,25,28,.10);display:flex;flex-direction:column;gap:10px">
+                            <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="2">
+                              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                                <span style="font-size:13.5px;font-weight:700;color:rgba(22,25,28,.62)">{{ r.label }}</span>
+                                <span style="{{ r.valueStyle }}">{{ r.value }}</span>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ b.hasNote }}">
+                          <div style="margin-top:12px;font-size:12.5px;line-height:1.65;font-weight:700;color:rgba(22,25,28,.62)">{{ b.note }}</div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isD }}">
+                      <div style="{{ b.darkStyle }}">
+                        <div style="display:flex;align-items:center;gap:10px">
+                          <div style="width:9px;height:9px;border-radius:50%;background:#FF7A5C;animation:ringPulse 1.8s infinite"></div>
+                          <span style="{{ b.tagStyle }}">{{ b.tag }}</span>
+                        </div>
+                        <div style="margin-top:10px;display:flex;align-items:flex-end;gap:11px">
+                          <div style="flex:1;min-width:0">
+                            <div style="font-size:19px;font-weight:900;line-height:1.4">{{ b.headline }}</div>
+                            <sc-if value="{{ b.hasNote }}">
+                              <div style="margin-top:5px;font-size:13px;color:rgba(255,255,255,.66)">{{ b.note }}</div>
+                            </sc-if>
+                          </div>
+                          <sc-if value="{{ b.hasImg }}">
+                            <div style="{{ b.imgStyle }}"></div>
+                          </sc-if>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isG }}">
+                      <div style="{{ b.cardStyle }}">
+                        <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                          <div>
+                            <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:14px;font-weight:900">{{ r.name }}</span><span style="{{ r.tagStyle }}">{{ r.tag }}</span></div>
+                            <div style="margin-top:7px;height:10px;border-radius:99px;background:#E9ECEE;overflow:hidden"><div style="{{ r.barStyle }}"></div></div>
+                            <sc-if value="{{ r.hasNote }}">
+                              <div style="margin-top:5px;font-size:12px;font-weight:700;color:rgba(22,25,28,.62)">{{ r.note }}</div>
+                            </sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isE }}">
+                      <div style="{{ b.darkStyle }}">
+                        <div style="{{ b.tagStyle }}">{{ b.tag }}</div>
+                        <div style="margin-top:10px;display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900"><span style="color:rgba(255,255,255,.6)">{{ b.from }}</span><span style="color:#FF9C82">→</span><span>{{ b.to }}</span></div>
+                        <sc-if value="{{ b.hasNote }}">
+                          <div style="margin-top:6px;font-size:13px;font-weight:900;color:#FF9C82">{{ b.note }}</div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isR }}">
+                      <div style="{{ b.cardStyle }}">
+                        <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:#077264">{{ b.label }}</div>
+                        <div style="margin-top:11px;display:flex;flex-direction:column;gap:8px;font-size:13.5px;font-weight:700;line-height:1.5">
+                          <sc-for list="{{ b.items }}" as="i" hint-placeholder-count="3">
+                            <div>{{ i.text }}</div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isT }}">
+                      <div style="{{ b.ticketStyle }}">
+                        <div style="{{ b.labelStyle }}">{{ b.label }}</div>
+                        <sc-if value="{{ b.hasBig }}">
+                          <div style="margin-top:9px;display:flex;align-items:baseline;gap:5px"><span style="font-size:36px;font-weight:900;letter-spacing:-.02em;white-space:nowrap">{{ b.big }}</span><span style="font-size:16px;font-weight:900">원</span></div>
+                        </sc-if>
+                        <div style="margin-top:8px;font-size:14.5px;font-weight:900;line-height:1.5">{{ b.sub }}</div>
+                        <sc-if value="{{ b.hasRows }}">
+                          <div style="margin-top:14px;padding-top:14px;border-top:1px dashed rgba(22,25,28,.3);display:flex;flex-direction:column;gap:8px">
+                            <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="2">
+                              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:900"><span style="opacity:.7">{{ r.label }}</span><span>{{ r.value }}</span></div>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isV }}">
+                      <div style="display:flex;flex-direction:column;gap:10px">
+                        <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                          <div style="{{ r.rowStyle }}">
+                            <div style="{{ r.numStyle }}">{{ r.mark }}</div>
+                            <div style="flex:1;min-width:0">
+                              <div style="font-size:14.5px;font-weight:900;letter-spacing:-.01em">{{ r.title }}</div>
+                              <div style="font-size:12.5px;font-weight:700;color:rgba(22,25,28,.62);margin-top:2px">{{ r.desc }}</div>
+                            </div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isS }}">
+                      <div style="display:flex;gap:8px">
+                        <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                          <div style="{{ r.chipStyle }}">{{ r.label }}</div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.isP }}">
+                      <div style="{{ b.cardStyle }}">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                          <div style="font-size:11.5px;font-weight:900;letter-spacing:.08em;color:#077264">{{ b.label }}</div>
+                          <div style="padding:5px 11px;border-radius:99px;background:#E0F7F3;color:#077264;font-size:11px;font-weight:900">{{ b.chip }}</div>
+                        </div>
+                        <div style="margin-top:9px;font-size:21px;font-weight:900;letter-spacing:-.025em">{{ b.name }}</div>
+                        <div style="margin-top:9px;font-size:13.5px;line-height:1.6;font-weight:700;color:rgba(22,25,28,.66)">{{ b.desc }}</div>
+                        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(22,25,28,.10);font-size:12.5px;font-weight:700;line-height:1.6;color:rgba(22,25,28,.62)">{{ b.note }}</div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <div onClick="{{ ucNext }}" style="{{ ucCtaStyle }}">{{ ucCta }} <span style="{{ ucDotStyle }}">›</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+        </x-import>
+      </div>
+
+      <div style="width:296px;display:flex;flex-direction:column;gap:13px">
+        <div style="background:#fff;border:1px solid rgba(22,25,28,.10);border-radius:22px;padding:21px;box-shadow:0 1px 2px rgba(22,25,28,.05)">
+          <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:#077264">이 화면의 역할</div>
+          <div style="margin-top:9px;font-size:18px;font-weight:900;line-height:1.4;letter-spacing:-.02em">{{ noteTitle }}</div>
+          <div style="margin-top:9px;font-size:14px;line-height:1.7;color:rgba(22,25,28,.6)">{{ noteBody }}</div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(22,25,28,.12);font-size:12px;font-weight:900;color:#077264">{{ noteTag }}</div>
+        </div>
+        <div style="background:#00C7A9;border-radius:22px;padding:21px;color:#16191C">
+          <div style="font-size:11px;font-weight:900;letter-spacing:.12em;opacity:.85">공통 8단계 루프</div>
+          <div style="margin-top:11px;display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.5">
+            <div>① 목표설정 (AI 페이스메이커)</div>
+            <div>② 실시간 감지 (60초 이내)</div>
+            <div>③ 원인 우선순위 분석</div>
+            <div>④ 개인화 미션 + iMKRW 보증금</div>
+            <div>⑤ 3단계 회복 검증</div>
+            <div>⑥ 등급 분기 (위험 = 지원제도 동시발동)</div>
+            <div>⑦ FCPS 반영 → ⑧ 경로 재계산</div>
+          </div>
+        </div>
+        <div style="background:rgba(22,25,28,.07);border:1px solid rgba(22,25,28,.13);border-radius:22px;padding:21px">
+          <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:#D0512E">유즈케이스별 차별화 지점</div>
+          <div style="margin-top:11px;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.5">
+            <div><b>A · 신파일러 자립준비청년</b><br><span style="color:rgba(22,25,28,.63)">대출·신용조회 없이 행동만으로 FCPS 형성 시작</span></div>
+            <div><b>B · 취약차주 소상공인</b><br><span style="color:rgba(22,25,28,.63)">위험 등급에서만 회복미션 + 지원제도매칭 동시 발동 · iM뱅크 실제 취급 5종 한정</span></div>
+            <div><b>C · 리볼빙 경험 청년</b><br><span style="color:rgba(22,25,28,.63)">60초 이내 실시간 개입 + 기취급 정책상품 크로스셀</span></div>
+            <div><b>검증된 수치만 사용</b><br><span style="color:rgba(22,25,28,.63)">신파일러 1,246만 명(청년 47.6%) · 정책 지원 비중 66.1%→49.1% · 개인워크아웃 실효자 38% 증가 · 이월 카드대금 326만원</span></div>
+          </div>
+        </div>
+        <div style="background:rgba(22,25,28,.07);border:1px solid rgba(22,25,28,.13);border-radius:22px;padding:21px">
+          <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:rgba(22,25,28,.58)">스토리 번역표</div>
+          <div style="margin-top:11px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;line-height:1.5;color:rgba(22,25,28,.75)">
+            <div><b style="color:#16191C">목적지</b> = 금융 목표 (TRV)</div>
+            <div><b style="color:#16191C">하루 연료</b> = 일일 가용예산</div>
+            <div><b style="color:#16191C">연료 보급</b> = 급여 분배</div>
+            <div><b style="color:#16191C">구간 탑승권</b> = AI 미션</div>
+            <div><b style="color:#16191C">항로 이탈</b> = 과소비 위험</div>
+            <div><b style="color:#16191C">경유 게이트</b> = 회복 검증</div>
+            <div><b style="color:#16191C">마일리지</b> = FCPS</div>
+            <div><b style="color:#16191C">라운지</b> = 상품 추천</div>
+          </div>
+        </div>
+        <div style="background:rgba(22,25,28,.07);border:1px solid rgba(22,25,28,.13);border-radius:22px;padding:21px">
+          <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:rgba(22,25,28,.58)">동작하는 데모</div>
+          <div style="margin-top:11px;font-size:14px;line-height:1.7;color:rgba(22,25,28,.6)">홈의 "배달 23,000원 결제"를 누르면 위험 지수와 도착일 배지가 실제로 밀립니다. 미션 기간 슬라이더, 보증금 금액, 상품 탭, 사업자 유형, 개입 강도, 큰 글씨 모드 모두 동작합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1740,&quot;height&quot;:1240}}">
+class Component extends DCLogic {
+  state = { screen: 'home', alertOn: false, accepted: false, spent: 3200, big: false, fueled: false, persona: 'A', push: null, hasGoal: true, emptyTab: '소비분석',
+    intensity: '보통', deposit: 30000, biz: '소상공인', prodTab: '전체', missionDays: 14 };
+
+  go(screen, extra) { this.setState(Object.assign({ screen: screen, alertOn: false }, extra || {})); }
+
+  renderVals() {
+    const s = this.state, M = '#00C7A9', MD = '#0A8873', INK = '#16191C', BG = '#F0F2F3', NAVY = '#16191C';
+
+    const groupDefs = [
+      ['UC-01 신파일러 자립준비청년', [
+        ['A1', '목표 등록 (실제 화면)', '음성 입력 → AI 계산 → 발권', 'input'],
+        ['A2', '실시간 감지', '배달 결제 · 42초 이내 감지', 'u12'],
+        ['A3', '원인 우선순위', '배달비 +42% · 도착일 6일 지연', 'u13'],
+        ['A4', '개인화 미션', '근거 7항목 · 32,000원 절감', 'u14'],
+        ['A5', 'iMKRW 보증금', '30,000원 예치 · 수행 시 반환', 'u15'],
+        ['A6', '회복 검증 3단계', '행동 → 지표 → 2주 유지', 'u16'],
+        ['A7', 'FCPS 형성 시작', '신용조회 없이 첫 신용 기록', 'u17']
+      ]],
+      ['UC-02 취약차주 소상공인', [
+        ['B1', '매출 상시 모니터링', '3개월 -18% · 연체 이력 없음', 'u21'],
+        ['B2', '위험 등급 판정', '위험 등급에서만 동시 발동', 'u22'],
+        ['B3', '사업자 유형 판별', '소상공인 119Plus 매칭', 'u23'],
+        ['B4', '정책과의 연결', '햇살론 119 최대 2,000만원', 'u24'],
+        ['B5', '회복미션 병행', '고정비 · 한도 / 신복위는 안내만', 'u25'],
+        ['B6', '검증 후 경로 재계산', '매출·현금흐름 기반 3단계', 'u26']
+      ]],
+      ['UC-03 리볼빙 경험 청년', [
+        ['C1', '한도 소진율 감지', '82% · 결제 38초 후', 'u31'],
+        ['C2', '원인 1순위', '리볼빙 잔액 · 19일 지연', 'u32'],
+        ['C3', '한도 낮추기 미션', '보증금 20,000원 · D-14', 'u33'],
+        ['C4', '회복 검증 3단계', '소진율 → 의존도 → 유지', 'u34'],
+        ['C5', '정책상품 크로스셀', '청년미래적금 5%+2~3%p', 'u35'],
+        ['C6', 'FCPS 변화 추이', '4개월 +34 · 골드까지 88점', 'u36']
+      ]],
+      ['본 서비스 화면 (v7)', [
+        ['1', '로그인 · 회원가입', '여권 확인 · iM GOAL', 'login'],
+        ['2', 'iM 자산 연결', '마이데이터 · 카드 · 사업자 매입', 'connect'],
+        ['2b', '첫 접속 · 빈 홈', '미발권 탑승권 + 탭마다 빈 상태', 'emptyStart'],
+        ['3', '금융 목표 입력 방식', '음성 · 직접 타이핑 2종', 'input'],
+        ['4', '음성으로 말하기', 'LISTENING 파형 + 인식 결과', 'voice'],
+        ['5', 'AI 항로 계산', '고정비·우선순위·기간 매칭', 'analyze'],
+        ['6', '티켓 발권', '천공 티켓 + 하루 연료 27,400원', 'plan']
+      ]],
+      ['홈', [
+        ['7', '홈 · 오늘의 탑승권', '페르소나별 진행률 · 연료 · 바코드', 'home'],
+        ['8', '여정 상세 · 페이스', '남은 기간 · 페이스 추이 + AI 예측', 'detail'],
+        ['9', '연료 보급 (급여 분배)', '입금액 → 3계좌 자동 분배', 'salary'],
+        ['10', '목표 달성 · 도착', 'ARRIVED 스탬프 + 여정 기록', 'arrived']
+      ]],
+      ['소비분석', [
+        ['10', '소비 분석', '도넛 + 주차별 비교', 'spend'],
+        ['11', '카테고리별 소비', '이번 주 245,000원 · 5개', 'category'],
+        ['12', '소비 달력', '일자별 연료 + 주요 내역', 'calendar']
+      ]],
+      ['알림', [
+        ['13', '항로 이탈 감지', '위험 지수 + 에이전트 제안', 'alert'],
+        ['14', '이탈 원인 분석 ✚', '기여도 4건 + 도착일 영향', 'cause']
+      ]],
+      ['미션', [
+        ['15', '구간 미션 상세', '가이드 + 기간 조정 + 보증금', 'missionDetail'],
+        ['16', '경유 게이트 3곳 ✚', '3단 회복 검증 + 전후 비교', 'verify'],
+        ['17', '보증금 티켓 (iMKRW)', '스마트계약 예치 · 9/14일', 'token'],
+        ['18', '보증금 해제 · 환원', '소각 → 원화 이체 3단계', 'release']
+      ]],
+      ['신용', [
+        ['19', 'FCPS 마일리지 ✚', '실버 612 · 골드까지 88점', 'mileage'],
+        ['20', 'iM 상품 라운지 ✚', '추천 근거 먼저 · 4종', 'products'],
+        ['21', '비상 착륙 안내 ✚', '위험 등급 · 지원제도 매칭', 'support']
+      ]]
+    ];
+    const active = s.alertOn ? 'alert' : (s.screen === 'empty' && !s.hasGoal ? 'emptyStart' : s.screen);
+    const groupAccents = ['#077264', '#077264', '#077264', '#16191C', '#0A8873', '#2E6BD0', '#7549C8', '#6E7A0A', '#0A8873'];
+    const groups = groupDefs.map((g, gi) => {
+      const ac = groupAccents[gi];
+      return {
+        name: g[0], count: g[1].length + '개',
+        headerStyle: 'display:flex;align-items:center;gap:9px;margin-top:22px;margin-bottom:6px;font-size:13px;font-weight:900;letter-spacing:.05em;color:#16191C',
+        headerBarStyle: 'flex:none;width:4px;height:17px;border-radius:99px;background:' + ac,
+        countStyle: 'flex:none;font-size:11px;font-weight:900;padding:3px 8px;border-radius:99px;background:rgba(22,25,28,.07);color:rgba(22,25,28,.55)',
+        items: g[1].map(d => {
+          const on = d[3] === active;
+          const ext = d[1].indexOf('✚') >= 0;
+          return {
+            num: d[0], title: d[1].replace(' ✚', ''), desc: d[2], mark: ext ? '✚' : '',
+            style: 'display:flex;gap:12px;align-items:center;padding:14px 15px;border-radius:18px;cursor:pointer;transition:all .18s ease;border:1px solid ' + (on ? M : 'rgba(22,25,28,.10)') + ';background:' + (on ? '#DDF6F1' : '#fff') + ';box-shadow:' + (on ? '0 0 0 3px rgba(0,201,167,.16)' : '0 1px 2px rgba(22,25,28,.05)'),
+            numStyle: 'flex:none;min-width:30px;padding:0 5px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:900;background:' + (on ? '#077264' : ac) + ';color:#fff',
+            titleStyle: 'font-size:15.5px;font-weight:900;letter-spacing:-.015em;color:#16191C',
+            descStyle: 'font-size:12.5px;line-height:1.45;color:rgba(22,25,28,.62)',
+            markStyle: 'flex:none;width:20px;text-align:center;font-size:13px;font-weight:900;color:' + (ext ? '#D0512E' : 'transparent'),
+            go: () => d[3] === 'alert' ? this.setState({ screen: 'home', alertOn: true, hasGoal: true, spent: 45600 })
+              : (d[3] === 'emptyStart' ? this.setState({ screen: 'empty', hasGoal: false, alertOn: false, fueled: false })
+                : this.setState({ screen: d[3], alertOn: false, hasGoal: d[3] === 'connect' || d[3] === 'login' ? false : true }))
+          };
+        })
+      };
+    });
+
+    const notes = {
+      login: ['수속부터 이야기를 심는다', '로그인을 "여권 확인"으로 부르며 여행 프레임을 첫 화면에 심습니다. 신용조회 기록 없음 칩으로 진입 부담을 먼저 없앱니다.', '데모 · 로그인'],
+      connect: ['자산 연결이 시작점', '마이데이터로 입출금·카드·타행 계좌를 연결합니다. 사업자는 카드 매입·매출까지 선택 연결해 UC-02 감지가 가능해집니다.', '온보딩 2단계'],
+      emptyTab: ['빈 탭도 설명이 된다', '목표가 없는 상태에서 하단 탭을 누르면 그 탭이 "무엇이 쌓이면 채워지는지" 알려주고 목표 등록으로 유도합니다.', '온보딩 3단계'],
+      arrived: ['도착이 이야기의 결말', 'ARRIVED 스탬프가 찍힌 탑승권과 여정 기록(미션·절감액·FCPS)을 함께 보여주고 다음 목표 발권으로 연결합니다.', '목표 달성'],
+      empty: ['빈 상태도 티켓으로', '목표가 없으면 목적지가 ???인 미발권 티켓을 보여줍니다. "무엇을 하면 되는지"가 카드 형태로 이미 설명됩니다.', '데모 · 목표 없는 홈'],
+      input: ['입력은 두 갈래, 결과는 하나', '말하거나 직접 입력하거나 — 어느 길로 들어와도 같은 티켓 한 장이 나옵니다. 데모의 4종 입력을 그대로 유지했습니다.', '데모 · 목표 설정'],
+      voice: ['말한 문장을 항목으로 분해', '네이비 야간 비행 색으로 집중을 만들고, 인식 문장 아래에 기간·목적지·금액을 칩으로 분해해 보여줍니다.', '데모 · 음성 입력'],
+      analyze: ['계산 중에도 무엇을 읽는지 말한다', '고정비, 소비 우선순위, 기간 실현 가능성을 항목별로 체크하며 남은 시간을 숫자로 알립니다.', '데모 · AI 분석'],
+      plan: ['첫 발권이 결정적 순간', '계획을 실제 티켓 형태로 발권합니다. 위 스텁은 여정, 아래 스텁은 하루 연료와 산출 근거 — 물리적 티켓의 정보 위계입니다.', '데모 · 계획 확인'],
+      home: ['홈은 오늘의 탑승권', '앱을 열면 티켓 한 장. 상단은 진행률 66.7%, 하단은 남은 연료와 바코드. 아래에 보증금·급여 보급·마일리지가 진행 항목으로 붙습니다.', '데모 · 홈'],
+      detail: ['페이스를 그래프로 증명', '데모의 페이스 추이 차트를 유지하고, AI 도착 예측을 계획 도착과 나란히 대비시킵니다.', '데모 · 목표 상세'],
+      salary: ['급여 분배 = 연료 보급', '정기 입금을 감지해 3계좌 분배를 제안합니다. 가로 스택 바로 비율을 한눈에 보이고, 이 분배가 여정에 주는 영향까지 계산해 보여줍니다.', '데모 · 급여 분배'],
+      spend: ['소비분석은 도넛 + 주차 비교', '데모의 2단 구조를 유지했습니다. 하단에서 카테고리와 달력으로 갈라집니다.', '데모 · 소비분석'],
+      category: ['1순위만 흰 카드로', '배달만 흰 카드로 올려 나머지와 위계를 만듭니다. 그대로 이탈 원인 분석으로 이어집니다.', '데모 · 카테고리'],
+      calendar: ['날짜별 연료를 색으로', '절약한 날은 민트, 초과한 날은 코랄. 달력 아래에 선택 날짜의 실제 내역이 붙습니다.', '데모 · 소비 달력'],
+      alert: ['과소비 = 항로 이탈', '"예산 초과"보다 "항로를 벗어났다"가 결과를 상상하게 만듭니다. 위험 지수 68 → 31, 도착일 배지가 실제로 밀립니다.', '데모 · AI 알림'],
+      missionDetail: ['미션 = 구간 탑승권', 'LEG 04라는 편명으로 "전체 여정 중 한 구간"임을 알립니다. 상단은 조건과 기간 조정, 하단은 추천 이유·방법. 뜯는 선이 둘을 나눕니다.', '데모 · 미션 상세'],
+      cause: ['✚ 왜 이탈했는지에 답한다', '데모에는 없던 화면입니다. 기여도 순으로 정렬하고, 1순위 원인이 하루 연료와 도착일을 어떻게 밀었는지 화살표로 연결합니다.', '확장 · 원인 분석'],
+      verify: ['✚ 미션 완료 ≠ 회복', '게이트 3개를 통과해야 도착이라는 비유로 3단계 검증을 설명합니다. 통과한 게이트만 민트로 채워집니다.', '확장 · 회복 검증'],
+      token: ['보증금도 티켓 한 장', 'iMKRW 스마트계약 예치를 티켓 형태로 발권합니다. 도착/이탈 처리를 나란히 고지한 뒤에만 진행됩니다.', '데모 · 토큰 미션'],
+      release: ['환원 과정을 3단계로 공개', '조건 충족 확인 → iMKRW 소각 → 원화 이체. 블록체인이 무엇을 했는지 사람 말로 설명합니다.', '데모 · 보증금 해제'],
+      mileage: ['✚ FCPS = 마일리지 등급', '점수를 마일리지로 바꾸면 "쌓인다"는 감각이 생깁니다. 티켓 하단 스텁에 골드까지 남은 88점을 붙여 다음 목표를 만듭니다.', '확장 · FCPS'],
+      products: ['✚ 상품 추천 = 라운지 혜택', '등급이 오르면 열리는 라운지로 표현해 권유가 아니라 보상으로 느껴지게 했습니다. 상품마다 "왜 추천됐나"가 먼저 옵니다.', '확장 · 상품 추천'],
+      support: ['✚ 위험 등급 = 비상 착륙 안내', '코랄 색면으로 긴급함을 알리되 카피는 "혼자 두지 않아요". 스스로 복귀(A)와 외부 지원(B)을 병렬로 두고, 사업자 유형으로 후보를 좁힙니다.', '확장 · 지원제도 매칭'],
+      settings: ['설정 = 여권', '큰 글씨 모드, 기내 안내방송(개입) 강도, 연동·FCPS 동의 관리를 여권 한 권에 모았습니다.', '접근성 · 안심 장치']
+    };
+    const CO = '#D0512E', LI = '#6E7A0A', BL = '#2E6BD0';
+    const ucDefs = {
+      u11: ['UC-01', M, '목적지를 말해주세요,', '목표 등록', [
+        ['q', '"2년 안에 전세보증금 3,000만원 모으고 싶어"'],
+        ['b', 'dandi', M, '목표금액 3,000만원 · 기간 24개월로 확인했어요'],
+        ['c', '준비금 반영 후 하루 여유 예산', '27,400', '원', 0, [['정착금 반영', '1,000만원', '']], ''],
+        ['c', '', '', '', 0, [['목표', '3,000만원', ''], ['기간', '24개월', ''], ['월 필요액', '833,000원', MD]], '신용거래 이력이 없어도 목표부터 시작합니다']
+      ], '탑승권 발권하기', '자연어 한 문장을 금액·기간·하루 예산으로 분해합니다. ① 목표설정(AI 페이스메이커).'],
+      u12: ['UC-01', M, '목표 등록 3주 뒤,', '실시간 감지', [
+        ['d', '위험징후 감지 · 42초 전', '배달앱 결제가 평소보다 잦아지고 있어요', '거래 발생 60초 이내 감지', 'dandi'],
+        ['c', '감지까지 걸린 시간', '42', '초', 70, [], '사후 기록형 가계부는 이 시점을 놓칩니다'],
+        ['c', '', '', '', 0, [['이번 주 배달', '4회', CO], ['4주 평균', '2.8회', '']], '']
+      ], '원인 보기', '결제 직후 60초 이내 개입. 반응 시점 자체가 차별화 지점입니다. ② 실시간 감지.'],
+      u13: ['UC-01', M, '무엇이 가장 컸나요,', '원인 우선순위', [
+        ['g', [['배달비', '+42%', 86, CO, '최근 4주 평균 대비 · 기여도 1순위'], ['카페 지출', '+11%', 34, '#CBE04B', ''], ['교통', '+3%', 14, 'rgba(22,25,28,.28)', '']]],
+        ['e', '도착일 영향 환산', '7월 8일', '7월 14일', '6일 지연'],
+        ['c', '', '', '', 0, [['하루 예산 대비', '초과 3일', CO], ['월 저축 페이스', '-8.4%', CO]], '']
+      ], '맞춤 미션 받기', '위험 후보 지표를 영향도 순으로 정렬하고, 목표 도착일 지연으로 환산해 보여줍니다. ③ 원인 우선순위 분석.'],
+      u14: ['UC-01', M, '왜 이 미션인가요,', '개인화 미션', [
+        ['r', '추천 근거 · 프로파일 7개 항목', ['전세보증금 목표 달성률 68%에서 정체', '일일 가용예산 8,000원', '최근 4주 배달 결제 증가 추세']],
+        ['c', '', '이번 주 배달 2회를 집밥으로', '', 0, [['예상 절감', '32,000원', MD], ['목표일', '6일 단축', MD]], ''],
+        ['b', 'ddokdi', '#E2F15E', '혼자 참지 말고, 보증금 걸고 같이 해봐요']
+      ], '미션 시작하기', '추천 이유(7개 항목)를 먼저 보여준 뒤 미션을 제안합니다. ④ 개인화 미션.'],
+      u15: ['UC-01', M, '약속을 걸어둡니다,', 'iMKRW 보증금', [
+        ['t', 'DEPOSIT TICKET', '30,000', '스마트계약 예치 · 기한 내 수행 시 전액 반환', [['기간', '7일 (D-7)'], ['실패 시', '미션 재설계 · 소각 없음']]],
+        ['c', '', '', '', 0, [['동의 방식', '명시적 동의', ''], ['예치 기록', '앱에서 상시 확인', '']], '명시적 동의 후에만 소액이 예치됩니다']
+      ], '동의하고 예치', '보증금은 벌칙이 아니라 약속 장치입니다. 명시적 동의 · 소액 · 수행 시 반환. ④-b iMKRW 보증금형.'],
+      u16: ['UC-01', M, '3단계로 확인합니다,', '회복 검증', [
+        ['v', [['Level 1 · 행동 확인', '배달 결제 감소 (금융데이터 기반)', 1], ['Level 2 · 지표 변화', '목표 달성 예상일 6일 단축 확인', 1], ['Level 3 · 지속성', '2주간 유지 확인', 1]]],
+        ['d', '판정', '회복 확인', '보증금 30,000원 전액 반환', 'dandi']
+      ], '경로 재계산 보기', '행동 → 지표 → 지속성 3단을 모두 통과하면 회복 확인으로 분류됩니다. ⑤ 3단계 회복 검증.'],
+      u17: ['UC-01', M, '기록이 쌓입니다,', 'FCPS 형성 시작', [
+        ['t', 'FIRST CREDIT RECORD', '', '신용조회 · 대출 신청 없이 시작된 첫 기록', []],
+        ['c', '', '', '', 18, [['미션 성공', '1건', ''], ['목표 준수', '3주 연속', ''], ['누적 궤적', '3~6개월 축적 시작', MD]], 'FCPS는 신용점수를 대체하지 않고 행동 궤적을 보완 지표로 축적합니다']
+      ], '내 궤적 자세히 보기', '행동 이력이 첫 신용 데이터가 되는 지점. 대출·신용조회 없이 궤적이 시작됩니다. ⑦ FCPS 반영.'],
+      u21: ['UC-02', BL, '가게 흐름을 함께 봅니다,', '매출 상시 모니터링', [
+        ['g', [['5월', '기준', 92, 'rgba(22,25,28,.20)', ''], ['7월', '-9%', 66, '#7DB5FF', ''], ['8월', '-18%', 54, CO, '최근 3개월 지속 감소 · 위험 후보 지표']]],
+        ['c', '', '', '', 0, [['카드 매입', '연동 중', ''], ['고정비', '월 4,120,000원', ''], ['연체 이력', '없음', MD]], '연체 전 단계는 기존 정책금융의 사각지대입니다']
+      ], '위험 후보 지표로 관찰 중', '마이데이터로 매출·카드 매입을 상시 모니터링합니다. 사업자 진입 지점. ② 실시간 감지.'],
+      u22: ['UC-02', BL, '등급이 바뀌었습니다,', '위험 등급 판정', [
+        ['s', ['안정', '주의', '위험'], 2],
+        ['d', '금융건강 상태 갱신', '회복미션과 함께 지원제도도 같이 볼까요?', '위험 등급에서만 동시 발동', 'ddokdi'],
+        ['c', '', '', '', 0, [['안정 · 주의', '회복미션만', ''], ['위험', '회복미션 + 지원제도매칭', BL]], '']
+      ], '지원제도 함께 보기', '안정·주의는 회복미션만, 위험 등급에서만 지원제도매칭이 함께 발동됩니다. ⑥ 등급 분기.'],
+      u23: ['UC-02', BL, '지금 상황에 맞는 것부터,', '사업자 유형 판별', [
+        ['s', ['개인사업자', '소상공인'], 0],
+        ['p', '가장 먼저 맞는 상품', '적합', '소상공인 119Plus', '만기연장 · 장기분할상환 · 금리감면', '연체가 발생하기 전 단계라 이 상품이 먼저 매칭됐어요'],
+        ['c', '', '', '', 0, [['후보 상품', 'iM뱅크 실제 취급 5종', ''], ['제외 기준', '자격 미달 · 취급 안 함', '']], '']
+      ], '공식 신청 경로로 이동', '사업자 유형과 위험 원인으로 실제 취급 5종 중 후보를 좁힙니다. ⑥-b 지원제도매칭.'],
+      u24: ['UC-02', BL, '다음 계단이 보입니다,', '정책과의 연결', [
+        ['v', [['119Plus 3개월 성실 이용', '최초 1,000만원', 1], ['+6개월 성실상환 · 금융교육', '1,000만원 추가', 1], ['햇살론 119', '최대 2,000만원 · 5년 상환', 0]]],
+        ['b', 'ddokdi', '#E2F15E', '지금의 성실 상환이 다음 정책 자격으로 이어져요']
+      ], '내 자격 조건 확인', '지금 이용하는 상품이 다음 정책 자격으로 이어지는 경로를 미리 보여줍니다.'],
+      u25: ['UC-02', BL, '동시에 진행합니다,', '회복미션 병행', [
+        ['v', [['고정비 점검', '월 4,120,000원 항목별 재검토', 1], ['카드 한도 관리', '사업용 카드 소진율 관리', 1]]],
+        ['c', '직접 심사하지 않는 영역', '신용회복위원회 채무조정 등', '', 0, [], '개인 대상 정책서민금융은 서비스가 심사하지 않고 공식 경로만 안내합니다']
+      ], '회복미션 시작', '심사 영역과 안내 영역을 명확히 구분합니다. ④ 회복미션(사업자).'],
+      u26: ['UC-02', BL, '회복을 확인하고,', '경로 재계산', [
+        ['v', [['Level 1 · 행동 수행 확인', '고정비·한도 미션 이행', 1], ['Level 2 · 매출·현금흐름 변화', '8월 대비 반등 확인', 1], ['Level 3 · 지속성', '관찰 중', 0]]],
+        ['e', '목표 경로 재계산', '주의 유지', '회복 진행', '검증 결과가 FCPS 데이터로']
+      ], 'FCPS 변화 보기', '매출·현금흐름 기반 3단계 검증 결과가 경로 재계산과 FCPS로 이어집니다. ⑤ + ⑧.'],
+      u31: ['UC-03', LI, '결제 직후 60초,', '한도 소진율 감지', [
+        ['d', '위험 수준 도달 · 38초 전', '카드 한도 소진율 82%', '방금 결제 148,000원', ''],
+        ['c', '한도 소진율', '82', '%', 82, [['리볼빙 잔액', '3,260,000원', CO], ['목표', '비상자금 마련', '']], '청년 리볼빙 월평균 이월 카드대금 326만원']
+      ], '원인 확인하기', '카드 결제 발생 60초 이내에 한도 소진율 위험을 감지합니다. ② 실시간 과소비 감지.'],
+      u32: ['UC-03', LI, '1순위 원인은,', '리볼빙 잔액 증가', [
+        ['g', [['리볼빙 잔액', '1순위', 78, CO, '이월 수수료가 목표 경로를 밀어냅니다'], ['고정 구독', '2순위', 29, '#CBE04B', '']]],
+        ['e', '비상자금 목표에 미치는 영향', '11월 20일', '12월 9일', '19일 지연'],
+        ['b', 'dandi', M, '한도부터 낮추면 목표가 다시 앞으로 와요']
+      ], '미션 받기', '영향도 1순위를 목표 경로 지연으로 환산해 보여줍니다. ③ 원인 분석.'],
+      u33: ['UC-03', LI, '보증금을 걸고 시작합니다,', '한도 낮추기 미션', [
+        ['c', '', '2주간 카드 소진율 82% → 60% 이하로', '', 0, [['보증금', '20,000원', ''], ['기한', 'D-14', '']], '명시적 동의 후 소액 예치, 기한 내 수행 시 전액 반환'],
+        ['c', '진행 상황', '', '', 46, [['현재', 'D-9 · 소진율 71%', MD]], '']
+      ], '동의하고 시작', '소진율 목표를 iMKRW 보증금형 미션으로 전환합니다. ④ 미션 + iMKRW.'],
+      u34: ['UC-03', LI, '3단계로 확인합니다,', '회복 검증', [
+        ['v', [['Level 1 · 한도 소진율 감소', '82% → 58%', 1], ['Level 2 · 리볼빙 의존도 감소', '326만 → 241만원', 1], ['Level 3 · 지속 유지', '2주간 유지 확인', 1]]],
+        ['t', '판정', '', '회복 확인 · 보증금 20,000원 반환', []]
+      ], '다음 단계 보기', '소진율 → 의존도 → 지속성 3단 검증. ⑤ 3단계 회복 검증.'],
+      u35: ['UC-03', LI, '자격이 맞는 상품만,', '정책상품 크로스셀', [
+        ['p', '목표 유형 · 자격 매칭', '적합', '청년미래적금', '3년 · 월 50만원 · 기본금리 5% + 우대 2~3%p', '비상자금 목표와 자격 조건이 맞아 노출됐어요'],
+        ['c', '', '', '', 0, [['취급기관', 'iM뱅크 참여 중', MD], ['연결', '별도 상담 없이 공식 경로', '']], '기취급 정책상품만 노출합니다']
+      ], '공식 가입 경로로', 'iM뱅크가 이미 취급 중인 정책상품만, 자격 매칭 근거와 함께 노출합니다. ⑥-d 크로스셀.'],
+      u36: ['UC-03', LI, '궤적에 반영됩니다,', 'FCPS 변화 추이', [
+        ['g', [['5월', '', 44, 'rgba(22,25,28,.20)', ''], ['6월', '', 58, 'rgba(22,25,28,.28)', ''], ['7월', '', 76, M, ''], ['8월', '+34', 100, INK, '최근 4개월 누적 변화']]],
+        ['c', '', '', '', 0, [['리볼빙 의존도', '감소', MD], ['미션 성공', '3건 누적', ''], ['등급', '실버 → 골드까지 88점', '']], '']
+      ], '목표 경로 재계산', '행동 데이터가 FCPS 추이에 반영되고 목표 경로가 갱신됩니다. ⑦ + ⑧.']
+    };
+    const pDefs = {
+      A: ['A · 자립준비청년', 'TRV', '3,000만원', '전세보증금', '27,400', '배달 23,000원 결제 발생시키기', M],
+      B: ['B · 소상공인', 'BIZ', '사업 안정화', '매출 회복', '9,600', '8월 매출 -18% 감지 발생시키기', M],
+      C: ['C · 리볼빙 청년', 'EMG', '600만원', '비상자금', '11,200', '카드 148,000원 결제 발생시키기', M]
+    };
+    const P = pDefs[s.persona] || pDefs.A;
+    const pushDefs = {
+      A: ['iM GOAL · 연료 경고', '배달 23,000원이 결제됐어요. 오늘 연료를 26,200원 썼습니다 — 지금 확인해볼까요?', '지금', '무슨 일인지 보기'],
+      B: ['iM GOAL · 매출 알림', '8월 매출이 3개월째 줄고 있어요 (-18%). 연체 전에 같이 점검해봐요.', '지금', '가게 상황 보기'],
+      C: ['iM GOAL · 한도 경고', '카드 148,000원 결제로 한도 소진율이 82%가 됐어요. 리볼빙으로 넘어가기 전에 확인해요.', '지금', '한도 확인하기']
+    };
+    const PU = pushDefs[s.push] || pushDefs.A;
+    const personas = ['A', 'B', 'C'].map(k => {
+      const on = (s.persona || 'A') === k, d = pDefs[k];
+      return { label: d[0], pick: () => this.setState({ persona: k, alertOn: false, push: null, screen: 'home', spent: 3200 }),
+        style: 'flex:1;padding:9px 4px;border-radius:99px;text-align:center;font-size:11.5px;font-weight:900;cursor:pointer;transition:all .18s ease;white-space:nowrap;background:' + (on ? d[6] : '#fff') + ';border:1px solid ' + (on ? 'transparent' : 'rgba(22,25,28,.12)') + ';color:' + (on ? INK : 'rgba(22,25,28,.6)') };
+    });
+    const chains = {
+      A: ['u12', 'u13', 'u14', 'u15', 'u16', 'u17'],
+      B: ['u21', 'u22', 'u23', 'u24', 'u25', 'u26'],
+      C: ['u31', 'u32', 'u33', 'u34', 'u35', 'u36']
+    };
+    const chainKey = s.screen && s.screen.charAt(0) === 'u' ? ({ '1': 'A', '2': 'B', '3': 'C' })[s.screen.charAt(1)] : null;
+    const chain = chainKey ? chains[chainKey] : [];
+    const chainIdx = chain.indexOf(s.screen);
+    const isLast = chainIdx >= 0 && chainIdx === chain.length - 1;
+    const uc = ucDefs[s.screen];
+    const isUC = !!uc;
+    let ucBlocks = [];
+    if (uc) {
+      const ac = M;
+      ucBlocks = uc[4].map(b => {
+        const k = b[0];
+        const o = { isQ: k === 'q', isB: k === 'b', isC: k === 'c', isD: k === 'd', isG: k === 'g', isE: k === 'e', isR: k === 'r', isT: k === 't', isV: k === 'v', isS: k === 's', isP: k === 'p' };
+        o.wrapStyle = 'display:flex;flex-direction:column';
+        if (k === 'q') { o.text = b[1]; o.qStyle = 'background:#fff;border:1px solid rgba(22,25,28,.10);border-radius:24px;padding:18px;font-size:15.5px;font-weight:700;line-height:1.6'; }
+        if (k === 'b') { o.imgStyle = 'flex:none;width:56px;height:72px;background:url(assets/' + b[1] + '-t.png) center bottom/contain no-repeat;animation:bob 4.2s ease-in-out infinite'; o.text = b[3]; o.bubbleStyle = 'flex:1;border-radius:22px 22px 22px 7px;padding:15px 17px;color:' + INK + ';font-size:14px;font-weight:900;line-height:1.55;background:' + b[2]; }
+        if (k === 'c') {
+          o.label = b[1]; o.headline = b[2]; o.big = b[3]; o.unit = b[4] ? b[4] : ''; o.barPct = b[4];
+          o.big = b[2] && !b[3] ? '' : b[2]; o.label = b[1]; o.headline = b[2] && b[3] === '' ? b[2] : '';
+          o.bigVal = b[2] && b[3] !== '' ? b[2] : ''; o.bigUnit = b[3] || '';
+          o.hasLabel = !!b[1]; o.hasHead = !!(b[2] && b[3] === ''); o.hasBig = !!(b[2] && b[3] !== '');
+          o.hasBar = b[4] > 0; o.barStyle = 'width:' + b[4] + '%;height:100%;border-radius:99px;background:' + ac;
+          o.rows = (b[5] || []).map(r => ({ label: r[0], value: r[1], valueStyle: 'font-size:14px;font-weight:900;color:' + (r[2] || INK) }));
+          o.hasRows = o.rows.length > 0; o.note = b[6] || ''; o.hasNote = !!b[6];
+          o.cardStyle = 'background:#fff;border:1px solid rgba(22,25,28,.10);border-radius:26px;padding:20px;box-shadow:0 1px 2px rgba(22,25,28,.05)';
+        }
+        if (k === 'd') {
+          o.tag = b[1]; o.headline = b[2]; o.note = b[3]; o.hasNote = !!b[3];
+          o.hasImg = !!b[4];
+          o.imgStyle = 'flex:none;width:52px;height:64px;margin-bottom:-16px;background:url(assets/' + (b[4] || 'dandi') + '-t.png) center bottom/contain no-repeat;animation:bob 3.6s ease-in-out infinite';
+          o.darkStyle = 'background:' + INK + ';border-radius:26px;padding:20px;color:#fff';
+          o.tagStyle = 'font-size:11.5px;font-weight:900;letter-spacing:.08em;color:' + (k === 'd' && b[1].indexOf('감지') >= 0 || b[1].indexOf('위험') >= 0 ? '#FF9C82' : ac);
+        }
+        if (k === 'g') {
+          o.rows = b[1].map(r => ({ name: r[0], tag: r[1], note: r[4], hasNote: !!r[4],
+            tagStyle: 'font-size:13.5px;font-weight:900;color:' + (r[3] === 'rgba(22,25,28,.20)' || r[3] === 'rgba(22,25,28,.28)' ? 'rgba(22,25,28,.62)' : (r[3] === '#CBE04B' ? LI : (r[3] === INK ? INK : (r[3] === M ? MD : r[3])))),
+            barStyle: 'width:' + r[2] + '%;height:100%;border-radius:99px;background:' + r[3] }));
+          o.cardStyle = 'background:#fff;border:1px solid rgba(22,25,28,.10);border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:15px;box-shadow:0 1px 2px rgba(22,25,28,.05)';
+        }
+        if (k === 'e') { o.tag = b[1]; o.from = b[2]; o.to = b[3]; o.note = b[4]; o.hasNote = !!b[4];
+          o.darkStyle = 'background:' + INK + ';border-radius:26px;padding:20px;color:#fff'; o.tagStyle = 'font-size:11.5px;font-weight:900;letter-spacing:.08em;color:' + ac; }
+        if (k === 'r') { o.label = b[1]; o.items = b[2].map(t => ({ text: '· ' + t }));
+          o.cardStyle = 'background:#DDF6F1;border:1px solid rgba(0,199,169,.3);border-radius:26px;padding:18px'; }
+        if (k === 't') { o.label = b[1]; o.big = b[2]; o.hasBig = !!b[2]; o.sub = b[3];
+          o.rows = (b[4] || []).map(r => ({ label: r[0], value: r[1] })); o.hasRows = (b[4] || []).length > 0;
+          const lightAc = ac === M || ac === '#E2F15E';
+          o.ticketStyle = 'border-radius:26px;padding:20px;color:' + (lightAc ? INK : '#fff') + ';background:' + (ac === LI ? INK : ac);
+          o.labelStyle = 'font-size:11.5px;font-weight:900;letter-spacing:.1em;color:' + (lightAc ? 'rgba(22,25,28,.7)' : 'rgba(255,255,255,.75)'); }
+        if (k === 'v') { o.rows = b[1].map((r, i) => ({ title: r[0], desc: r[1],
+          numStyle: 'flex:none;width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;background:' + (r[2] ? ac : 'rgba(22,25,28,.12)') + ';color:' + (r[2] ? '#fff' : 'rgba(22,25,28,.62)'),
+          mark: r[2] ? '✓' : String(i + 1),
+          rowStyle: 'background:#fff;border:1px solid ' + (r[2] ? 'rgba(0,199,169,.35)' : 'rgba(22,25,28,.12)') + ';border-radius:22px;padding:16px;display:flex;align-items:center;gap:13px' })); }
+        if (k === 's') { o.rows = b[1].map((l, i) => ({ label: l,
+          chipStyle: 'flex:1;height:46px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:900;background:' + (i === b[2] ? (b[1].length === 3 ? CO : INK) : '#fff') + ';border:1px solid ' + (i === b[2] ? 'transparent' : 'rgba(22,25,28,.12)') + ';color:' + (i === b[2] ? '#fff' : 'rgba(22,25,28,.62)') })); }
+        if (k === 'p') { o.label = b[1]; o.chip = b[2]; o.name = b[3]; o.desc = b[4]; o.note = b[5];
+          o.cardStyle = 'background:#fff;border:1px solid rgba(0,199,169,.4);border-radius:26px;padding:20px;box-shadow:0 0 0 3px rgba(0,199,169,.12)'; }
+        return o;
+      });
+    }
+    const n = notes[active] || (uc ? [uc[3], uc[6], uc[0] + ' · ' + uc[2].replace(',', '')] : notes.home);
+
+    const dailyBudget = parseInt(P[4].replace(/,/g, ''), 10);
+    const remaining = dailyBudget - s.spent, over = remaining < 0;
+    const grade = over ? '이탈' : (s.spent > 5000 ? '주의' : '순항');
+
+    const alertByP = {
+      A: ['항로 이탈 감지 · 42초 전', '오늘 연료를 18,200원 초과했어요', '배달앱 결제', 'iM 체크카드 · 방금', '23,000원', '배', '#FFD9CF', '#C4472A',
+        '위험 지수 · 순항 68 → 이탈 31', '하루 연료 27,400원 중 45,600원을 썼습니다. 배달 지출이 4주 평균 대비 +34.5%입니다.', 'u13'],
+      B: ['매출 하락 감지 · 3개월 연속', '8월 매출이 18% 줄었어요', '카드 매입 정산', 'iM 사업자통장 · 오늘 09:40', '-1,240,000원', '매', '#D6E4FF', '#1E4FA8',
+        '위험 등급 · 주의 → 위험', '3개월 연속 매출 감소로 위험 등급이 됐습니다. 고정비 월 4,120,000원은 그대로입니다.', 'u22'],
+      C: ['한도 소진율 경고 · 38초 전', '카드 한도를 82% 썼어요', '카드 결제', 'iM 체크카드 · 방금', '148,000원', '카', '#EEF3C9', '#5A6608',
+        '리볼빙 위험 · 소진율 82%', '이번 달 이월 카드대금이 3,260,000원입니다. 지금 한도를 낮추면 목표가 다시 앞으로 옵니다.', 'u32']
+    };
+    const AL = alertByP[s.persona] || alertByP.A;
+
+    const inputModes = [
+      ['음성으로 말하기', '"2년 안에 전세보증금 3,000만원"', '🎙', 'voice', true],
+      ['직접 타이핑', '목표·금액·기간을 직접 입력', '⌨', 'analyze', false]
+    ].map(m => ({
+      title: m[0], desc: m[1], icon: m[2], go: () => this.go(m[3]),
+      style: 'display:flex;align-items:center;gap:14px;border-radius:22px;padding:17px 18px;cursor:pointer;transition:all .18s ease;background:' + (m[4] ? M : '#fff') + ';border:1px solid ' + (m[4] ? M : 'rgba(22,25,28,.10)') + ';color:' + INK + ';box-shadow:0 1px 2px rgba(22,25,28,.05)',
+      iconStyle: 'flex:none;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;background:' + (m[4] ? 'rgba(10,30,26,.14)' : 'rgba(22,25,28,.12)'),
+      arrowStyle: 'width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;background:' + (m[4] ? 'rgba(10,30,26,.14)' : 'rgba(22,25,28,.12)')
+    }));
+
+    const waveHeights = [26, 44, 68, 92, 58, 34, 76, 100, 62, 40, 84, 54, 30, 70, 96, 48, 36, 80, 60, 42, 88, 52, 32, 66, 46, 28];
+    const waveBars = waveHeights.map((h, i) => ({
+      style: 'width:6px;border-radius:99px;background:' + (i % 3 === 0 ? M : 'rgba(22,25,28,.58)') + ';height:' + h + '%;animation:wave ' + (0.7 + (i % 5) * 0.16).toFixed(2) + 's ease-in-out infinite;animation-delay:' + (i * 0.05).toFixed(2) + 's'
+    }));
+
+    const splitByP = {
+      A: [['목표 저축 (TRV)', '전세보증금 목표 계좌', '833,000원', '40%', NAVY],
+          ['보증금 예치', 'iMKRW 스마트계약', '30,000원', '2%', M],
+          ['생활 연료', '일일 예산 27,400원 기준', '1,203,000원', '58%', '#7DB5FF']],
+      B: [['사업 안정화 (BIZ)', '고정비 버퍼 계좌', '480,000원', '62%', NAVY],
+          ['보증금 예치', 'iMKRW 스마트계약', '50,000원', '7%', M],
+          ['운영 연료', '일일 예산 9,600원 기준', '238,000원', '31%', '#7DB5FF']],
+      C: [['비상자금 (EMG)', '비상자금 목표 계좌', '240,000원', '32%', NAVY],
+          ['보증금 예치', 'iMKRW 스마트계약', '20,000원', '3%', M],
+          ['생활 연료', '일일 예산 11,200원 기준', '484,000원', '65%', '#7DB5FF']]
+    };
+    const splits = (splitByP[s.persona] || splitByP.A).map(sp => ({
+      name: sp[0], desc: sp[1], amount: sp[2], pct: sp[3],
+      dotStyle: 'flex:none;width:14px;height:14px;border-radius:5px;background:' + sp[4]
+    }));
+
+    const paceTargets = [40, 52, 44, 61, 48, 70, 56, 78];
+    const paceBars = paceTargets.map((h, i) => ({
+      style: 'flex:1;height:' + h + '%;border-radius:8px 8px 0 0;background:' + (i === 7 ? M : (i === 5 ? 'rgba(201,160,82,.55)' : 'rgba(22,25,28,.16)'))
+    }));
+
+    const cats = [
+      ['식비 · 배달', '32%', NAVY], ['교통', '23%', M], ['생활', '17%', '#7DB5FF'],
+      ['문화', '15%', '#6E7A0A'], ['기타', '13%', '#DDE2E5']
+    ].map(c => ({ name: c[0], pct: c[1], dotStyle: 'flex:none;width:13px;height:13px;border-radius:5px;background:' + c[2] }));
+
+    const catRows = [
+      ['배달', '11건', '91,000원', '+34.5%', 100, true, '배'],
+      ['외식', '6건', '58,000원', '+8%', 64, false, '외'],
+      ['교통', '18건', '42,000원', '−3%', 46, false, '교'],
+      ['편의점', '14건', '31,000원', '+12%', 34, false, '편'],
+      ['구독', '4건', '23,000원', '0%', 25, false, '구']
+    ].map(c => ({
+      name: c[0], count: c[1], amount: c[2], delta: c[3], icon: c[6],
+      cardStyle: 'border-radius:26px;padding:20px;background:' + (c[5] ? '#fff' : 'rgba(22,25,28,.08)') + ';color:' + INK,
+      iconStyle: 'flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;background:' + (c[5] ? '#FFD9CF' : 'rgba(22,25,28,.12)') + ';color:' + (c[5] ? '#C4472A' : 'rgba(22,25,28,.7)'),
+      deltaStyle: 'font-size:12.5px;font-weight:900;margin-top:2px;color:' + (c[3].charAt(0) === '+' ? '#C4472A' : (c[5] ? MD : 'rgba(22,25,28,.61)')),
+      barWrapStyle: 'margin-top:14px;height:9px;border-radius:99px;overflow:hidden;background:' + (c[5] ? '#F0EAE8' : 'rgba(22,25,28,.14)'),
+      barStyle: 'width:' + c[4] + '%;height:100%;border-radius:99px;background:' + (c[5] ? '#C4472A' : 'rgba(22,25,28,.58)')
+    }));
+
+    const weekVals = [186, 214, 240, 245];
+    const weeks = weekVals.map((v, i) => ({
+      label: (i + 1) + '주',
+      barStyle: 'width:100%;height:' + Math.round(v / 245 * 100) + '%;border-radius:9px 9px 0 0;background:' + (i === 3 ? '#FF7A5C' : 'rgba(22,25,28,.18)'),
+      labelStyle: 'font-size:12px;font-weight:900;color:' + (i === 3 ? '#D0512E' : 'rgba(22,25,28,.58)')
+    }));
+
+    const spendMap = { 3: 4200, 4: 12800, 5: 2100, 6: 9400, 7: 0, 8: 18600, 9: 6300, 10: 3100, 11: 7800, 12: 24500, 13: 5200, 14: 0, 15: 8100, 16: 11200, 17: 4600, 18: 26200, 19: 7400, 20: 3800, 21: 0, 22: 9100, 23: 14300, 24: 5900, 25: 2400 };
+    const calCells = [];
+    for (let i = 0; i < 35; i++) {
+      const day = i - 2;
+      if (day < 1 || day > 31) { calCells.push({ day: '', amt: '', style: 'height:46px', numStyle: '', amtStyle: '' }); continue; }
+      const amt = spendMap[day];
+      const has = amt !== undefined;
+      const kind = !has ? 'none' : (amt === 0 ? 'save' : (amt > 8000 ? 'over' : 'ok'));
+      const bg = kind === 'save' ? M : (kind === 'over' ? '#C4472A' : (kind === 'ok' ? '#EDF2F0' : 'transparent'));
+      const fg = kind === 'over' ? '#fff' : (kind === 'save' ? INK : 'rgba(10,30,26,.55)');
+      calCells.push({
+        day: String(day), amt: has && amt > 0 ? Math.round(amt / 1000) + 'k' : (kind === 'save' ? '0' : ''),
+        style: 'height:46px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:' + bg + (day === 18 ? ';outline:2px solid #16191C;outline-offset:1px' : ''),
+        numStyle: 'font-size:12.5px;font-weight:900;color:' + fg,
+        amtStyle: 'font-size:9.5px;font-weight:900;color:' + fg + ';opacity:.7'
+      });
+    }
+
+    const txns = [
+      ['배달앱 결제', 'iM 체크카드 · 19:42', '23,000원', '배', '#FFD9CF', '#C4472A'],
+      ['편의점', 'iM 체크카드 · 13:10', '2,400원', '편', 'rgba(22,25,28,.12)', 'rgba(22,25,28,.7)'],
+      ['버스·지하철', '교통카드 · 08:20', '800원', '교', 'rgba(22,25,28,.12)', 'rgba(22,25,28,.7)']
+    ].map(t => ({
+      name: t[0], meta: t[1], amount: t[2], icon: t[3],
+      iconStyle: 'flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;background:' + t[4] + ';color:' + t[5]
+    }));
+
+    const causes = [
+      ['1', '배달 지출 증가', '반복적인 소비 증가', '+34.5%', 48, '48%', true],
+      ['2', '주말 외식 집중', '일회성 변화', '+18%', 26, '26%', false],
+      ['3', '구독 서비스 중복', '고정비 부담', '월 27,900원', 17, '17%', false],
+      ['4', '편의점 소액 결제', '빈도 증가', '주 14회', 9, '9%', false]
+    ].map(c => ({
+      rank: c[0], name: c[1], type: c[2], delta: c[3], weight: c[5],
+      style: 'border-radius:26px;padding:20px;background:' + (c[6] ? '#fff' : 'rgba(22,25,28,.09)') + ';color:' + INK,
+      rankStyle: 'flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;background:' + (c[6] ? '#C4472A' : 'rgba(22,25,28,.14)') + ';color:' + (c[6] ? '#fff' : INK),
+      deltaStyle: 'flex:none;white-space:nowrap;font-size:15px;font-weight:900;color:#C4472A',
+      barWrapStyle: 'margin-top:14px;height:9px;border-radius:99px;overflow:hidden;background:' + (c[6] ? '#F0EAE8' : 'rgba(22,25,28,.14)'),
+      barStyle: 'width:' + c[4] + '%;height:100%;border-radius:99px;background:' + (c[6] ? '#C4472A' : 'rgba(22,25,28,.61)')
+    }));
+
+    const levels = [
+      ['GATE 1', '행동 수행 확인', '통과', '배달 결제가 주 1회로 줄어 미션 수행이 자동 확인됐습니다.', 100, true],
+      ['GATE 2', '금융 상태 변화 확인', '통과 중', '주간 배달비가 91,000원 → 58,000원으로 줄고 하루 연료가 회복됐습니다.', 62, true],
+      ['GATE 3', '지속 여부 확인', '12일 남음', '4주 동안 변화가 유지되는지 추적합니다. 이탈이 재발하면 재개입 필요로 바뀝니다.', 24, false]
+    ].map(l => ({
+      level: l[0], title: l[1], tag: l[2], body: l[3], icon: l[5] ? '✓' : '3',
+      style: 'border-radius:28px;padding:22px;color:#16191C;background:' + (l[5] ? 'rgba(201,160,82,.12)' : 'rgba(22,25,28,.08)') + ';border:1px solid ' + (l[5] ? 'rgba(201,160,82,.4)' : 'rgba(22,25,28,.12)'),
+      dotStyle: 'flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;background:' + (l[5] ? M : 'rgba(22,25,28,.14)') + ';color:' + (l[5] ? INK : 'rgba(22,25,28,.6)'),
+      tagStyle: 'flex:none;white-space:nowrap;padding:7px 13px;border-radius:99px;font-size:12px;font-weight:900;background:' + (l[5] ? M : 'rgba(22,25,28,.14)') + ';color:' + (l[5] ? INK : 'rgba(22,25,28,.7)'),
+      barWrapStyle: 'margin-top:14px;height:8px;border-radius:99px;background:rgba(22,25,28,.14);overflow:hidden',
+      barStyle: 'width:' + l[4] + '%;height:100%;border-radius:99px;background:' + M
+    }));
+
+    const profile = ['목표 전세보증금 3,000만원', '여정 24개월', '진행 68%', '연료 27,400원', '배달 빈도 증가', '구간 3건 · 성공 2', '항로 주의'].map(t => ({ text: t }));
+
+    const dayOptions = [7, 14, 21, 28].map(v => ({
+      label: v + '일', pick: () => this.setState({ missionDays: v }),
+      style: 'flex:1;height:44px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;cursor:pointer;background:' + (s.missionDays === v ? NAVY : '#F2F5F4') + ';color:' + (s.missionDays === v ? '#fff' : 'rgba(10,30,26,.5)')
+    }));
+
+    const depositOptions = [10000, 30000, 50000].map(v => ({
+      label: (v / 10000) + '만', pick: () => this.setState({ deposit: v }),
+      style: 'flex:1;height:48px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;cursor:pointer;background:' + (s.deposit === v ? NAVY : '#F2F5F4') + ';color:' + (s.deposit === v ? '#fff' : 'rgba(10,30,26,.5)')
+    }));
+
+    const fcpsFactors = [
+      ['정시 도착 (예산 준수)', 78, '좋음', true], ['구간 완주율', 82, '좋음', true],
+      ['연료 안정성', 64, '보통', true], ['적립 변화 (저축)', 41, '개선 필요', false]
+    ].map(f => ({
+      name: f[0], tag: f[2],
+      barStyle: 'width:' + f[1] + '%;height:100%;border-radius:99px;background:' + (f[3] ? M : '#6E7A0A'),
+      tagStyle: 'flex:none;white-space:nowrap;font-size:12.5px;font-weight:900;width:64px;text-align:right;color:' + (f[3] ? '#077264' : '#6E7A0A')
+    }));
+
+    const bizTypes = ['소상공인', '개인사업자'].map(l => ({
+      label: l, pick: () => this.setState({ biz: l }),
+      style: 'flex:1;height:48px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:900;cursor:pointer;background:' + (s.biz === l ? NAVY : '#F2F5F4') + ';color:' + (s.biz === l ? '#fff' : 'rgba(10,30,26,.5)')
+    }));
+    const allSupport = [
+      ['소상공인119Plus', '매출이 줄어든 소상공인 · 연체 전 단계', '상담 예약', '적합', ['소상공인']],
+      ['햇살론119', '연체 위험이 감지된 자영업자', '자격 확인', '적합', ['소상공인', '개인사업자']],
+      ['개인사업자 채무조정', '다중채무 상태인 개인사업자', '상담 예약', '검토', ['개인사업자']],
+      ['폐업자 지원', '폐업을 검토 중이거나 진행한 경우', '안내 보기', '참고', ['소상공인', '개인사업자']]
+    ];
+    const fitColor = { '적합': [M, INK], '검토': ['#7DB5FF', INK], '참고': ['#DDE2E5', 'rgba(10,30,26,.5)'] };
+    const supportProducts = allSupport.filter(p => p[4].indexOf(s.biz) >= 0).map(p => ({
+      name: p[0], target: p[1], cta: p[2], fit: p[3],
+      fitStyle: 'flex:none;white-space:nowrap;padding:6px 12px;border-radius:99px;font-size:11.5px;font-weight:900;background:' + fitColor[p[3]][0] + ';color:' + fitColor[p[3]][1]
+    }));
+
+    const prodDefs = [
+      ['목적지 연계', 'iM 목표적금 3개월', '적', '등록한 목적지 도착일과 만기가 같고, 구간 성공분 18,000원이 자동으로 적립됩니다.', '금리', '연 3.6%', '월 납입', '20만원', '자동이체 설정', 'mint', ['전체', '목표']],
+      ['정책상품', '청년미래적금', '청', '자립준비청년 요건을 이미 충족해 별도 서류 없이 신청할 수 있습니다.', '정부 기여', '월 3만원', '가입 기간', '3년', '자격 확인', 'sky', ['전체', '목표']],
+      ['마일리지 보완', 'iM 체크카드', '체', '마일리지 중 신용거래형태 항목이 약합니다. 월 30만원을 6개월 유지하면 +24점이 예상됩니다.', '예상 상승', '+24점', '유지 기간', '6개월', '카드 신청', 'white', ['전체', '신용']],
+      ['부채 조정', '대환대출 · 한도 조정 상담', '대', '카드 한도 소진율이 82%로 높아 이자 부담이 큰 상태로 감지됐습니다.', '월 절감', '4.1만원', '소진율', '82→55%', '상담 예약', 'coral', ['전체', '신용']]
+    ];
+    const prodTheme = {
+      mint: { bg: M, fg: INK, tagBg: INK, tagFg: M, reason: 'rgba(10,30,26,.10)', cta: INK, ctaFg: '#fff', sub: 'rgba(10,30,26,.10)', subFg: 'rgba(10,30,26,.6)' },
+      sky: { bg: '#7DB5FF', fg: INK, tagBg: NAVY, tagFg: '#fff', reason: 'rgba(255,255,255,.8)', cta: NAVY, ctaFg: '#fff', sub: 'rgba(10,30,26,.07)', subFg: 'rgba(10,30,26,.55)' },
+      white: { bg: '#fff', fg: INK, tagBg: '#E0F7F3', tagFg: MD, reason: '#F2F5F4', cta: NAVY, ctaFg: '#fff', sub: '#F2F5F4', subFg: 'rgba(10,30,26,.55)' },
+      coral: { bg: '#FFE2DA', fg: '#3A1A11', tagBg: '#C4472A', tagFg: '#fff', reason: 'rgba(255,255,255,.82)', cta: NAVY, ctaFg: '#fff', sub: 'rgba(58,26,17,.08)', subFg: 'rgba(58,26,17,.55)' }
+    };
+    const imProducts = prodDefs.filter(p => p[10].indexOf(s.prodTab) >= 0).map(p => {
+      const t = prodTheme[p[9]];
+      return {
+        tag: p[0], name: p[1], icon: p[2], reason: p[3], k1: p[4], v1: p[5], k2: p[6], v2: p[7], cta: p[8],
+        cardStyle: 'border-radius:28px;padding:22px;background:' + t.bg + ';color:' + t.fg,
+        iconStyle: 'flex:none;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;background:' + t.tagBg + ';color:' + t.tagFg,
+        tagStyle: 'display:inline-block;padding:6px 12px;border-radius:99px;font-size:11.5px;font-weight:900;letter-spacing:.06em;background:' + t.tagBg + ';color:' + t.tagFg,
+        reasonStyle: 'margin-top:14px;border-radius:20px;padding:16px;background:' + t.reason,
+        ctaStyle: 'flex:1;height:52px;border-radius:99px;background:' + t.cta + ';color:' + t.ctaFg + ';font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer',
+        subCtaStyle: 'flex:none;white-space:nowrap;padding:0 18px;height:52px;border-radius:99px;background:' + t.sub + ';color:' + t.subFg + ';font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer'
+      };
+    });
+    const productTabs = ['전체', '목표', '신용'].map(l => ({
+      label: l === '전체' ? '전체 4' : (l === '목표' ? '목적지 연계' : '마일리지'),
+      pick: () => this.setState({ prodTab: l }),
+      style: 'flex:1;height:50px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:900;cursor:pointer;background:' + (s.prodTab === l ? M : 'rgba(22,25,28,.08)') + ';color:' + (s.prodTab === l ? INK : 'rgba(22,25,28,.6)')
+    }));
+
+    const intensityDescs = {
+      '약하게': '주 1회 요약만 방송합니다. 알림이 부담스러운 분께 권합니다.',
+      '보통': '연료를 초과한 날에만 알려드립니다. 기본값입니다.',
+      '강하게': '결제마다 즉시 알리고, 구간도 매일 새로 제안합니다.'
+    };
+    const intensities = ['약하게', '보통', '강하게'].map(l => ({
+      label: l, pick: () => this.setState({ intensity: l }),
+      style: 'flex:1;height:50px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;cursor:pointer;background:' + (s.intensity === l ? M : 'rgba(22,25,28,.08)') + ';color:' + (s.intensity === l ? INK : 'rgba(22,25,28,.6)')
+    }));
+
+    const navGroups = {
+      home: ['home', 'detail', 'salary', 'empty', 'settings', 'arrived'],
+      spend: ['spend', 'category', 'calendar'],
+      alert: ['missionDetail', 'cause'],
+      token: ['token', 'release', 'verify'],
+      credit: ['mileage', 'products', 'support']
+    };
+    const navItems = [['홈', 'home', '✈'], ['소비분석', 'spend', '▥'], ['알림', 'missionDetail', '◍'], ['미션', 'token', '⚿'], ['신용', 'mileage', '◆']].map(nv => {
+      const key = nv[1] === 'missionDetail' ? 'alert' : (nv[1] === 'mileage' ? 'credit' : nv[1]);
+      const on = navGroups[key].indexOf(s.screen) >= 0;
+      const lightBg = s.screen === 'support';
+      return {
+        label: nv[0], icon: nv[2],
+        go: () => { if (!s.hasGoal) { this.setState({ screen: nv[1] === 'home' ? 'empty' : 'emptyTab', emptyTab: nv[0], alertOn: false }); return; } this.go(nv[1]); },
+        circleStyle: 'width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;transition:all .18s ease;background:' + (on ? M : (lightBg ? 'rgba(43,11,3,.10)' : 'rgba(22,25,28,.12)')) + ';color:' + (on ? INK : (lightBg ? 'rgba(43,11,3,.55)' : 'rgba(22,25,28,.6)')),
+        labelStyle: 'font-size:10.5px;font-weight:900;white-space:nowrap;color:' + (on ? '#077264' : 'rgba(22,25,28,.55)')
+      };
+    });
+    const navScreens = ['home', 'detail', 'empty', 'emptyTab', 'spend', 'category', 'calendar', 'missionDetail', 'cause', 'verify', 'token', 'release', 'mileage', 'products', 'salary'];
+    const fueled = s.fueled;
+    const acctByP = {
+      A: { code: 'TRV', pre: [
+        ['목표 저축 (TRV)', '전세보증금 3,000만원 · 68% 도달', '20,400,000', '지난달 +833,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '30,000', '변동 없음', M],
+        ['생활 연료', '하루 27,400원 × 남은 45일', '1,233,000', '이번 주 -74,000', '#7DB5FF']
+      ], post: [
+        ['목표 저축 (TRV)', '전세보증금 3,000만원 · 71% 도달', '21,233,000', '+833,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '30,000', '변동 없음', M],
+        ['생활 연료', '하루 27,400원 × 남은 45일', '1,233,000', '+1,233,000', '#7DB5FF']
+      ], total: '2,066,000', prePct: 68, postPct: 71, left: '8,767,000원',
+        now: '2026년 8월', eta: '2028년 8월', etaShort: "'28.08", etaLate: "'28.09", dday: 'D-730', ddayLate: 'D-760', span: '24개월',
+        target: '30,000,000원', etaFast: '2028년 6월', weekAvg: '208,000원', needPace: '192,000원',
+        etaDelayed: '2028년 9월', delayNote: '난기류 30일 지연' },
+      B: { code: 'BIZ', pre: [
+        ['사업 안정화 (BIZ)', '고정비 3개월 버퍼 · 42% 도달', '5,180,000', '지난달 -320,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '50,000', '변동 없음', M],
+        ['운영 연료', '하루 9,600원 × 남은 30일', '288,000', '매출 -18%', '#7DB5FF']
+      ], post: [
+        ['사업 안정화 (BIZ)', '고정비 3개월 버퍼 · 46% 도달', '5,660,000', '+480,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '50,000', '변동 없음', M],
+        ['운영 연료', '하루 9,600원 × 남은 30일', '288,000', '+288,000', '#7DB5FF']
+      ], total: '768,000', prePct: 42, postPct: 46, left: '6,340,000원',
+        now: '2026년 8월', eta: '2027년 2월', etaShort: "'27.02", etaLate: "'27.04", dday: 'D-180', ddayLate: 'D-240', span: '6개월',
+        target: '12,360,000원', etaFast: '2027년 1월', weekAvg: '120,000원', needPace: '166,000원',
+        etaDelayed: '2027년 4월', delayNote: '난기류 60일 지연' },
+      C: { code: 'EMG', pre: [
+        ['비상자금 (EMG)', '목표 600만원 · 31% 도달', '1,860,000', '지난달 +240,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '20,000', '변동 없음', M],
+        ['생활 연료', '하루 11,200원 × 남은 45일', '504,000', '리볼빙 -326,000', '#7DB5FF']
+      ], post: [
+        ['비상자금 (EMG)', '목표 600만원 · 35% 도달', '2,100,000', '+240,000', NAVY],
+        ['보증금 예치', 'iMKRW 스마트계약 · 고정 예치', '20,000', '변동 없음', M],
+        ['생활 연료', '하루 11,200원 × 남은 45일', '504,000', '+504,000', '#7DB5FF']
+      ], total: '744,000', prePct: 31, postPct: 35, left: '3,900,000원',
+        now: '2026년 8월', eta: '2027년 11월', etaShort: "'27.11", etaLate: "'27.12", dday: 'D-450', ddayLate: 'D-480', span: '15개월',
+        target: '6,000,000원', etaFast: '2027년 10월', weekAvg: '69,000원', needPace: '64,000원',
+        etaDelayed: '2027년 12월', delayNote: '난기류 30일 지연' }
+    };
+    const AP = acctByP[s.persona] || acctByP.A;
+    const acctRows = s.fueled ? AP.post : AP.pre;
+    const fuelAccounts = acctRows.map(a => ({
+      name: a[0], desc: a[1], amount: a[2] + '원', delta: a[3],
+      deltaStyle: 'font-size:11.5px;font-weight:900;margin-top:1px;color:' + (a[3].indexOf('+') >= 0 ? '#077264' : (a[3].indexOf('-') >= 0 ? '#D0512E' : 'rgba(22,25,28,.62)')),
+      dotStyle: 'flex:none;width:12px;height:12px;border-radius:4px;background:' + a[4]
+    }));
+    const lightNav = false;
+
+    return {
+      personas: personas, pDest: P[1], pGoal: P[2], pGoalName: P[3], pFuel: P[4],
+      pTriggerLabel: '데모 · ' + P[5],
+      pushHint: '실제 상황처럼 알림이 먼저 도착합니다',
+      pTrigger: () => { const k = s.persona || 'A';
+        this.setState({ push: null, alertOn: true, screen: 'home', hasGoal: true, spent: k === 'A' ? 45600 : (k === 'B' ? 16800 : 19200) }); },
+      hasPush: !!s.push,
+      pushTitle: PU[0], pushBody: PU[1], pushTime: PU[2], pushAction: PU[3],
+      pushIconStyle: 'flex:none;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:' + (s.push === 'A' ? INK : '#fff') + ';background:' + (s.push ? pDefs[s.push][6] : M),
+      pushOpen: () => this.setState({ push: null, screen: 'home', alertOn: true }),
+      alertTag: AL[0],
+      alertHead: (s.persona || 'A') === 'A' ? ('오늘 연료를 ' + Math.max(0, s.spent - dailyBudget).toLocaleString('en-US') + '원 초과했어요') : AL[1], alertTxnName: AL[2], alertTxnSub: AL[3], alertTxnAmt: AL[4],
+      alertIcon: AL[5], alertRiskTag: AL[8], alertRiskBody: AL[9],
+      alertIconStyle: 'width:48px;height:48px;border-radius:50%;background:' + AL[6] + ';color:' + AL[7] + ';display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900',
+      alertDelayNote: '도착 예정일이 ' + AP.eta + ' → ' + AP.etaDelayed + '로 지연',
+      toAlertCause: () => this.go(AL[10]),
+      toAlertMission: () => { const k = s.persona || 'A';
+        this.go(k === 'A' ? 'u14' : (k === 'B' ? 'u23' : 'u33')); },
+      pushLater: () => this.setState({ push: null }),
+      groups: groups, frameDark: false, isUC: isUC, ucBlocks: ucBlocks,
+      ucLabel: uc ? uc[0] : '', ucSub: uc ? uc[2] : '', ucTitle: uc ? uc[3] : '',
+      ucCta: uc ? (isLast ? '탑승권으로 돌아가기' : uc[5]) : '',
+      ucStep: chainIdx >= 0 ? (chainIdx + 1) + ' / ' + chain.length : '',
+      ucNext: () => { if (isLast) { this.setState({ screen: 'home' }); return; } this.go(chain[chainIdx + 1]); },
+      ucDots: chain.map((k, i) => ({ style: 'flex:1;height:4px;border-radius:99px;background:' + (i <= chainIdx ? M : 'rgba(22,25,28,.14)') })),
+      ucChipStyle: 'padding:9px 15px;border-radius:99px;font-size:12.5px;font-weight:900;color:' + INK + ';background:' + M,
+      ucCtaStyle: 'margin-top:6px;height:56px;border-radius:99px;background:' + INK + ';color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer',
+      ucDotStyle: 'width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:' + INK + ';background:' + M,
+      inputModes: inputModes, waveBars: waveBars, splits: splits, paceBars: paceBars,
+      cats: cats, catRows: catRows, weeks: weeks, calCells: calCells, txns: txns,
+      causes: causes, levels: levels, profile: profile, dayOptions: dayOptions,
+      depositOptions: depositOptions, fcpsFactors: fcpsFactors, bizTypes: bizTypes,
+      supportProducts: supportProducts, imProducts: imProducts, productTabs: productTabs,
+      intensities: intensities, navItems: navItems,
+      isLogin: s.screen === 'login', isEmpty: s.screen === 'empty', isInput: s.screen === 'input',
+      isVoice: s.screen === 'voice', isAnalyze: s.screen === 'analyze', isPlan: s.screen === 'plan',
+      isHome: s.screen === 'home', isDetail: s.screen === 'detail', isSalary: s.screen === 'salary',
+      isSpend: s.screen === 'spend', isCategory: s.screen === 'category', isCalendar: s.screen === 'calendar',
+      isMissionDetail: s.screen === 'missionDetail', isCause: s.screen === 'cause', isVerify: s.screen === 'verify',
+      isConnect: s.screen === 'connect', isEmptyTab: s.screen === 'emptyTab', isArrived: s.screen === 'arrived',
+      emptyTabName: s.emptyTab || '소비분석',
+      emptyTabTitle: ({ '소비분석': '분석할 지출이 모이는 중', '알림': '아직 감지된 이탈이 없어요', '미션': '진행 중인 구간 미션이 없어요', '신용': '기록이 아직 비어 있어요' })[s.emptyTab] || '아직 비어 있어요',
+      emptyTabDesc: ({ '소비분석': '자산을 연결한 날부터 카테고리별 소비 흐름이 쌓입니다.', '알림': '금융 목표를 등록하면 결제 60초 안에 위험을 알려드립니다.', '미션': '이탈이 감지되면 AI가 회복 미션을 제안합니다.', '신용': '미션 성공과 목표 준수가 첫 신용 궤적이 됩니다.' })[s.emptyTab] || '금융 목표를 등록하면 채워집니다.',
+      emptyTabIcon: ({ '소비분석': '▥', '알림': '◍', '미션': '⚿', '신용': '◆' })[s.emptyTab] || '✈',
+      startOnboarding: () => this.setState({ screen: 'connect', hasGoal: false, fueled: false, alertOn: false, spent: 3200 }),
+      finishGoal: () => this.setState({ screen: 'home', hasGoal: true, alertOn: false, spent: 3200 }),
+      connectItems: [
+        ['iM뱅크 입출금', '급여통장 · 예금 2건', '연결됨', true],
+        ['iM 체크·신용카드', '카드 2매 · 승인 내역', '연결됨', true],
+        ['타행 계좌 (마이데이터)', '은행 3곳 · 증권 1곳', '연결됨', true],
+        ['카드 매입·매출 (사업자)', '사업자만 해당', '선택', false]
+      ].map(c => ({ name: c[0], desc: c[1], tag: c[2],
+        rowStyle: 'display:flex;align-items:center;gap:14px;background:#fff;border-radius:26px;padding:18px 20px',
+        markStyle: 'flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;background:' + (c[3] ? M : 'rgba(22,25,28,.10)') + ';color:' + (c[3] ? INK : 'rgba(22,25,28,.5)'),
+        mark: c[3] ? '✓' : '+',
+        tagStyle: 'flex:none;font-size:12px;font-weight:900;color:' + (c[3] ? MD : 'rgba(22,25,28,.5)') })),
+      blankTabs: [
+        ['홈', '아직 발권된 탑승권이 없어요', '금융 목표를 등록하면 오늘의 탑승권이 만들어집니다', '✈'],
+        ['소비분석', '분석할 지출이 모이는 중', '자산을 연결한 날부터 카테고리별 흐름이 쌓입니다', '▥'],
+        ['알림', '아직 감지된 이탈이 없어요', '목표가 생기면 결제 60초 안에 위험을 알려드립니다', '◍'],
+        ['미션', '진행 중인 구간 미션이 없어요', '이탈이 감지되면 AI가 회복 미션을 제안합니다', '⚿'],
+        ['신용', '기록이 아직 비어 있어요', '미션 성공과 목표 준수가 첫 신용 궤적이 됩니다', '◆']
+      ].map(t => ({ label: t[0], title: t[1], desc: t[2], icon: t[3],
+        pick: () => this.setState({ blankTab: t[0] }),
+        chipStyle: 'flex:1;height:42px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:900;cursor:pointer;white-space:nowrap;background:' + ((s.blankTab || '홈') === t[0] ? INK : 'rgba(22,25,28,.07)') + ';color:' + ((s.blankTab || '홈') === t[0] ? '#fff' : 'rgba(22,25,28,.6)'),
+        on: (s.blankTab || '홈') === t[0] })),
+      arrivedRecords: [
+        ['미션 성공', '9건 / 11건'], ['절감한 금액', '1,284,000원'], ['FCPS 상승', '+64점 · 실버 → 골드'], ['보증금 반환', '전액 반환']
+      ].map(r => ({ label: r[0], value: r[1] })),
+      toConnect: () => this.go('connect'), toArrived: () => this.go('arrived'),
+      toEmpty: () => this.setState({ screen: 'empty', hasGoal: false, alertOn: false }),
+      isToken: s.screen === 'token', isRelease: s.screen === 'release', isMileage: s.screen === 'mileage',
+      isProducts: s.screen === 'products', isSupport: s.screen === 'support', isSettings: s.screen === 'settings',
+      alertOn: s.alertOn, showNav: navScreens.indexOf(s.screen) >= 0 && !s.alertOn,
+      navBarStyle: 'position:absolute;left:18px;right:18px;bottom:22px;height:74px;border-radius:99px;background:#FFFFFF;border:1px solid rgba(22,25,28,.09);box-shadow:0 8px 26px rgba(22,25,28,.13);display:flex;align-items:center;justify-content:space-around;padding:0 14px;box-sizing:border-box;z-index:6',
+      noteTitle: n[0], noteBody: n[1], noteTag: n[2],
+      homeSub: over ? '항로를 벗어났어요,' : '순항 중입니다,',
+      homeHeadline: over ? '오늘 연료 초과' : '오늘도 예정대로',
+      gradeLabel: '항로 ' + grade,
+      gradeChipStyle: 'flex:none;white-space:nowrap;padding:5px 11px;border-radius:99px;font-size:11.5px;font-weight:900;background:' + (over ? '#FFE2DA' : '#E0F7F3') + ';color:' + (over ? '#C4472A' : MD),
+      planeStyle: 'font-size:17px;animation:fly 3s ease-in-out infinite;color:' + (over ? '#C4472A' : NAVY),
+      etaBadgeStyle: 'padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:900;white-space:nowrap;background:' + (over ? '#FFE2DA' : '#E0F7F3') + ';color:' + (over ? '#C4472A' : MD),
+      etaDate: (over || s.alertOn) ? AP.etaLate : AP.etaShort,
+      etaNote: (over || s.alertOn) ? AP.delayNote : '정시 도착 예상',
+      isDelayed: over || s.alertOn, notDelayed: !(over || s.alertOn), delayNote: AP.delayNote,
+      delayChipStyle: 'padding:5px 11px;border-radius:99px;font-size:11px;font-weight:900;white-space:nowrap;background:#FFE2DA;color:#C4472A',
+      pNow: AP.now, pEta: (s.screen !== 'arrived' && (over || s.alertOn)) ? AP.etaDelayed : AP.eta,
+      pDday: (over || s.alertOn) ? AP.ddayLate : AP.dday, pSpan: AP.span,
+      pSaved: (fueled ? AP.post[0][2] : AP.pre[0][2]) + '원', pTarget: AP.target,
+      pEtaPlan: AP.eta, pEtaAI: AP.etaFast, pWeekAvg: AP.weekAvg, pNeedPace: AP.needPace,
+      tripBarStyle: 'width:' + (fueled ? AP.postPct : AP.prePct) + '%;height:100%;border-radius:99px;transition:width .6s ease;background:' + (over ? '#C4472A' : NAVY),
+      tripAmountLabel: (fueled ? AP.post[0][2] : AP.pre[0][2]) + '원 · ' + (fueled ? AP.postPct : AP.prePct) + '% 비행',
+      tripPctLabel: (fueled ? AP.postPct : AP.prePct) + '% 비행',
+      tripLeftLabel: '남은 ' + (function () {
+        const num = t => parseInt(String(t).replace(/[^0-9]/g, ''), 10) || 0;
+        const left = num(AP.target) - num(fueled ? AP.post[0][2] : AP.pre[0][2]);
+        return left.toLocaleString('en-US') + '원';
+      })(),
+      tripBarInnerStyle: 'width:' + (fueled ? AP.postPct : AP.prePct) + '%;height:100%;background:#16191C;transition:width .6s ease',
+      punchLeftStyle: 'position:absolute;left:-13px;width:26px;height:26px;border-radius:50%;background:' + BG,
+      punchRightStyle: 'position:absolute;right:-13px;width:26px;height:26px;border-radius:50%;background:' + BG,
+      fuelLabel: over ? '오늘 연료 초과' : '오늘 남은 연료 (하루 ' + P[4] + '원)',
+      remaining: over ? '-' + Math.abs(remaining).toLocaleString() : remaining.toLocaleString(),
+      fuelNumStyle: 'font-size:' + (s.big ? 44 : 34) + 'px;font-weight:900;letter-spacing:-.04em;transition:font-size .2s ease;color:' + (over ? '#C4472A' : INK),
+      fuelBarStyle: 'width:' + Math.min(100, Math.round(s.spent / 8000 * 100)) + '%;height:100%;border-radius:99px;background:' + (over ? '#C4472A' : M) + ';transition:width .5s ease',
+      ticketCta: over ? '왜 이탈했는지 보기' : '여정 상세 보기',
+      missionDays: s.missionDays,
+      missionSave: (Math.round(s.missionDays / 7 * 16000)).toLocaleString() + '원',
+      acceptLabel: s.accepted ? '탑승 완료 · D-' + s.missionDays : '보증금 없이 탑승하기',
+      acceptStyle: 'margin-top:9px;height:52px;border-radius:99px;font-size:15.5px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;background:' + (s.accepted ? '#E0F7F3' : '#F2F5F4') + ';color:' + (s.accepted ? MD : 'rgba(10,30,26,.6)'),
+      accept: () => this.setState({ accepted: !this.state.accepted }),
+      depositAmount: s.deposit.toLocaleString(),
+      bigCardStyle: 'display:flex;align-items:center;gap:16px;padding:22px;border-radius:28px;cursor:pointer;background:' + (s.big ? M : 'rgba(22,25,28,.08)') + ';color:' + (s.big ? INK : '#fff'),
+      bigTrackStyle: 'flex:none;width:62px;height:36px;border-radius:99px;padding:3px;box-sizing:border-box;display:flex;justify-content:' + (s.big ? 'flex-end' : 'flex-start') + ';background:' + (s.big ? INK : 'rgba(22,25,28,.16)') + ';transition:all .2s ease',
+      bigKnobStyle: 'width:30px;height:30px;border-radius:50%;background:' + (s.big ? M : '#fff'),
+      toggleBig: () => this.setState({ big: !this.state.big }),
+      intensityDesc: intensityDescs[s.intensity],
+      toEmpty: () => this.go('empty'), toInput: () => this.go('input'), toAnalyze: () => this.go('analyze'),
+      toPlan: () => this.go('plan'), toHome: () => this.go('home'), toDetail: () => this.go('detail'),
+      fueled: fueled, notFueled: !fueled, fuelAccounts: fuelAccounts,
+      payAmount: AP.total,
+      acctTitle: fueled ? ('연료 보급 완료 · ' + AP.total + '원') : '내 계좌 현황 · 3계좌',
+      acctSub: fueled ? '오늘 07:12 · 3계좌 자동 분배' : '어제 23:50 기준 · 페르소나 ' + (s.persona || 'A'),
+      acctIcon: fueled ? '✓' : '▤',
+      acctIconStyle: 'flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;background:' + (fueled ? M : 'rgba(22,25,28,.10)') + ';color:' + INK,
+      acctBadge: fueled ? '방금 변동' : '분배 대기',
+      acctBadgeStyle: 'flex:none;padding:5px 10px;border-radius:99px;font-size:11px;font-weight:900;background:' + (fueled ? '#E0F7F3' : 'rgba(125,181,255,.22)') + ';color:' + (fueled ? '#077264' : '#2E6BD0'),
+      doFuel: () => this.setState({ screen: 'home', alertOn: false, fueled: true }),
+      toSalary: () => this.go('salary'), toSpend: () => this.go('spend'), toCategory: () => this.go('category'),
+      toCalendar: () => this.go('calendar'), toMissionDetail: () => this.go('missionDetail'),
+      toCause: () => this.go('cause'), toVerify: () => this.go('verify'), toToken: () => this.go('token'),
+      toRelease: () => this.go('release'), toMileage: () => this.go('mileage'), toProducts: () => this.go('products'),
+      toSupport: () => this.go('support'), toSettings: () => this.go('settings'),
+      simulate: () => this.setState({ alertOn: true, spent: 26200 }),
+      dismiss: () => this.setState({ alertOn: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

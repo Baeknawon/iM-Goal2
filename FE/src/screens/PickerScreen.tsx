@@ -1,0 +1,85 @@
+import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../store/appStore';
+import { Brand } from '../components/ui';
+import { color } from '../styles/theme';
+import type { PersonaKey } from '../types';
+
+interface Card {
+  key: PersonaKey;
+  badge: string;
+  name: string;
+  hook: string;
+  desc: string;
+  accent: string;
+  meta: string;
+}
+
+const cards: Card[] = [
+  { key: 'A', badge: '🧑‍🎓', name: '자립준비청년', hook: '신용 이력이 없어요', desc: '전세보증금 3,000만원을 24개월 안에 모으고 싶지만, 신용조회 기록도 대출 이력도 없습니다.', accent: color.mint, meta: '신파일러 · 24세' },
+  { key: 'B', badge: '🏪', name: '소상공인', hook: '매출이 줄고 있어요', desc: '연체는 없지만 3개월째 매출이 18% 감소했습니다. 위험 등급이 되면 지원제도까지 같이 안내합니다.', accent: color.sky, meta: '취약차주 · 41세' },
+  { key: 'C', badge: '💳', name: '리볼빙 청년', hook: '한도가 자꾸 차요', desc: '카드 한도 소진율 82%, 리볼빙 잔액 326만원. 결제 60초 안에 개입합니다.', accent: '#E2F15E', meta: '청년 직장인 · 29세' },
+];
+
+/** Persona/situation picker: climb-demo's dark entry screen shown before the app itself. */
+export function PickerScreen() {
+  const navigate = useNavigate();
+  const setPersona = useAppStore((s) => s.setPersona);
+  const resetOnboarding = useAppStore((s) => s.resetOnboarding);
+
+  const pick = (key: PersonaKey) => {
+    setPersona(key);
+    resetOnboarding();
+    navigate('/login');
+  };
+
+  return (
+    <div
+      style={{
+        height: '100%', background: color.ink, color: '#fff', boxSizing: 'border-box',
+        padding: '64px 22px 30px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'auto',
+      }}
+    >
+      <div style={{ position: 'absolute', top: -90, right: -80, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle,rgba(0,201,169,.3),transparent 70%)', pointerEvents: 'none' }} />
+
+      <Brand size={38} ink="#fff" accent={color.mint} style={{ position: 'relative' }} />
+
+      <div style={{ position: 'relative', marginTop: 26, fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,.6)' }}>어떤 상황을 보시겠어요?</div>
+      <div style={{ position: 'relative', marginTop: 4, fontSize: 27, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.24 }}>
+        상황을 하나 고르면<br />그 사람의 앱이 열립니다
+      </div>
+      <div style={{ position: 'relative', marginTop: 10, fontSize: 13.5, lineHeight: 1.65, fontWeight: 500, color: 'rgba(255,255,255,.56)' }}>
+        로그인부터 자산 연결, 목표 등록, 실시간 감지, 회복 미션까지 실제 순서대로 진행됩니다.
+      </div>
+
+      <div style={{ position: 'relative', marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {cards.map((c) => (
+          <div
+            key={c.key}
+            onClick={() => pick(c.key)}
+            style={{ background: 'rgba(255,255,255,.07)', borderRadius: 26, padding: 18, cursor: 'pointer' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
+              <div style={{ flex: 'none', width: 54, height: 54, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 27, lineHeight: 1, background: c.accent }}>
+                {c.badge}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 900, letterSpacing: '.02em', color: c.accent }}>{c.hook}</div>
+                <div style={{ marginTop: 2, fontSize: 19, fontWeight: 900, letterSpacing: '-.025em' }}>{c.name}</div>
+              </div>
+              <div style={{ flex: 'none', width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900 }}>›</div>
+            </div>
+            <div style={{ marginTop: 11, fontSize: 13, lineHeight: 1.65, fontWeight: 500, color: 'rgba(255,255,255,.6)' }}>{c.desc}</div>
+            <div style={{ marginTop: 11, paddingTop: 11, borderTop: '1px solid rgba(255,255,255,.12)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ flex: 'none', width: 22, height: 22, borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 900, color: color.ink, background: c.accent }}>{c.key}</div>
+              <span style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.05em', color: 'rgba(255,255,255,.46)' }}>{c.meta}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ position: 'relative', marginTop: 'auto', paddingTop: 22, fontSize: 11, lineHeight: 1.65, fontWeight: 700, color: 'rgba(255,255,255,.34)' }}>
+        iM금융그룹 공모전 시연용 · 화면의 수치는 발표용 예시입니다
+      </div>
+    </div>
+  );
+}
