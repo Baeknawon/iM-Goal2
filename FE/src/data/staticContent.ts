@@ -39,12 +39,6 @@ export const dayTxns = [
   { name: '버스·지하철', meta: '교통카드 · 08:20', amount: '800원', icon: '교', iconBg: 'rgba(22,25,28,.12)', iconFg: 'rgba(22,25,28,.7)' },
 ];
 
-export const verifyGates = [
-  { level: '1단계', title: '행동 수행 확인', tag: '통과', body: '배달 결제가 주 1회로 줄어 미션 수행이 자동 확인됐습니다.', barPct: 100, passed: true },
-  { level: '2단계', title: '금융 상태 변화 확인', tag: '통과 중', body: '주간 배달비가 91,000원 → 58,000원으로 줄고 하루 예산이 회복됐습니다.', barPct: 62, passed: true },
-  { level: '3단계', title: '지속 여부 확인', tag: '12일 남음', body: '4주 동안 변화가 유지되는지 추적합니다. 이탈이 재발하면 재개입 필요로 바뀝니다.', barPct: 24, passed: false },
-];
-
 export const fcpsFactors = [
   { name: '정시 도착 (예산 준수)', barPct: 78, tag: '좋음', good: true },
   { name: '구간 완주율', barPct: 82, tag: '좋음', good: true },
@@ -64,11 +58,6 @@ export const arrivedRecords = [
   { label: '절감한 금액', value: '1,284,000원' },
   { label: 'FCPS 상승', value: '+64점 · 실버 → 골드' },
   { label: '보증금 반환', value: '전액 반환' },
-];
-
-export const inputModes = [
-  { title: '음성으로 말하기', desc: '"2년 안에 전세보증금 3,000만원"', icon: '🎙', to: '/voice', emphasized: true },
-  { title: '직접 타이핑', desc: '목표·금액·기간을 직접 입력', icon: '⌨', to: '/typing', emphasized: false },
 ];
 
 // ── 비상 착륙 안내 (support) ──────────────────────────────────────────────

@@ -8,11 +8,23 @@ export type BizTypeKey = '소상공인' | '개인사업자';
 
 export type ProductTabKey = '전체' | '목표' | '신용';
 
+/** 보증금 미션의 최종 결과. 금전 처리는 동일(전액 반환), FCPS 기록만 다름. */
+export type MissionResult = 'success' | 'fail' | 'give_up';
+
+/** FCPS(신용 궤적)에 반영되는 미션 이력 한 건. */
+export interface FcpsEntry {
+  result: MissionResult;
+  label: string;   // "회복 미션 성공" 등
+  mission: string; // 미션 이름
+  deposit: number; // 예치했던 보증금
+  delta: number;   // FCPS 점수 변화 (성공 +, 실패/포기 -)
+}
+
 /** The 18 use-case walkthrough screens (u11..u36), 6 per persona chain. */
 export type UCScreenId =
-  | 'u11' | 'u12' | 'u13' | 'u14' | 'u15' | 'u16' | 'u17'
-  | 'u21' | 'u22' | 'u23' | 'u24' | 'u25' | 'u26'
-  | 'u31' | 'u32' | 'u33' | 'u34' | 'u35' | 'u36';
+    | 'u11' | 'u12' | 'u13' | 'u14' | 'u15' | 'u16' | 'u17'
+    | 'u21' | 'u22' | 'u23' | 'u24' | 'u25' | 'u26'
+    | 'u31' | 'u32' | 'u33' | 'u34' | 'u35' | 'u36';
 
 /**
  * Simulation state shared across the whole app session — ported 1:1 from the
@@ -45,4 +57,14 @@ export interface AppState {
   incomeMonthly: number;
   incomeAssets: number;
   incomeFixed: number;
+  /** iMKRW 머니(지갑) 잔액. 미션 시작 시 보증금만큼 빠져나가(묶이고), 종료 시 반환됨. */
+  wallet: number;
+  /** 현재 미션에 묶여 있는 보증금 총합. */
+  locked: number;
+  /** 직전 미션 시작 때 지갑 잔액이 부족해 에이전트가 자동 충전한 금액 (0이면 자동충전 없음). */
+  autoTopUp: number;
+  /** 마지막 미션 결과 (없으면 null). */
+  missionResult: MissionResult | null;
+  /** FCPS에 반영된 미션 이력 (최신순). */
+  fcpsLog: FcpsEntry[];
 }

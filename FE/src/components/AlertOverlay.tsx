@@ -19,64 +19,58 @@ export function AlertOverlay() {
   const AP = acctDefs[persona];
 
   const alertHead = persona === 'A'
-    ? `오늘 예산을 ${Math.max(0, spent - personaDefs.A.dailyBudget).toLocaleString('en-US')}원 초과했어요`
-    : AL.headFallback;
+      ? `오늘 예산을 ${Math.max(0, spent - personaDefs.A.dailyBudget).toLocaleString('en-US')}원 초과했어요`
+      : AL.headFallback;
 
   return (
-    <>
-      <div style={dropStyle}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#FF7A5C', animation: 'ringPulse 1.8s infinite' }} />
-          <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: '#D0512E' }}>{AL.tag}</span>
-        </div>
-        <div style={{ marginTop: 8, display: 'flex', alignItems: 'flex-end', gap: 12 }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 17, fontWeight: 900 }}>{alertHead}</div>
-            <div style={{ marginTop: 4, fontSize: 14, wordBreak: 'keep-all', color: 'rgba(255,255,255,.6)' }}>
-              도착 예정일이 {AP.eta} → {AP.etaDelayed}로 지연
+      <>
+        <div style={dropStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#FF7A5C', animation: 'ringPulse 1.8s infinite' }} />
+            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: '#D0512E' }}>{AL.tag}</span>
+          </div>
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'flex-end', gap: 12 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 17, fontWeight: 900 }}>{alertHead}</div>
+              <div style={{ marginTop: 4, fontSize: 14, wordBreak: 'keep-all', color: 'rgba(255,255,255,.6)' }}>
+                도착 예정일이 {AP.eta} → {AP.etaDelayed}로 지연
+              </div>
             </div>
+            <img
+                src="/assets/dandi-alert.png" alt="단디"
+                style={{ flex: 'none', height: 64, width: 'auto', display: 'block', marginBottom: -16, animation: 'fret 1.1s ease-in-out infinite' }}
+            />
           </div>
-          <img
-            src="/assets/dandi-alert.png" alt="단디"
-            style={{ flex: 'none', height: 64, width: 'auto', display: 'block', marginBottom: -16, animation: 'fret 1.1s ease-in-out infinite' }}
-          />
         </div>
-      </div>
 
-      <div style={sheetStyle}>
-        <div style={{ width: 44, height: 5, borderRadius: 9999, background: 'rgba(22,25,28,.12)', margin: '0 auto 20px' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 48, height: 48, borderRadius: '50%', background: AL.iconBg, color: AL.iconFg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 900 }}>
-            {AL.icon}
+        <div style={sheetStyle}>
+          <div style={{ width: 44, height: 5, borderRadius: 9999, background: 'rgba(22,25,28,.12)', margin: '0 auto 20px' }} />
+          {/* 핵심만: 거래 한 줄 + 미션 받기 버튼 (상세는 다음 화면에서) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: AL.iconBg, color: AL.iconFg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 900 }}>
+              {AL.icon}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 17, fontWeight: 900 }}>{AL.txnName}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(22,25,28,.61)', marginTop: 2 }}>{AL.txnSub}</div>
+            </div>
+            <div style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: 20, fontWeight: 900, letterSpacing: '-.02em' }}>{AL.txnAmt}</div>
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 17, fontWeight: 900 }}>{AL.txnName}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(22,25,28,.61)', marginTop: 2 }}>{AL.txnSub}</div>
-          </div>
-          <div style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: 20, fontWeight: 900, letterSpacing: '-.02em' }}>{AL.txnAmt}</div>
-        </div>
-        <div style={{ marginTop: 16, background: '#FFEFEA', borderRadius: 24, padding: 18 }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: '#C4472A' }}>{AL.riskTag}</div>
-          <div style={{ marginTop: 8, fontSize: 15, lineHeight: 1.7, fontWeight: 700, color: '#3A1A11' }}>{AL.riskBody}</div>
-        </div>
-        <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 9 }}>
-          <div
-            onClick={() => { dismissAlert(); navigate(`/uc/${phase1Start[persona]}`); }}
-            style={{ borderRadius: 30, background: color.ink, color: '#fff', padding: '20px 22px', cursor: 'pointer' }}
-          >
-            <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: color.mint }}>AI 에이전트 · 원인부터 회복까지</div>
-            <div style={{ marginTop: 7, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 9 }}>
+            <div
+                onClick={() => { dismissAlert(); navigate(`/uc/${phase1Start[persona]}`); }}
+                style={{ borderRadius: 30, background: color.ink, color: '#fff', padding: '18px 22px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
+            >
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.02em' }}>AI 에이전트가 바로잡는 미션 받기</div>
-                <div style={{ marginTop: 4, fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,.62)' }}>지금 상황에 맞는 회복 미션을 만들어드려요</div>
+                <div style={{ fontSize: 17, fontWeight: 900, letterSpacing: '-.02em' }}>원인 보고 미션 받기</div>
+                <div style={{ marginTop: 3, fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,.6)' }}>AI가 원인을 분석해 회복 미션을 만들어드려요</div>
               </div>
               <div style={{ flex: 'none', width: 34, height: 34, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 900 }}>›</div>
             </div>
+            <CtaButton height={50} bg="rgba(22,25,28,.06)" fg="rgba(22,25,28,.6)" onClick={dismissAlert}>나중에 확인</CtaButton>
           </div>
-          <CtaButton height={50} bg="rgba(22,25,28,.06)" fg="rgba(22,25,28,.6)" onClick={dismissAlert}>나중에 확인</CtaButton>
         </div>
-      </div>
-    </>
+      </>
   );
 }
 

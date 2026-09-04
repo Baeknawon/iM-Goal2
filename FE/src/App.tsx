@@ -11,7 +11,9 @@ import { ConnectScreen } from './screens/ConnectScreen';
 import { IncomeScreen } from './screens/IncomeScreen';
 import { EmptyHomeScreen } from './screens/EmptyHomeScreen';
 import { EmptyTabScreen } from './screens/EmptyTabScreen';
-import { GoalInputScreen } from './screens/GoalInputScreen';
+import { ChatGoalScreen } from './screens/ChatGoalScreen';
+import { GoalReportScreen } from './screens/GoalReportScreen';
+import { TicketIssueScreen } from './screens/TicketIssueScreen';
 import { VoiceInputScreen } from './screens/VoiceInputScreen';
 import { ParsedScreen } from './screens/ParsedScreen';
 import { TypingScreen } from './screens/TypingScreen';
@@ -19,13 +21,14 @@ import { AnalyzeScreen } from './screens/AnalyzeScreen';
 import { PlanScreen } from './screens/PlanScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { DetailScreen } from './screens/DetailScreen';
+import { AccountsScreen } from './screens/AccountsScreen';
+import { SalarySplitSettingsScreen } from './screens/SalarySplitSettingsScreen';
 import { SalaryScreen } from './screens/SalaryScreen';
 import { SpendScreen } from './screens/SpendScreen';
 import { CategoryScreen } from './screens/CategoryScreen';
 import { CalendarScreen } from './screens/CalendarScreen';
 import { MissionDetailScreen } from './screens/MissionDetailScreen';
 import { CauseScreen } from './screens/CauseScreen';
-import { VerifyScreen } from './screens/VerifyScreen';
 import { TokenScreen } from './screens/TokenScreen';
 import { ReleaseScreen } from './screens/ReleaseScreen';
 import { MileageScreen } from './screens/MileageScreen';
@@ -54,73 +57,76 @@ function AppShell() {
   };
 
   return (
-    <PhoneFrame>
-      <Routes>
-        <Route path="/" element={<Navigate to="/picker" replace />} />
-        <Route path="/picker" element={<PickerScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/consent" element={<ConsentScreen />} />
-        <Route path="/linking" element={<LinkingScreen />} />
-        <Route path="/connect" element={<ConnectScreen />} />
-        <Route path="/income" element={<IncomeScreen />} />
-        <Route path="/empty" element={<EmptyHomeScreen />} />
-        <Route path="/emptyTab" element={<EmptyTabScreen />} />
-        <Route path="/input" element={<GoalInputScreen />} />
-        <Route path="/voice" element={<VoiceInputScreen />} />
-        <Route path="/parsed" element={<ParsedScreen />} />
-        <Route path="/typing" element={<TypingScreen />} />
-        <Route path="/analyze" element={<AnalyzeScreen />} />
-        <Route path="/plan" element={<PlanScreen />} />
-        <Route path="/home" element={<HomeScreen />} />
-        <Route path="/detail" element={<DetailScreen />} />
-        <Route path="/salary" element={<SalaryScreen />} />
-        <Route path="/spend" element={<SpendScreen />} />
-        <Route path="/category" element={<CategoryScreen />} />
-        <Route path="/calendar" element={<CalendarScreen />} />
-        <Route path="/missionDetail" element={<MissionDetailScreen />} />
-        <Route path="/cause" element={<CauseScreen />} />
-        <Route path="/verify" element={<VerifyScreen />} />
-        <Route path="/token" element={<TokenScreen />} />
-        <Route path="/release" element={<ReleaseScreen />} />
-        <Route path="/mileage" element={<MileageScreen />} />
-        <Route path="/products" element={<ProductsScreen />} />
-        <Route path="/support" element={<SupportScreen />} />
-        <Route path="/settings" element={<SettingsScreen />} />
-        <Route path="/arrived" element={<ArrivedScreen />} />
-        <Route path="/alerts" element={<AlertsScreen />} />
-        <Route path="/quiz" element={<QuizScreen />} />
-        <Route path="/missions" element={<MissionsScreen />} />
-        <Route path="/missionLive" element={<MissionLiveScreen />} />
-        <Route path="/uc/:id" element={<UCScreen />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-      {showSwitcher && (
-        <div
-          onClick={toPicker}
-          style={{
-            position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: 6, zIndex: 40,
-            padding: '6px 14px', borderRadius: 9999, background: 'rgba(22,25,28,.55)', color: '#fff',
-            fontSize: 11, fontWeight: 900, cursor: 'pointer',
-          }}
-        >
-          상황 바꾸기
-        </div>
-      )}
-      {showNav && <BottomNav />}
-    </PhoneFrame>
+      <PhoneFrame>
+        <Routes>
+          <Route path="/" element={<Navigate to="/picker" replace />} />
+          <Route path="/picker" element={<PickerScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/consent" element={<ConsentScreen />} />
+          <Route path="/linking" element={<LinkingScreen />} />
+          <Route path="/connect" element={<ConnectScreen />} />
+          <Route path="/income" element={<IncomeScreen />} />
+          <Route path="/empty" element={<EmptyHomeScreen />} />
+          <Route path="/emptyTab" element={<EmptyTabScreen />} />
+          <Route path="/chat" element={<ChatGoalScreen />} />
+          <Route path="/report" element={<GoalReportScreen />} />
+          <Route path="/issuing" element={<TicketIssueScreen />} />
+          <Route path="/voice" element={<VoiceInputScreen />} />
+          <Route path="/parsed" element={<ParsedScreen />} />
+          <Route path="/typing" element={<TypingScreen />} />
+          <Route path="/analyze" element={<AnalyzeScreen />} />
+          <Route path="/plan" element={<PlanScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/detail" element={<DetailScreen />} />
+          <Route path="/accounts" element={<AccountsScreen />} />
+          <Route path="/splitSettings" element={<SalarySplitSettingsScreen />} />
+          <Route path="/salary" element={<SalaryScreen />} />
+          <Route path="/spend" element={<SpendScreen />} />
+          <Route path="/category" element={<CategoryScreen />} />
+          <Route path="/calendar" element={<CalendarScreen />} />
+          <Route path="/missionDetail" element={<MissionDetailScreen />} />
+          <Route path="/cause" element={<CauseScreen />} />
+          <Route path="/token" element={<TokenScreen />} />
+          <Route path="/release" element={<ReleaseScreen />} />
+          <Route path="/mileage" element={<MileageScreen />} />
+          <Route path="/products" element={<ProductsScreen />} />
+          <Route path="/support" element={<SupportScreen />} />
+          <Route path="/settings" element={<SettingsScreen />} />
+          <Route path="/arrived" element={<ArrivedScreen />} />
+          <Route path="/alerts" element={<AlertsScreen />} />
+          <Route path="/quiz" element={<QuizScreen />} />
+          <Route path="/missions" element={<MissionsScreen />} />
+          <Route path="/missionLive" element={<MissionLiveScreen />} />
+          <Route path="/uc/:id" element={<UCScreen />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+        {showSwitcher && (
+            <div
+                onClick={toPicker}
+                style={{
+                  position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: 6, zIndex: 40,
+                  padding: '6px 14px', borderRadius: 9999, background: 'rgba(22,25,28,.55)', color: '#fff',
+                  fontSize: 11, fontWeight: 900, cursor: 'pointer',
+                }}
+            >
+              상황 바꾸기
+            </div>
+        )}
+        {showNav && <BottomNav />}
+      </PhoneFrame>
   );
 }
 
 export default function App() {
   return (
-    <div
-      style={{
-        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'radial-gradient(circle at 30% 20%, rgba(0,201,167,.10), transparent 55%), #EFF1F2',
-        padding: 32, boxSizing: 'border-box',
-      }}
-    >
-      <AppShell />
-    </div>
+      <div
+          style={{
+            minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'radial-gradient(circle at 30% 20%, rgba(0,201,167,.10), transparent 55%), #EFF1F2',
+            padding: 32, boxSizing: 'border-box',
+          }}
+      >
+        <AppShell />
+      </div>
   );
 }

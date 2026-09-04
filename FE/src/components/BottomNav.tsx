@@ -7,7 +7,7 @@ import type { EmptyTabKey } from '../types';
 const navGroups: Record<string, string[]> = {
   home: ['home', 'detail', 'salary', 'empty', 'settings', 'arrived'],
   spend: ['spend', 'category', 'calendar'],
-  alert: ['alerts', 'quiz', 'cause', 'verify'],
+  alert: ['alerts', 'quiz', 'cause'],
   missions: ['missions', 'missionDetail', 'token', 'release', 'missionLive'],
   credit: ['mileage', 'products', 'support'],
 };
@@ -23,7 +23,7 @@ const navItems: { label: EmptyTabKey | '홈'; to: string; icon: string; groupKey
 /** Screens where the bottom nav is shown at all (mirrors the doc's `navScreens`). */
 export const navScreens = [
   'home', 'detail', 'empty', 'emptyTab', 'spend', 'category', 'calendar',
-  'missionDetail', 'cause', 'verify', 'token', 'release', 'mileage', 'products', 'salary',
+  'missionDetail', 'cause', 'token', 'release', 'mileage', 'products', 'salary',
   'alerts', 'quiz', 'missions', 'missionLive',
 ];
 
@@ -37,42 +37,42 @@ export function BottomNav() {
   const supportScreen = current === 'support';
 
   return (
-    <div style={navBarStyle}>
-      {navItems.map((nv) => {
-        const on = navGroups[nv.groupKey].includes(current);
-        return (
-          <div
-            key={nv.to}
-            onClick={() => {
-              if (!hasGoal) {
-                if (nv.to === 'home') navigate('/empty');
-                else {
-                  setEmptyTab(nv.label as EmptyTabKey);
-                  navigate('/emptyTab');
-                }
-                return;
-              }
-              navigate('/' + nv.to);
-            }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, cursor: 'pointer' }}
-          >
-            <div
-              style={{
-                width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: 14, fontWeight: 900, transition: 'all .18s ease',
-                background: on ? color.mint : supportScreen ? 'rgba(43,11,3,.10)' : 'rgba(22,25,28,.12)',
-                color: on ? color.ink : supportScreen ? 'rgba(43,11,3,.55)' : 'rgba(22,25,28,.6)',
-              }}
-            >
-              {nv.icon}
-            </div>
-            <span style={{ fontSize: 10.5, fontWeight: 900, whiteSpace: 'nowrap', color: on ? '#077264' : 'rgba(22,25,28,.55)' }}>
+      <div style={navBarStyle}>
+        {navItems.map((nv) => {
+          const on = navGroups[nv.groupKey].includes(current);
+          return (
+              <div
+                  key={nv.to}
+                  onClick={() => {
+                    if (!hasGoal) {
+                      if (nv.to === 'home') navigate('/empty');
+                      else {
+                        setEmptyTab(nv.label as EmptyTabKey);
+                        navigate('/emptyTab');
+                      }
+                      return;
+                    }
+                    navigate('/' + nv.to);
+                  }}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, cursor: 'pointer' }}
+              >
+                <div
+                    style={{
+                      width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: 14, fontWeight: 900, transition: 'all .18s ease',
+                      background: on ? color.mint : supportScreen ? 'rgba(43,11,3,.10)' : 'rgba(22,25,28,.12)',
+                      color: on ? color.ink : supportScreen ? 'rgba(43,11,3,.55)' : 'rgba(22,25,28,.6)',
+                    }}
+                >
+                  {nv.icon}
+                </div>
+                <span style={{ fontSize: 10.5, fontWeight: 900, whiteSpace: 'nowrap', color: on ? '#077264' : 'rgba(22,25,28,.55)' }}>
               {nv.label}
             </span>
-          </div>
-        );
-      })}
-    </div>
+              </div>
+          );
+        })}
+      </div>
   );
 }
 
