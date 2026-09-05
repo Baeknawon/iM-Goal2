@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import type { AppState, PersonaKey, MissionResult, FcpsEntry } from '../types';
 import { incomeDefs, missionDefs } from '../data/personas';
+import { recommendMissionDuration } from '../viewmodel/missionDuration';
+import { recoveryPlan } from '../viewmodel/recoveryFlow';
 
 /** iMKRW 지갑 초기 잔액. */
 const WALLET_INITIAL = 50000;
@@ -71,6 +73,8 @@ export const useAppStore = create<AppStore>((set) => ({
   consents: defaultConsents,
   quizPick: null,
   missionOn: false,
+  missionStartedAt: null,
+  activeRecoveryPlan: null,
   recovered: false,
   incomeMonthly: incomeDefs.A.monthly,
   incomeAssets: incomeDefs.A.assets,
@@ -82,7 +86,7 @@ export const useAppStore = create<AppStore>((set) => ({
   fcpsLog: [],
 
   setPersona: (p) => set({
-    persona: p, alertOn: false, push: null, spent: 3200, missionOn: false, recovered: false,
+    persona: p, missionDays: recommendMissionDuration(p).days, alertOn: false, push: null, spent: 3200, missionOn: false, missionStartedAt: null, activeRecoveryPlan: null, recovered: false,
     fueled: false, goalCompleteSeen: false,
     wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [],
     incomeMonthly: incomeDefs[p].monthly, incomeAssets: incomeDefs[p].assets, incomeFixed: incomeDefs[p].fixed,
@@ -98,14 +102,17 @@ export const useAppStore = create<AppStore>((set) => ({
   }),
   pickQuiz: (i) => set({ quizPick: i }),
   resetQuiz: () => set({ quizPick: null }),
-  setMissionOn: (v) => set({ missionOn: v }),
+  setMissionOn: (v) => set((s) => ({ missionOn: v, missionStartedAt: v ? (s.missionStartedAt ?? new Date().toISOString()) : s.missionStartedAt })),
 
   // 미션 시작: iMKRW 머니에서 보증금만큼 묶임. 잔액이 부족하면 에이전트가 자동 충전 후 묶음.
   startMission: (dep) => set((s) => {
+    if (s.missionOn || !Number.isFinite(dep) || dep < 0) return {};
     const topUp = Math.max(0, dep - s.wallet); // 부족분 자동 충전
     const walletAfterTopUp = s.wallet + topUp; // 부족하면 dep만큼으로 채워짐
     return {
-      missionOn: true, recovered: false, missionResult: null,
+      missionOn: true, alertOn: false, recovered: false, missionResult: null,
+      missionStartedAt: new Date().toISOString(),
+      activeRecoveryPlan: recoveryPlan(s.persona, s.missionDays, s.spent),
       deposit: dep,
       wallet: walletAfterTopUp - dep, // 보증금만큼 빠져나감 (묶임)
       locked: s.locked + dep,
@@ -115,37 +122,45 @@ export const useAppStore = create<AppStore>((set) => ({
 
   // 미션 종료(성공/실패/포기): 묶인 보증금이 iMKRW 머니로 반환되고 결과가 FCPS에 기록됨.
   finishMission: (result) => set((s) => {
+    if (!s.missionOn || s.missionResult !== null) return {};
     const meta = fcpsByResult[result];
     const MI = missionDefs[s.persona];
     const entry: FcpsEntry = {
       result, label: meta.label, mission: `${MI.title1} ${MI.title2}`,
+      startedAt: s.missionStartedAt, completedAt: new Date().toISOString(),
+      recoveryPlan: s.activeRecoveryPlan ?? undefined,
       deposit: s.deposit, delta: meta.delta,
     };
     return {
       missionOn: false,
       recovered: result === 'success',
       missionResult: result,
+      missionDays: recommendMissionDuration(s.persona, result).days,
       wallet: s.wallet + s.deposit,          // 묶였던 보증금 반환
       locked: Math.max(0, s.locked - s.deposit),
       fcpsLog: [entry, ...s.fcpsLog],
-      alertOn: false, spent: 3200,
+      alertOn: false,
     };
   }),
 
   // 성공 회복 (기존 흐름 유지 — ReleaseScreen에서 호출)
   completeRecovery: () => set((s) => {
+    if (!s.missionOn || s.missionResult !== null) return {};
     const meta = fcpsByResult.success;
     const MI = missionDefs[s.persona];
     const entry: FcpsEntry = {
       result: 'success', label: meta.label, mission: `${MI.title1} ${MI.title2}`,
+      startedAt: s.missionStartedAt, completedAt: new Date().toISOString(),
+      recoveryPlan: s.activeRecoveryPlan ?? undefined,
       deposit: s.deposit, delta: meta.delta,
     };
     return {
       missionOn: false, recovered: true, missionResult: 'success',
+      missionDays: recommendMissionDuration(s.persona, 'success').days,
       wallet: s.wallet + s.deposit,
       locked: Math.max(0, s.locked - s.deposit),
       fcpsLog: [entry, ...s.fcpsLog],
-      alertOn: false, spent: 3200,
+      alertOn: false,
     };
   }),
   incMonthly: (v) => set({ incomeMonthly: Math.max(0, v) }),
@@ -154,7 +169,7 @@ export const useAppStore = create<AppStore>((set) => ({
   setAlertOn: (v) => set({ alertOn: v }),
   setPush: (p) => set({ push: p }),
   triggerPersonaAlert: (p) =>
-      set({ push: null, alertOn: true, hasGoal: true, spent: triggerSpend[p], missionOn: false, recovered: false }),
+      set({ push: null, alertOn: true, hasGoal: true, spent: triggerSpend[p], recovered: false }),
   dismissAlert: () => set({ alertOn: false }),
   toggleAccepted: () => set((s) => ({ accepted: !s.accepted })),
   toggleBig: () => set((s) => ({ big: !s.big })),
@@ -166,8 +181,8 @@ export const useAppStore = create<AppStore>((set) => ({
   setDeposit: (n) => set({ deposit: n }),
   setBiz: (t) => set({ biz: t }),
   setProdTab: (t) => set({ prodTab: t }),
-  setMissionDays: (n) => set({ missionDays: n }),
-  resetOnboarding: () => set({ hasGoal: false, fueled: false, goalCompleteSeen: false, alertOn: false, spent: 3200, missionOn: false, recovered: false, wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [] }),
+  setMissionDays: (n) => set((s) => !s.missionOn && [7, 14, 21, 28].includes(n) ? { missionDays: n } : {}),
+  resetOnboarding: () => set({ activeRecoveryPlan: null, missionStartedAt: null, hasGoal: false, fueled: false, goalCompleteSeen: false, alertOn: false, spent: 3200, missionOn: false, recovered: false, wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [] }),
   finishGoal: () => set({ hasGoal: true, alertOn: false, spent: 3200 }),
   simulateOverspend: () => set({ alertOn: true, spent: 26200 }),
 }));

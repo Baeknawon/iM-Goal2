@@ -8,22 +8,96 @@ html, body, #root {
 
 body {
   margin: 0;
-  background: #F0F2F3;
-  font-family: 'Noto Sans KR', system-ui, sans-serif;
+  background: var(--color-60-bg-base);
+  font-family: var(--font-family-sans);
   -webkit-font-smoothing: antialiased;
-  color: #16191C;
+  color: var(--color-60-text-primary);
 }
 
 a {
-  color: #0A8873;
+  color: var(--color-accent-text);
   text-decoration: none;
 }
 a:hover {
-  color: #00C7A9;
+  color: var(--im-mint);
 }
 
 button {
   font-family: inherit;
+}
+
+body {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  background: transparent;
+  text-align: inherit;
+  cursor: pointer;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid var(--color-accent-text);
+  outline-offset: 3px;
+}
+
+button:disabled { cursor: not-allowed; opacity: .5; }
+button:active { filter: brightness(.96); }
+
+.app-screen {
+  isolation: isolate;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.screen-header { padding-bottom: var(--space-1); }
+.consent-body > * { flex-shrink: 0; }
+.screen-stack { display: flex; flex-direction: column; gap: var(--component-gap); }
+.screen-stack > * { flex-shrink: 0; }
+.screen-action-footer {
+  flex: none;
+  padding: var(--space-2) var(--screen-padding-x) max(34px, env(safe-area-inset-bottom));
+  background: var(--color-60-bg-surface);
+  border-top: 1px solid var(--color-60-border);
+}
+.screen-body { overscroll-behavior-y: contain; scrollbar-width: thin; scrollbar-color: var(--color-60-border) transparent; }
+.surface-card { border: 1px solid var(--color-60-border); box-shadow: var(--shadow-subtle); }
+.ticket-shell { border-radius: var(--radius-xl); box-shadow: var(--shadow-card); }
+.primary-cta { padding: var(--space-1-5) var(--space-2); line-height: var(--line-height-snug); letter-spacing: var(--letter-spacing-normal); }
+.app-screen > div { min-height: 0; }
+.app-screen input, .app-screen textarea {
+  min-height: var(--touch-target-min);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-60-border);
+}
+
+@media (max-width: 480px) {
+  .app-stage { padding: 0 !important; }
+  .phone-frame {
+    width: 100% !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes slideUp {
@@ -39,9 +113,9 @@ button {
   50% { transform: translateY(-11px) rotate(3deg); }
 }
 @keyframes ringPulse {
-  0% { box-shadow: 0 0 0 0 rgba(203,224,75,.45); }
-  70% { box-shadow: 0 0 0 16px rgba(203,224,75,0); }
-  100% { box-shadow: 0 0 0 0 rgba(203,224,75,0); }
+  0% { box-shadow: 0 0 0 0 rgba(var(--color-mint-rgb),.45); }
+  70% { box-shadow: 0 0 0 16px rgba(var(--color-mint-rgb),0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--color-mint-rgb),0); }
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -73,10 +147,10 @@ button {
   70%, 100% { width: 100%; }
 }
 @keyframes calcring {
-  0% { background: conic-gradient(#16191C 0turn .68turn, #E6EDEA .68turn 1turn); }
-  33% { background: conic-gradient(#16191C 0turn .79turn, #E6EDEA .79turn 1turn); }
-  66% { background: conic-gradient(#16191C 0turn .91turn, #E6EDEA .91turn 1turn); }
-  100% { background: conic-gradient(#00C7A9 0turn 1turn, #00C7A9 1turn); }
+  0% { background: conic-gradient(var(--color-60-text-primary) 0turn .68turn, var(--color-chart-track) .68turn 1turn); }
+  33% { background: conic-gradient(var(--color-60-text-primary) 0turn .79turn, var(--color-chart-track) .79turn 1turn); }
+  66% { background: conic-gradient(var(--color-60-text-primary) 0turn .91turn, var(--color-chart-track) .91turn 1turn); }
+  100% { background: conic-gradient(var(--im-mint) 0turn 1turn, var(--im-mint) 1turn); }
 }
 @keyframes calcA { 0%, 24% { opacity: 1; } 25%, 100% { opacity: 0; } }
 @keyframes calcB { 0%, 24% { opacity: 0; } 25%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -101,7 +175,7 @@ button {
   50% { transform: rotate(2deg) translateY(-4px); }
 }
 
-/* 티켓 발급 로딩: 카드가 위로 촤라락 넘어가는 효과 */
+/* Issuing animation from feat/기능. */
 @keyframes ticketFlip {
   0% { transform: translateY(26px) rotateX(-55deg); opacity: 0; }
   14% { transform: translateY(0) rotateX(0deg); opacity: 1; }
@@ -115,18 +189,4 @@ button {
 @keyframes floatUp {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
-}
-
-/* 기내 플라이트 트래커: 지구 자전(그리드 흐름) + 별 반짝임 */
-@keyframes globeSpin {
-  from { background-position: 0 0; }
-  to { background-position: -240px 0; }
-}
-@keyframes twinkle {
-  0%, 100% { opacity: .25; }
-  50% { opacity: .9; }
-}
-@keyframes planePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
 }

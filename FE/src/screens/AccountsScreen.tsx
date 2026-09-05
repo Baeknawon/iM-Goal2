@@ -28,41 +28,41 @@ export function AccountsScreen() {
 
     return (
         <Screen>
-            <div style={{ padding: '68px 22px 0' }}>
+            <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <BackToHome />
-                    <Pill bg={fueled ? color.mintTintLight : 'rgba(125,181,255,.22)'} fg={fueled ? '#077264' : '#2E6BD0'}>
+                    <Pill bg={fueled ? color.mintTintLight : 'rgba(var(--color-blue-rgb),.22)'} fg={fueled ? 'var(--color-accent-text)' : 'var(--color-info-text)'}>
                         {fueled ? '방금 변동' : '분배 대기'}
                     </Pill>
                 </div>
-                <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{fueled ? '오늘 07:12 · 3계좌 자동 분배' : `어제 23:50 기준 · 페르소나 ${persona}`}</div>
-                <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.14, marginTop: 1 }}>내 계좌 현황</div>
+                <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{fueled ? '오늘 07:12 · 3계좌 자동 분배' : `어제 23:50 기준 · 페르소나 ${persona}`}</div>
+                <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>내 계좌 현황</div>
             </div>
 
             <ScreenBody>
                 {/* 총액 요약 = 전체 보유 금액 (3계좌 합산) */}
-                <div style={{ background: color.ink, borderRadius: 28, padding: 22, color: '#fff' }}>
-                    <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: color.mint }}>전체 보유 금액</div>
+                <div style={{ background: 'var(--color-hero)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', color: 'var(--im-white)' }}>
+                    <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: color.mint }}>전체 보유 금액</div>
                     <div style={{ marginTop: 6, display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                        <span style={{ fontSize: 38, fontWeight: 900, letterSpacing: '-.03em' }}>{totalBalance}</span>
-                        <span style={{ fontSize: 16, fontWeight: 900 }}>원</span>
+                        <span style={{ fontSize: 38, fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>{totalBalance}</span>
+                        <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>원</span>
                     </div>
-                    <div style={{ marginTop: 6, fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,.6)' }}>3계좌 잔액을 모두 합한 금액이에요</div>
+                    <div style={{ marginTop: 6, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>3계좌 잔액을 모두 합한 금액이에요</div>
                 </div>
 
                 {/* 계좌별 상세 */}
-                <div style={{ marginTop: 14, background: '#fff', borderRadius: 26, padding: 22, color: color.ink }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', color: color.ink }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                         {rows.map((a) => (
-                            <div key={a.name} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div key={a.name} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)' }}>
                                 <div style={{ flex: 'none', width: 14, height: 14, borderRadius: 5, background: a.dotColor }} />
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ fontSize: 15.5, fontWeight: 900, letterSpacing: '-.01em' }}>{a.name}</div>
-                                    <div style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(22,25,28,.58)', marginTop: 2 }}>{a.desc}</div>
+                                    <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '-.01em' }}>{a.name}</div>
+                                    <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{a.desc}</div>
                                 </div>
                                 <div style={{ flex: 'none', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                    <div style={{ fontSize: 16, fontWeight: 900 }}>{a.amount}원</div>
-                                    <div style={{ fontSize: 12, fontWeight: 900, marginTop: 2, color: a.delta.includes('+') ? '#077264' : a.delta.includes('-') ? '#D0512E' : 'rgba(22,25,28,.62)' }}>{a.delta}</div>
+                                    <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>{a.amount}원</div>
+                                    <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', marginTop: 'var(--space-0-5)', color: a.delta.includes('+') ? 'var(--color-accent-text)' : a.delta.includes('-') ? 'var(--color-danger)' : 'var(--color-60-text-secondary)' }}>{a.delta}</div>
                                 </div>
                             </div>
                         ))}
@@ -72,14 +72,14 @@ export function AccountsScreen() {
                 {/* 급여 분배 설정으로 이동 */}
                 <div
                     onClick={() => navigate('/splitSettings')}
-                    style={{ marginTop: 14, background: 'rgba(22,25,28,.08)', borderRadius: 26, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}
+                    style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)', cursor: 'pointer' }}
                 >
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: color.sky, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900 }}>급</div>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: color.sky, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>급</div>
                     <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 16, fontWeight: 900 }}>급여 분배 설정</div>
-                        <div style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(22,25,28,.63)', marginTop: 2 }}>분배 비율 변경하기</div>
+                        <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>급여 분배 설정</div>
+                        <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>분배 비율 변경하기</div>
                     </div>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(22,25,28,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900 }}>›</div>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--color-30-surface-sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>›</div>
                 </div>
             </ScreenBody>
         </Screen>

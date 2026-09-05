@@ -12,6 +12,9 @@ export function useJourney() {
   const spent = useAppStore((s) => s.spent);
   const fueled = useAppStore((s) => s.fueled);
   const alertOn = useAppStore((s) => s.alertOn);
+  const latest = useAppStore((s) => s.fcpsLog[0]);
+  const activePlan = useAppStore((s) => s.activeRecoveryPlan);
+  const missionOn = useAppStore((s) => s.missionOn);
   const deposit = useAppStore((s) => s.deposit); // 실제 예치한 보증금
 
   const P = personaDefs[persona];
@@ -19,8 +22,9 @@ export function useJourney() {
 
   const remaining = P.dailyBudget - spent;
   const over = remaining < 0;
-  const grade = over ? '이탈' : spent > 5000 ? '주의' : '순항';
-  const delayed = over || alertOn;
+  const completedPlan = !missionOn && !alertOn && !fueled ? latest?.recoveryPlan : undefined;
+  const grade = completedPlan && latest?.result === 'success' ? '회복 중' : over ? '이탈' : spent > 5000 ? '주의' : '순항';
+  const delayed = over || alertOn || !!completedPlan;
 
   const saved = fueled ? AP.post[0].amount : AP.pre[0].amount;
   const savedPct = fueled ? AP.postPct : AP.prePct;
@@ -37,12 +41,14 @@ export function useJourney() {
   }, 0);
   const totalBalance = totalBalanceNum.toLocaleString('en-US');
 
+  const routePlan = !fueled ? (missionOn ? activePlan : completedPlan) : undefined;
+  const recoveredDays = completedPlan && latest?.result === 'success' ? completedPlan.recoverDays : 0;
   return {
     persona, P, AP, fueled, spent, remaining, over, grade, delayed,
     saved, savedPct, leftLabel, totalBalance,
     eta: delayed ? AP.etaLate : AP.etaShort,
     etaFull: delayed ? AP.etaDelayed : AP.eta,
-    dday: delayed ? AP.ddayLate : AP.dday,
-    etaNote: delayed ? AP.delayNote : '정시 도착 예상',
+    dday: routePlan ? `D-${routePlan.delayedDday - recoveredDays}` : delayed ? AP.ddayLate : AP.dday,
+    etaNote: completedPlan ? `저축 실행 시 ${recoveredDays}일 회복 예상 · ${completedPlan.delayDays - recoveredDays}일 지연 잔여` : delayed ? AP.delayNote : '정시 도착 예상',
   };
 }

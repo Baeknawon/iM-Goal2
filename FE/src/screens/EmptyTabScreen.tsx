@@ -18,21 +18,21 @@ export function EmptyTabScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px 22px 0', flex: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+      <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)' }}>
           <Brand size={23} />
-          <div style={{ padding: '9px 15px', borderRadius: 9999, background: 'rgba(22,25,28,.12)', fontSize: 13, fontWeight: 900, whiteSpace: 'nowrap' }}>목표 미등록</div>
+          <div style={{ padding: '9px 15px', borderRadius: 'var(--radius-pill)', background: 'var(--color-30-surface-sub)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>목표 미등록</div>
         </div>
-        <div style={{ marginTop: 18, fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.16 }}>{emptyTab}</div>
+        <div style={{ marginTop: 18, fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)' }}>{emptyTab}</div>
       </div>
       <div style={{ flex: 1, overflow: 'auto', padding: '22px 22px 120px' }}>
-        <div style={{ background: '#fff', borderRadius: 30, padding: '38px 26px', textAlign: 'center' }}>
-          <div style={{ width: 74, height: 74, borderRadius: '50%', background: 'rgba(22,25,28,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'rgba(22,25,28,.35)', margin: '0 auto' }}>
+        <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-2xl)', padding: '38px 26px', textAlign: 'center' }}>
+          <div style={{ width: 74, height: 74, borderRadius: '50%', background: 'var(--color-30-surface-sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-3xl)', color: 'rgba(var(--color-ink-rgb),.35)', margin: '0 auto' }}>
             {c.icon}
           </div>
-          <div style={{ marginTop: 18, fontSize: 19, fontWeight: 900, letterSpacing: '-.025em' }}>{c.title}</div>
-          <div style={{ marginTop: 9, fontSize: 14, lineHeight: 1.7, fontWeight: 500, color: 'rgba(22,25,28,.62)' }}>{c.desc}</div>
-          <CtaButton height={54} bg="#16191C" fg="#fff" arrowBg="#00C7A9" style={{ marginTop: 20, fontSize: 15.5 }} onClick={() => navigate('/input')}>
+          <div style={{ marginTop: 18, fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.025em' }}>{c.title}</div>
+          <div style={{ marginTop: 9, fontSize: 'var(--font-size-sm)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>{c.desc}</div>
+          <CtaButton height={54} bg="var(--color-action-bg)" fg="var(--color-action-text)" arrowBg="var(--color-action-text)" style={{ marginTop: 'var(--space-2-5)', fontSize: 'var(--font-size-sm)' }} onClick={() => navigate('/input')}>
             금융 목표 등록하기
           </CtaButton>
         </div>

@@ -22,9 +22,7 @@ const navItems: { label: EmptyTabKey | '홈'; to: string; icon: string; groupKey
 
 /** Screens where the bottom nav is shown at all (mirrors the doc's `navScreens`). */
 export const navScreens = [
-  'home', 'detail', 'empty', 'emptyTab', 'spend', 'category', 'calendar',
-  'missionDetail', 'cause', 'token', 'release', 'mileage', 'products', 'salary',
-  'alerts', 'quiz', 'missions', 'missionLive',
+  'home', 'empty', 'emptyTab', 'spend', 'alerts', 'missions', 'mileage',
 ];
 
 export function BottomNav() {
@@ -54,19 +52,19 @@ export function BottomNav() {
                     }
                     navigate('/' + nv.to);
                   }}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, cursor: 'pointer' }}
+                  style={{ flex: 1, minWidth: 0, minHeight: 56, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 4, cursor: 'pointer' }}
               >
                 <div
                     style={{
-                      width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', fontSize: 14, fontWeight: 900, transition: 'all .18s ease',
-                      background: on ? color.mint : supportScreen ? 'rgba(43,11,3,.10)' : 'rgba(22,25,28,.12)',
-                      color: on ? color.ink : supportScreen ? 'rgba(43,11,3,.55)' : 'rgba(22,25,28,.6)',
+                      width: 40, height: 28, borderRadius: 'var(--radius-pill)', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: 14, fontWeight: 'var(--font-weight-semibold)', transition: 'all .18s ease',
+                      background: on ? color.mintTint : supportScreen ? 'rgba(var(--color-ink-rgb),.10)' : 'transparent',
+                      color: on ? color.ink : supportScreen ? 'var(--color-60-text-secondary)' : 'var(--color-60-text-secondary)',
                     }}
                 >
                   {nv.icon}
                 </div>
-                <span style={{ fontSize: 10.5, fontWeight: 900, whiteSpace: 'nowrap', color: on ? '#077264' : 'rgba(22,25,28,.55)' }}>
+                <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap', color: on ? 'var(--color-accent-text)' : 'var(--color-60-text-secondary)' }}>
               {nv.label}
             </span>
               </div>
@@ -77,8 +75,8 @@ export function BottomNav() {
 }
 
 const navBarStyle: CSSProperties = {
-  position: 'absolute', left: 18, right: 18, bottom: 22, height: 74, borderRadius: 9999,
-  background: '#FFFFFF', border: '1px solid rgba(22,25,28,.09)', boxShadow: '0 8px 26px rgba(22,25,28,.13)',
+  position: 'absolute', left: 16, right: 16, bottom: 28, height: 72, borderRadius: 'var(--radius-xl)',
+  background: 'var(--color-60-bg-surface)', border: '1px solid var(--color-60-border)', boxShadow: 'var(--shadow-card)',
   display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '0 14px',
   boxSizing: 'border-box', zIndex: 6,
 };

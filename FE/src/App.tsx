@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { PhoneFrame } from './components/PhoneFrame';
+import { GlobalAssistant } from './components/GlobalAssistant';
 import { BottomNav, navScreens } from './components/BottomNav';
 import { useAppStore } from './store/appStore';
 
@@ -32,6 +33,8 @@ import { CauseScreen } from './screens/CauseScreen';
 import { TokenScreen } from './screens/TokenScreen';
 import { ReleaseScreen } from './screens/ReleaseScreen';
 import { MileageScreen } from './screens/MileageScreen';
+import { VerifyScreen } from './screens/VerifyScreen';
+import { FcpsDetailScreen } from './screens/FcpsDetailScreen';
 import { ProductsScreen } from './screens/ProductsScreen';
 import { SupportScreen } from './screens/SupportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
@@ -87,8 +90,10 @@ function AppShell() {
           <Route path="/missionDetail" element={<MissionDetailScreen />} />
           <Route path="/cause" element={<CauseScreen />} />
           <Route path="/token" element={<TokenScreen />} />
+          <Route path="/verify" element={<VerifyScreen />} />
           <Route path="/release" element={<ReleaseScreen />} />
           <Route path="/mileage" element={<MileageScreen />} />
+          <Route path="/fcps" element={<FcpsDetailScreen />} />
           <Route path="/products" element={<ProductsScreen />} />
           <Route path="/support" element={<SupportScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
@@ -105,24 +110,25 @@ function AppShell() {
                 onClick={toPicker}
                 style={{
                   position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: 6, zIndex: 40,
-                  padding: '6px 14px', borderRadius: 9999, background: 'rgba(22,25,28,.55)', color: '#fff',
-                  fontSize: 11, fontWeight: 900, cursor: 'pointer',
+                  padding: '6px 14px', borderRadius: 9999, background: 'var(--color-60-text-secondary)', color: 'var(--im-white)',
+                  fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', cursor: 'pointer',
                 }}
             >
               상황 바꾸기
             </div>
         )}
         {showNav && <BottomNav />}
+        <GlobalAssistant />
       </PhoneFrame>
   );
 }
 
 export default function App() {
   return (
-      <div
+      <div className="app-stage"
           style={{
             minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'radial-gradient(circle at 30% 20%, rgba(0,201,167,.10), transparent 55%), #EFF1F2',
+            background: 'var(--color-30-surface-sub)',
             padding: 32, boxSizing: 'border-box',
           }}
       >

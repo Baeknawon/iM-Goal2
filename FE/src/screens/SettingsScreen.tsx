@@ -20,45 +20,45 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px 22px 0' }}>
+      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
           <Pill>MY PASSPORT</Pill>
         </div>
-        <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>iM뱅크 주거래 · SILVER</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.14, marginTop: 1 }}>김서준님</div>
+        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>iM뱅크 주거래 · SILVER</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>김서준님</div>
       </div>
 
       <div style={{ flex: 1, overflow: 'auto', padding: '16px 22px 40px' }}>
         <div
           onClick={toggleBig}
           style={{
-            display: 'flex', alignItems: 'center', gap: 16, padding: 22, borderRadius: 28, cursor: 'pointer',
-            background: big ? color.mint : 'rgba(22,25,28,.08)', color: big ? color.ink : '#fff',
+            display: 'flex', alignItems: 'center', gap: 'var(--space-2)', padding: 'var(--space-2-5)', borderRadius: 'var(--radius-xl)', cursor: 'pointer',
+            background: big ? color.mint : 'rgba(var(--color-ink-rgb),.08)', color: big ? color.ink : color.textSecondary,
           }}
         >
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.015em' }}>큰 글씨 모드</div>
-            <div style={{ marginTop: 3, fontSize: 13, fontWeight: 700, opacity: 0.6 }}>탑승권 금액 숫자를 34px → 44px로</div>
+            <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.015em' }}>큰 글씨 모드</div>
+            <div style={{ marginTop: 3, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', opacity: 0.6 }}>탑승권 금액 숫자를 34px → 44px로</div>
           </div>
-          <div style={{ flex: 'none', width: 62, height: 36, borderRadius: 9999, padding: 3, boxSizing: 'border-box', display: 'flex', justifyContent: big ? 'flex-end' : 'flex-start', background: big ? color.ink : 'rgba(22,25,28,.16)', transition: 'all .2s ease' }}>
-            <div style={{ width: 30, height: 30, borderRadius: '50%', background: big ? color.mint : '#fff' }} />
+          <div style={{ flex: 'none', width: 62, height: 36, borderRadius: 'var(--radius-pill)', padding: 3, boxSizing: 'border-box', display: 'flex', justifyContent: big ? 'flex-end' : 'flex-start', background: big ? color.mint : 'rgba(var(--color-ink-rgb),.16)', transition: 'all .2s ease' }}>
+            <div style={{ width: 30, height: 30, borderRadius: '50%', background: big ? color.mint : 'var(--im-white)' }} />
           </div>
         </div>
 
-        <div style={{ marginTop: 12, background: 'rgba(22,25,28,.08)', borderRadius: 28, padding: 22 }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.63)' }}>기내 안내방송 · 개입 강도</div>
-          <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+        <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)' }}>
+          <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>기내 안내방송 · 개입 강도</div>
+          <div style={{ marginTop: 'var(--space-1-5)', display: 'flex', gap: 'var(--space-1)' }}>
             {INTENSITIES.map((i) => {
               const on = intensity === i;
               return (
                 <div
                   key={i}
                   onClick={() => setIntensity(i)}
-                  style={{
-                    flex: 1, height: 50, borderRadius: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 15, fontWeight: 900, cursor: 'pointer',
-                    background: on ? color.mint : 'rgba(22,25,28,.08)', color: on ? color.ink : 'rgba(22,25,28,.6)',
+                  style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',
+                    flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer',
+                    background: on ? color.mint : 'rgba(var(--color-ink-rgb),.08)', color: on ? color.ink : 'var(--color-60-text-secondary)',
                   }}
                 >
                   {i}
@@ -66,37 +66,37 @@ export function SettingsScreen() {
               );
             })}
           </div>
-          <div style={{ marginTop: 12, fontSize: 13.5, lineHeight: 1.65, fontWeight: 500, color: 'rgba(22,25,28,.6)' }}>{intensityDescs[intensity]}</div>
+          <div style={{ marginTop: 'var(--space-1-5)', fontSize: 'var(--font-size-xs)', lineHeight: 1.65, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>{intensityDescs[intensity]}</div>
         </div>
 
-        <div style={{ marginTop: 12, background: 'rgba(22,25,28,.08)', borderRadius: 28, padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.63)' }}>안심 장치</div>
+        <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
+          <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>안심 장치</div>
           <SettingsRow icon="데" title="연동 데이터 관리" desc="언제든 해지 · 즉시 삭제" />
           <SettingsRow icon="F" title="FCPS 제공 동의 관리" desc="여신심사 보조자료 제공 여부" />
-          <SettingsRow icon="비" iconBg="#FFD9CF" iconFg="#C4472A" title="비상 착륙 안내 다시 보기" desc="위험 등급일 때 자동으로 열립니다" onClick={() => navigate('/support')} />
+          <SettingsRow icon="비" iconBg="var(--color-danger-surface)" iconFg="var(--color-danger)" title="비상 착륙 안내 다시 보기" desc="위험 등급일 때 자동으로 열립니다" onClick={() => navigate('/support')} />
         </div>
 
-        <div style={{ marginTop: 14, height: 66, borderRadius: 9999, background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, fontSize: 18, fontWeight: 900, cursor: 'pointer' }}>
-          <span style={{ width: 32, height: 32, borderRadius: '50%', background: color.ink, color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>☎</span>
+        <div style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-1-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}>
+          <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>☎</span>
           전화 상담 1566-0000
         </div>
-        <div style={{ marginTop: 12, textAlign: 'center', fontSize: 13, fontWeight: 700, color: 'rgba(22,25,28,.58)' }}>평일 09:00~18:00 · 대기 없이 담당자 연결</div>
+        <div style={{ marginTop: 'var(--space-1-5)', textAlign: 'center', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>평일 09:00~18:00 · 대기 없이 담당자 연결</div>
       </div>
     </Screen>
   );
 }
 
 function SettingsRow({
-  icon, iconBg = color.mintTintLight, iconFg = '#077264', title, desc, onClick,
+  icon, iconBg = color.mintTintLight, iconFg = 'var(--color-accent-text)', title, desc, onClick,
 }: { icon: string; iconBg?: string; iconFg?: string; title: string; desc: string; onClick?: () => void }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 13, cursor: onClick ? 'pointer' : undefined }} onClick={onClick}>
-      <div style={{ width: 40, height: 40, borderRadius: '50%', background: iconBg, color: iconFg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900 }}>{icon}</div>
+      <div style={{ width: 40, height: 40, borderRadius: '50%', background: iconBg, color: iconFg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>{icon}</div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 15.5, fontWeight: 900 }}>{title}</div>
-        <div style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(22,25,28,.63)', marginTop: 1 }}>{desc}</div>
+        <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>{title}</div>
+        <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{desc}</div>
       </div>
-      <span style={{ fontSize: 19, opacity: 0.35 }}>›</span>
+      <span style={{ fontSize: 'var(--font-size-lg)', opacity: 0.35 }}>›</span>
     </div>
   );
 }
