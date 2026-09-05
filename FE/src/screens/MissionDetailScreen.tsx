@@ -70,7 +70,7 @@ function MissionDetailContent() {
                 <button type="button" className="deposit-reset" onClick={() => setDraftDays(recommendation.days)}>AI 추천 {recommendation.days}일로 맞추기</button>
                 <div className="deposit-adjust-actions"><CtaButton height={52} bg={color.bgAlt} onClick={() => setDraftDays(null)}>취소</CtaButton><CtaButton height={52} onClick={() => { setMissionDays(draftDays); setDraftDays(null); }}>기간 적용</CtaButton></div>
               </div>}
-              <p className="mission-duration-footnote">미션 특성과 최근 결과에 따른 데모 추천입니다.</p>
+              <p className="mission-duration-footnote">미션 특성과 최근 결과에 따른 추천입니다.</p>
             </section>
           </div>
           <div style={{ position: 'relative', height: 26, background: 'var(--color-60-bg-surface)', display: 'flex', alignItems: 'center' }}>

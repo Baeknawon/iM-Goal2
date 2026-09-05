@@ -118,7 +118,7 @@ function AppShell() {
             </div>
         )}
         {showNav && <BottomNav />}
-        <GlobalAssistant />
+        <GlobalAssistant enabled={showNav} />
       </PhoneFrame>
   );
 }

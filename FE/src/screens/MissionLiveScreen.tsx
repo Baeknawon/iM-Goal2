@@ -74,11 +74,11 @@ export function MissionLiveScreen() {
             <div style={{ marginTop: 9, fontSize: 'var(--font-size-sm)', lineHeight: 1.7, fontWeight: 'var(--font-weight-semibold)' }}>{MI.how}</div>
           </div>
           <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>
-            완료 기준: {recoveryCriteria[persona].rule}. 데모에서는 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
+            완료 기준: {recoveryCriteria[persona].rule}. 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
           </div>
 
           {/* 데모: 미션 결과 처리 (성공 / 실패 / 포기) */}
-          <div style={{ marginTop: 4, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>데모 · 미션 결과 처리</div>
+          <div style={{ marginTop: 4, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>미션 결과 처리</div>
           <div
               onClick={() => { navigate('/verify?result=success'); }}
               style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}

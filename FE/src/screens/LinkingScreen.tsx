@@ -46,11 +46,12 @@ export function LinkingScreen() {
             </div>
           ))}
         </div>
-        <div style={{ flex: 1 }} />
-        <img
-          src="/assets/pair-map.png" alt="연결을 확인하는 단디와 똑디"
-          style={{ width: '100%', maxWidth: 320, alignSelf: 'center', height: 'auto', display: 'block', animation: 'unfurl 3.2s ease-in-out infinite' }}
-        />
+        <div style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', width: 'calc(100% - 44px)', maxWidth: 320, pointerEvents: 'none' }}>
+          <img
+            src="/assets/pair-map.png" alt="연결을 확인하는 단디와 똑디"
+            style={{ width: '100%', height: 'auto', display: 'block', animation: 'unfurl 3.2s ease-in-out infinite' }}
+          />
+        </div>
       </div>
     </Screen>
   );

@@ -7,7 +7,7 @@ import type { PersonaKey } from '../types';
 interface Message extends AssistantReply { role: 'user' | 'assistant' }
 const greeting: Message = { role: 'assistant', text: '안녕하세요, 똑디예요! 지금 보고 있는 화면에서 궁금한 점을 물어보세요. 목표와 미션을 함께 살펴볼게요.' };
 
-export function GlobalAssistant() {
+export function GlobalAssistant({ enabled = true }: { enabled?: boolean }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const persona = useAppStore((s) => s.persona);
@@ -21,10 +21,10 @@ export function GlobalAssistant() {
   const end = useRef<HTMLDivElement>(null);
   const messages = history[persona];
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { setOpen(false); }, [pathname, enabled]);
   useEffect(() => { setDraft(''); }, [persona]);
   useEffect(() => {
-    if (!open) return;
+    if (!open || !enabled) return;
     input.current?.focus();
     // Keep keyboard navigation and screen readers inside the sheet while it is open.
     const siblings = Array.from(host.current?.parentElement?.children ?? [])
@@ -45,7 +45,7 @@ export function GlobalAssistant() {
       document.removeEventListener('keydown', onKey);
       launcher.current?.focus();
     };
-  }, [open]);
+  }, [open, enabled]);
   useEffect(() => { if (open) end.current?.scrollIntoView({ block: 'nearest' }); }, [messages, open]);
 
   const send = (value: string) => {
@@ -56,6 +56,8 @@ export function GlobalAssistant() {
     setDraft('');
   };
 
+  if (!enabled) return null;
+
   return <div ref={host} className="assistant-host">
     <button ref={launcher} type="button" className="assistant-launcher" aria-label="똑디에게 물어보기" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)} hidden={open}>
       <img src="/assets/ddokdi-credit.png" alt="" /><span>똑디</span>
@@ -65,7 +67,7 @@ export function GlobalAssistant() {
       <section ref={panel} className="assistant-sheet" role="dialog" aria-modal="true" aria-labelledby="assistant-title" aria-describedby="assistant-description">
         <header className="assistant-header">
           <img src="/assets/ddokdi-credit.png" alt="" />
-          <div><h2 id="assistant-title">똑디에게 물어보기</h2><p id="assistant-description">화면 맞춤 도우미 · 데모</p></div>
+          <div><h2 id="assistant-title">똑디에게 물어보기</h2><p id="assistant-description">화면 맞춤 도우미</p></div>
           <button type="button" aria-label="챗봇 닫기" onClick={() => setOpen(false)}>×</button>
         </header>
         <div className="assistant-meta"><span>화면을 옮겨도 대화가 이어져요</span><button type="button" disabled={messages.length === 0} onClick={() => setHistory((old) => ({ ...old, [persona]: [] }))}>대화 지우기</button></div>
@@ -83,7 +85,7 @@ export function GlobalAssistant() {
           <input ref={input} id="assistant-input" value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && event.nativeEvent.isComposing) event.preventDefault(); }} maxLength={1000} placeholder="궁금한 점을 물어보세요" autoComplete="off" />
           <button type="submit" disabled={!draft.trim()} aria-label="질문 보내기">↑</button>
         </form>
-        <p className="assistant-footnote">앱 데이터 기반 데모 답변 · 거래는 직접 실행하지 않아요</p>
+        <p className="assistant-footnote">앱 데이터 기반 답변 · 거래는 직접 실행하지 않아요</p>
       </section>
     </div>}
   </div>;

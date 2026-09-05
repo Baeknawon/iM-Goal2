@@ -9,7 +9,7 @@ export function ConnectScreen() {
   return (
     <Screen>
       <ScreenHeader
-        onBack={() => navigate('/home')}
+        onBack={() => navigate('/consent')}
         backLabel="‹ 뒤로"
         rightChip={<Pill bg={color.mint} fg={color.ink}>동의 3/4 · 완료</Pill>}
         sub="연결이 끝났어요,"

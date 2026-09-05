@@ -30,7 +30,7 @@ function SpendContent() {
       <section className="insight-hero"><MonthPicker />
         <p className="insight-eyebrow">{month}월 총소비</p><div className="insight-number">{data.total.toLocaleString()}<span>원</span></div>
         <p className="insight-secondary">{data.previousTotal?`지난달보다 ${Math.abs(data.total-data.previousTotal).toLocaleString()}원 ${data.total>=data.previousTotal?'더 썼어요':'덜 썼어요'}`:'지난달 비교 내역이 없어요'}</p>
-        <span className="insight-caption">월 전체 기준 · {data.entries.length}건 · 목데이터</span>
+        <span className="insight-caption">월 전체 기준 · {data.entries.length}건</span>
       </section>
       {data.entries.length>0?<>
         <section className="insight-budget"><div className="insight-section-heading"><h2>{budget?'설정한 예산':'이번 달 예산을 정해보세요'}</h2><button onClick={()=>{setDraft(budget?String(budget):'');setEditing(!editing);}}>{budget?'변경':'설정하기'}</button></div>
@@ -44,6 +44,6 @@ function SpendContent() {
         </section>
         <section className="insight-section"><div className="insight-section-heading"><h2>어디에 많이 썼나요?</h2><button onClick={()=>navigate('/category')}>전체 보기 ›</button></div><SpendingRows period={period}/><p className="insight-caption">금액·건수·비중은 선택 월 기준 / 증감률은 전월 대비</p></section>
         <section className="insight-coach"><img src="/assets/ddokdi-credit.png" alt=""/><div><h2>지출을 줄일 방법도 살펴볼까요?</h2><p>내 상황에 맞는 회복 미션과 예상 효과를 확인해요.</p><button onClick={()=>navigate('/missionDetail')}>추천 미션 확인 ›</button></div></section>
-      </>:<div className="insight-empty">이 달에는 기록된 소비가 없어요.<br/>2026년 6·7월에 데모 내역이 있습니다.</div>}
+      </>:<div className="insight-empty">이 달에는 기록된 소비가 없어요.<br/>다른 달을 선택해 확인해보세요.</div>}
     </div></ScreenBody></Screen>;
 }

@@ -78,8 +78,9 @@ export function PickerScreen() {
       </div>
 
       <div style={{ position: 'relative', marginTop: 'auto', paddingTop: 22, fontSize: 'var(--font-size-2xs)', lineHeight: 1.65, fontWeight: 'var(--font-weight-semibold)', color: color.textSecondary }}>
-        iM금융그룹 공모전 시연용 · 화면의 수치는 발표용 예시입니다
+        iM금융그룹 공모전 · 금융 목표를 향한 작은 실천
       </div>
     </div>
   );
 }
+

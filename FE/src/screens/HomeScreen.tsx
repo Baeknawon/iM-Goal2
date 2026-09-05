@@ -37,15 +37,20 @@ export function HomeScreen() {
                 GOAL 0725 · {P.goalName} <span style={{ opacity: 0.5 }}>▾</span>
               </div>
             </div>
-            <div
+            <button
+                type="button"
+                aria-label="마이페이지 열기"
                 onClick={() => navigate('/settings')}
-                style={{ flex: 'none', width: 46, height: 46, cursor: 'pointer', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}
+                style={{ flex: 'none', width: 48, minHeight: 58, padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}
             >
-              <img
-                  src="/assets/dandi-hi.png" alt="단디"
-                  style={{ height: 52, width: 'auto', display: 'block', animation: 'nod 3.2s ease-in-out infinite', filter: 'drop-shadow(0 5px 10px rgba(var(--color-ink-rgb),.18))' }}
-              />
-            </div>
+              <span style={{ width: 36, height: 36, borderRadius: '50%', display: 'grid', placeItems: 'center', background: 'var(--color-30-tab-bg)', color: 'var(--color-60-text-primary)' }}>
+                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="3.5" />
+                  <path d="M5 20v-1a7 7 0 0 1 14 0v1" />
+                </svg>
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.3, color: 'var(--color-60-text-secondary)' }}>마이</span>
+            </button>
           </div>
 
           <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{over ? '항로를 벗어났어요,' : '순항 중입니다,'}</div>
@@ -226,7 +231,7 @@ export function HomeScreen() {
               onClick={() => triggerPersonaAlert(persona)}
               style={{ marginTop: 18, height: 52, borderRadius: 'var(--radius-pill)', border: '1.5px dashed var(--color-60-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', cursor: 'pointer' }}
           >
-            데모 · {P.triggerLabel}
+            {P.triggerLabel}
           </div>
           <div style={{ marginTop: 7, textAlign: 'center', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>실제 상황처럼 알림이 먼저 도착합니다</div>
           {showRecoverTrigger && (
@@ -234,7 +239,7 @@ export function HomeScreen() {
                   onClick={() => navigate(`/uc/${phase2Start[persona]}`)}
                   style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
               >
-                데모 · 회복 미션 성공 확인
+                회복 미션 성공 확인
                 <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>✓</span>
               </div>
           )}

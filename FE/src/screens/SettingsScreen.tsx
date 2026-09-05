@@ -25,8 +25,8 @@ export function SettingsScreen() {
           <BackToHome />
           <Pill>MY PASSPORT</Pill>
         </div>
-        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>iM뱅크 주거래 · SILVER</div>
-        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>김서준님</div>
+        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>김서준님 · iM뱅크 주거래</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>마이페이지</div>
       </div>
 
       <div style={{ flex: 1, overflow: 'auto', padding: '16px 22px 40px' }}>

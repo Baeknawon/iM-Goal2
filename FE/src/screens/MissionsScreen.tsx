@@ -102,7 +102,7 @@ export function MissionsScreen() {
                     </div>
                 ))}
                 <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>
-                    과거 완료 미션 3건은 시연용 목데이터입니다. 새 미션에는 실제 수행 날짜가 기록됩니다.<br />보증금은 벌칙이 아닙니다. 성공·실패·포기 어느 경우든 iMKRW 지갑으로 전액 돌려받고, 결과만 FCPS에 기록됩니다.
+                    미션에는 시작일과 완료일이 기록됩니다.<br />보증금은 벌칙이 아닙니다. 성공·실패·포기 어느 경우든 iMKRW 지갑으로 전액 돌려받고, 결과만 FCPS에 기록됩니다.
                 </div>
             </div>
         </Screen>

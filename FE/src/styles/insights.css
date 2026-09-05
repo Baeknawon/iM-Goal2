@@ -77,3 +77,17 @@
 .insight-calendar button[data-level=low] { background:#EEF5F2; }
 .insight-calendar button[data-level=high] { background:#C8E9DF; }
 .insight-calendar button[aria-pressed=true] { outline:2px solid #008F7A; outline-offset:0; }
+
+.credit-boarding-pass.insight-hero { position:relative; padding:22px 24px 0; border-radius:24px; background:linear-gradient(145deg,#FFFFFF 55%,#F0F7F6); border:1px solid #DFEAE5; overflow:hidden; box-shadow:0 4px 14px rgba(31,41,55,.035); }
+.credit-pass-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--color-accent-text); font-size:12px; font-weight:700; letter-spacing:.1em; }
+.credit-pass-heading > span:last-child { font-size:22px; }
+.credit-pass-route { display:flex; align-items:center; gap:10px; margin-top:18px; font-size:12px; color:var(--color-60-text-secondary); }
+.credit-pass-route-line { flex:1; min-width:16px; height:1px; border-top:1px dashed #B2CEC3; }
+.credit-boarding-pass .insight-eyebrow { margin-top:22px; }
+.credit-pass-stub { position:relative; display:flex; align-items:center; justify-content:space-between; gap:12px; margin:22px -24px 0; padding:18px 24px 20px; border-top:1px dashed #B7CFC5; background:rgba(232,244,239,.6); }
+.credit-pass-stub::before,.credit-pass-stub::after { content:''; position:absolute; top:-10px; width:20px; height:20px; border-radius:50%; background:var(--color-60-bg-base); border:1px solid #DFEAE5; }
+.credit-pass-stub::before { left:-11px; }.credit-pass-stub::after { right:-11px; }
+.credit-pass-stub > div > span,.credit-pass-stub > button > span { display:block; font-size:12px; color:var(--color-60-text-secondary); }
+.credit-pass-stub b { display:block; margin-top:4px; font-size:14px; font-weight:600; }
+.credit-pass-stub > button { min-height:48px; padding:0; color:var(--color-accent-text); }
+.credit-pass-barcode { flex:none; width:34px; height:34px; opacity:.5; background:repeating-linear-gradient(90deg,#38584C 0 1px,transparent 1px 3px,#38584C 3px 5px,transparent 5px 7px,#38584C 7px 8px,transparent 8px 11px); }

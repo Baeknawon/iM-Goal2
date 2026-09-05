@@ -20,7 +20,7 @@ export function CalendarScreen() {
       if(day===null)return <span key={'blank'+i}/>;
       const amount=data.entries.filter(e=>e.day===day).reduce((sum,e)=>sum+e.amount,0);
       return <button key={day} aria-pressed={selected===day} aria-label={`${month}월 ${day}일 ${amount.toLocaleString()}원`} onClick={()=>setSelection({period,day})} data-level={amount>15000?'high':amount>0?'low':'none'}><b>{day}</b><small>{data.entries.length?formatCalendarAmount(amount):'—'}</small></button>;
-    })}</div><p className="insight-caption">색이 진할수록 지출이 많은 날이에요 · 목데이터</p></section>
+    })}</div><p className="insight-caption">색이 진할수록 지출이 많은 날이에요</p></section>
     <section className="insight-section"><div className="insight-section-heading"><h2>{selected===null?'날짜를 선택해주세요':`${month}월 ${selected}일`}</h2><b>{rows.reduce((sum,e)=>sum+e.amount,0).toLocaleString()}원</b></div>{rows.length?rows.map((row,i)=><div className="insight-habit" key={i}><span>{row.name}</span><b>{row.amount.toLocaleString()}원</b></div>):<p className="insight-secondary">표시할 소비 내역이 없습니다.</p>}</section>
   </div></ScreenBody></Screen>;
 }

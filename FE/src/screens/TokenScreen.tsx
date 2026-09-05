@@ -79,12 +79,12 @@ function DepositScreen() {
               <summary>추천 금액 계산 보기</summary>
               <p>미션 기간 예산의 10%({won(Math.round(result.base))}원)에 오늘 초과 지출 보정액 {won(Math.round(result.adjustment))}원을 더했어요. 보정은 하루 예산까지만 반영하며, 초과분의 25%예요.</p>
               <p>월 여유의 10%({won(Math.floor(result.cashCap))}원), 지갑의 60%({won(Math.floor(result.walletCap))}원), 남은 목표 금액, 5만원 중 가장 낮은 금액을 상한으로 적용하고 1,000원 단위로 내림했어요.</p>
-              <p>데모 계산 기준이며, 보증금만으로 목표 달성이나 수익을 보장하지 않아요.</p>
+              <p>계산 결과는 예상치이며, 보증금만으로 목표 달성이나 수익을 보장하지 않아요.</p>
             </details>
           </section>
           <div className="deposit-wallet"><span>예치 후 지갑 잔액</span><strong>{won(Math.max(0, wallet - shownDeposit))} iMKRW</strong></div>
           {topUp > 0 && <InfoNote>선택 금액이 지갑 잔액보다 {won(topUp)}원 많아요. 아래 예치에 동의하면 부족분 {won(topUp)}원이 자동 충전된 뒤 예치됩니다.</InfoNote>}
-          <InfoNote>보증금은 미션 기간 동안만 묶입니다. 현재 데모에서는 성공·실패·포기 모두 전액 반환하고, 수행 결과만 FCPS에 기록해요. 추천 확인이나 금액 조정만으로는 예치되지 않아요.</InfoNote>
+          <InfoNote>보증금은 미션 기간 동안만 묶입니다. 현재 기준으로는 성공·실패·포기 모두 전액 반환하고, 수행 결과만 FCPS에 기록해요. 추천 확인이나 금액 조정만으로는 예치되지 않아요.</InfoNote>
         </div>
       </ScreenBody>
       <div className="screen-action-footer">

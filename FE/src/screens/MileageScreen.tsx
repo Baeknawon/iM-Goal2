@@ -24,7 +24,11 @@ export function MileageScreen() {
   const change=visible.at(-1)!.balance-visible[0].balance;
   return <Screen><header className="insight-header"><h1>금융 행동 점수</h1><button onClick={()=>navigate('/fcps')}>FCPS란?</button></header>
     <ScreenBody><div className="insight-stack">
-      <section className="insight-hero"><p className="insight-eyebrow">꾸준한 실천이 쌓인 나의 FCPS</p><div className="insight-number">{score.total}<span>점</span></div><p className="insight-positive">기록 시작 이후 {score.total>=FCPS_INITIAL_SCORE?'+':''}{score.total-FCPS_INITIAL_SCORE}점</p><p className="insight-caption">공식 신용점수와 다른 금융 행동 지표 · 데모</p></section>
+      <section className="insight-hero credit-boarding-pass">
+        <div className="credit-pass-heading"><span>MY GROWTH PASS</span><span aria-hidden="true">✈</span></div>
+        <div className="credit-pass-route"><span>작은 실천</span><span className="credit-pass-route-line" aria-hidden="true"/><span>더 나은 금융 습관</span></div><p className="insight-eyebrow">꾸준한 실천이 쌓인 나의 FCPS</p><div className="insight-number">{score.total}<span>점</span></div><p className="insight-positive">기록 시작 이후 {score.total>=FCPS_INITIAL_SCORE?'+':''}{score.total-FCPS_INITIAL_SCORE}점</p><p className="insight-caption">공식 신용점수와 다른 금융 행동 지표</p>
+        <div className="credit-pass-stub"><div><span>기록 시작</span><b>2026.02.01</b></div><button type="button" onClick={()=>navigate('/fcps')}><span>함께 쌓은 기록</span><b>{points.length-1}건 <span aria-hidden="true">›</span></b></button><div className="credit-pass-barcode" aria-hidden="true"/></div>
+      </section>
       <section className="insight-section"><div className="insight-section-heading"><h2>점수의 변화</h2><div className="insight-segment"><button aria-pressed={!recent} onClick={()=>{setRecent(false);setSelection(null);}}>전체</button><button aria-pressed={recent} onClick={()=>{setRecent(true);setSelection(null);}}>최근 3건</button></div></div>
         <div className="insight-trend-summary"><b>{change>=0?'+':''}{change}점</b><span>선택 구간 변화</span></div>
         <svg className="insight-trend" viewBox="0 0 320 166" role="img" aria-label={`FCPS ${visible[0].balance}점에서 ${visible.at(-1)!.balance}점으로 변화`}>
