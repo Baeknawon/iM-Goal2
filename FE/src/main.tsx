@@ -16,3 +16,5 @@ createRoot(document.getElementById('root')!).render(
 );
 
 import './styles/assistant.css';
+
+import './styles/insights.css';
