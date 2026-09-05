@@ -9,11 +9,11 @@ export const waveHeights = [
 export const paceTargets = [40, 52, 44, 61, 48, 70, 56, 78];
 
 export const spendCategories = [
-  { name: '식비 · 배달', pct: '32%', color: color.navy },
-  { name: '교통', pct: '23%', color: color.mint },
-  { name: '생활', pct: '17%', color: color.sky },
-  { name: '문화', pct: '15%', color: '#6E7A0A' },
-  { name: '기타', pct: '13%', color: '#DDE2E5' },
+  { name: '식비 · 배달', pct: '32%', color: color.mint },
+  { name: '교통', pct: '23%', color: color.sky },
+  { name: '생활', pct: '17%', color: 'var(--im-purple)' },
+  { name: '문화', pct: '15%', color: color.gold },
+  { name: '기타', pct: '13%', color: 'var(--im-light-blue)' },
 ];
 
 export const categoryRows = [
@@ -34,9 +34,9 @@ export const spendMap: Record<number, number> = {
 };
 
 export const dayTxns = [
-  { name: '배달앱 결제', meta: 'iM 체크카드 · 19:42', amount: '23,000원', icon: '배', iconBg: '#FFD9CF', iconFg: '#C4472A' },
-  { name: '편의점', meta: 'iM 체크카드 · 13:10', amount: '2,400원', icon: '편', iconBg: 'rgba(22,25,28,.12)', iconFg: 'rgba(22,25,28,.7)' },
-  { name: '버스·지하철', meta: '교통카드 · 08:20', amount: '800원', icon: '교', iconBg: 'rgba(22,25,28,.12)', iconFg: 'rgba(22,25,28,.7)' },
+  { name: '배달앱 결제', meta: 'iM 체크카드 · 19:42', amount: '23,000원', icon: '배', iconBg: 'var(--color-danger-surface)', iconFg: 'var(--color-danger)' },
+  { name: '편의점', meta: 'iM 체크카드 · 13:10', amount: '2,400원', icon: '편', iconBg: 'rgba(var(--color-ink-rgb),.12)', iconFg: 'var(--color-60-text-secondary)' },
+  { name: '버스·지하철', meta: '교통카드 · 08:20', amount: '800원', icon: '교', iconBg: 'rgba(var(--color-ink-rgb),.12)', iconFg: 'var(--color-60-text-secondary)' },
 ];
 
 export const fcpsFactors = [
@@ -73,7 +73,7 @@ export const supportProductDefs: { name: string; target: string; cta: string; fi
 export const fitColor: Record<'적합' | '검토' | '참고', { bg: string; fg: string }> = {
   적합: { bg: color.mint, fg: color.ink },
   검토: { bg: color.sky, fg: color.ink },
-  참고: { bg: '#DDE2E5', fg: 'rgba(22,25,28,.5)' },
+  참고: { bg: 'var(--color-60-border)', fg: 'var(--color-60-text-secondary)' },
 };
 
 // ── iM 상품 라운지 (products) ─────────────────────────────────────────────
@@ -101,8 +101,8 @@ export const productDefs: ProductDef[] = [
 export const productThemes: Record<ProductTheme, {
   bg: string; fg: string; tagBg: string; tagFg: string; reasonBg: string; ctaBg: string; ctaFg: string; subBg: string; subFg: string;
 }> = {
-  mint: { bg: color.mint, fg: color.ink, tagBg: color.ink, tagFg: color.mint, reasonBg: 'rgba(10,30,26,.10)', ctaBg: color.ink, ctaFg: '#fff', subBg: 'rgba(10,30,26,.10)', subFg: 'rgba(10,30,26,.6)' },
-  sky: { bg: color.sky, fg: color.ink, tagBg: color.navy, tagFg: '#fff', reasonBg: 'rgba(255,255,255,.8)', ctaBg: color.navy, ctaFg: '#fff', subBg: 'rgba(10,30,26,.07)', subFg: 'rgba(10,30,26,.55)' },
-  white: { bg: '#fff', fg: color.ink, tagBg: color.mintTintLight, tagFg: color.mintDark, reasonBg: '#F2F5F4', ctaBg: color.navy, ctaFg: '#fff', subBg: '#F2F5F4', subFg: 'rgba(10,30,26,.55)' },
-  coral: { bg: '#FFE2DA', fg: '#3A1A11', tagBg: color.coralDark, tagFg: '#fff', reasonBg: 'rgba(255,255,255,.82)', ctaBg: color.navy, ctaFg: '#fff', subBg: 'rgba(58,26,17,.08)', subFg: 'rgba(58,26,17,.55)' },
+  mint: { bg: color.white, fg: color.ink, tagBg: color.mintTint, tagFg: color.mintDark, reasonBg: color.mintTint, ctaBg: color.action, ctaFg: color.onAction, subBg: color.bg, subFg: color.textSecondary },
+  sky: { bg: color.white, fg: color.ink, tagBg: 'var(--color-info-surface)', tagFg: color.skyText, reasonBg: color.mintTint, ctaBg: color.action, ctaFg: color.onAction, subBg: color.bg, subFg: color.textSecondary },
+  white: { bg: color.white, fg: color.ink, tagBg: 'var(--color-purple-surface)', tagFg: color.purple, reasonBg: color.mintTint, ctaBg: color.action, ctaFg: color.onAction, subBg: color.bg, subFg: color.textSecondary },
+  coral: { bg: color.white, fg: color.ink, tagBg: color.coralTint, tagFg: color.coralDark, reasonBg: color.mintTint, ctaBg: color.action, ctaFg: color.onAction, subBg: color.bg, subFg: color.textSecondary },
 };

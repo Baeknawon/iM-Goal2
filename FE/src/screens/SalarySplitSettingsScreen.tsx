@@ -48,54 +48,54 @@ export function SalarySplitSettingsScreen() {
 
     return (
         <Screen>
-            <div style={{ padding: '68px 22px 0' }}>
+            <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Pill onClick={() => navigate('/accounts')}>‹ 계좌 현황</Pill>
                     <Pill bg={color.mint} fg={color.ink}>매월 25일 자동</Pill>
                 </div>
-                <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>급여가 들어오면 이 비율로,</div>
-                <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.14, marginTop: 1 }}>분배 비율 설정</div>
+                <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>급여가 들어오면 이 비율로,</div>
+                <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>분배 비율 설정</div>
             </div>
 
             <ScreenBody>
                 {/* 입금액 + 합계 바 */}
-                <div style={{ background: '#fff', borderRadius: 26, padding: 22, color: color.ink }}>
+                <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', color: color.ink }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.06em', color: 'rgba(22,25,28,.55)' }}>월 입금액 기준</span>
-                        <span style={{ fontSize: 17, fontWeight: 900 }}>{AP.total}원</span>
+                        <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>월 입금액 기준</span>
+                        <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>{AP.total}원</span>
                     </div>
-                    <div style={{ marginTop: 14, height: 14, borderRadius: 9999, overflow: 'hidden', display: 'flex', background: '#EEF1F2' }}>
+                    <div style={{ marginTop: 'var(--space-1-5)', height: 14, borderRadius: 'var(--radius-pill)', overflow: 'hidden', display: 'flex', background: 'var(--color-30-tab-bg)' }}>
                         {splits.map((sp, i) => (
                             <div key={sp.name} style={{ width: `${pcts[i]}%`, background: sp.dotColor, transition: 'width .2s ease' }} />
                         ))}
                     </div>
-                    <div style={{ marginTop: 10, textAlign: 'right', fontSize: 12.5, fontWeight: 900, color: valid ? '#077264' : '#D0512E' }}>
+                    <div style={{ marginTop: 10, textAlign: 'right', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: valid ? 'var(--color-accent-text)' : 'var(--color-danger)' }}>
                         합계 {sum}% {valid ? '· 딱 맞아요' : '· 100%로 맞춰주세요'}
                     </div>
                 </div>
 
                 {/* 계좌별 슬라이더 */}
-                <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ marginTop: 'var(--space-1-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
                     {splits.map((sp, i) => {
                         const amount = Math.round((totalNum * pcts[i]) / 100);
                         const wallet = isWallet(i);
                         return (
-                            <div key={sp.name} style={{ background: '#fff', borderRadius: 22, padding: 18, color: color.ink }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div key={sp.name} style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', color: color.ink }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)' }}>
                                     <div style={{ flex: 'none', width: 12, height: 12, borderRadius: 4, background: sp.dotColor }} />
                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontSize: 15, fontWeight: 900, letterSpacing: '-.01em' }}>{wallet ? 'iMKRW 머니 충전' : sp.name}</div>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(22,25,28,.55)', marginTop: 1 }}>{wallet ? '미션 보증금으로 쓰이는 머니' : sp.desc}</div>
+                                        <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '-.01em' }}>{wallet ? 'iMKRW 머니 충전' : sp.name}</div>
+                                        <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{wallet ? '미션 보증금으로 쓰이는 머니' : sp.desc}</div>
                                     </div>
                                     <div style={{ flex: 'none', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                        <div style={{ fontSize: 16, fontWeight: 900 }}>{pcts[i]}%</div>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(22,25,28,.55)', marginTop: 1 }}>{amount.toLocaleString('en-US')}원</div>
+                                        <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>{pcts[i]}%</div>
+                                        <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{amount.toLocaleString('en-US')}원</div>
                                     </div>
                                 </div>
                                 <input
                                     type="range" min={0} max={100} value={pcts[i]}
                                     onChange={(e) => setPct(i, Number(e.target.value))}
-                                    style={{ marginTop: 14, width: '100%', accentColor: sp.dotColor as string, cursor: 'pointer' }}
+                                    style={{ marginTop: 'var(--space-1-5)', width: '100%', accentColor: sp.dotColor as string, cursor: 'pointer' }}
                                 />
                             </div>
                         );
@@ -104,13 +104,13 @@ export function SalarySplitSettingsScreen() {
 
                 <div
                     onClick={resetDefault}
-                    style={{ marginTop: 14, textAlign: 'center', fontSize: 13.5, fontWeight: 900, color: 'rgba(22,25,28,.55)', cursor: 'pointer' }}
+                    style={{ marginTop: 'var(--space-1-5)', textAlign: 'center', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', cursor: 'pointer' }}
                 >
                     추천 비율로 되돌리기
                 </div>
 
                 <CtaButton
-                    height={62} style={{ marginTop: 14, opacity: valid ? 1 : 0.45, pointerEvents: valid ? 'auto' : 'none' }}
+                    height={62} style={{ marginTop: 'var(--space-1-5)', opacity: valid ? 1 : 0.45, pointerEvents: valid ? 'auto' : 'none' }}
                     onClick={() => navigate('/accounts')}
                 >
                     이 비율로 저장하기

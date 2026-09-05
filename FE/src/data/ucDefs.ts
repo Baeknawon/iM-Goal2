@@ -95,8 +95,8 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
       { type: 'alert', tag: '위험징후 감지', headline: '배달앱 결제가 평소보다 잦아지고 있어요', note: '이번 주 배달 4회 · 4주 평균 2.8회', mascot: 'dandi' },
       { type: 'bars', rows: [
           { name: '배달비', tag: '+42%', pct: 86, color: CO, note: '최근 4주 평균 대비 · 기여도 1순위' },
-          { name: '카페 지출', tag: '+11%', pct: 34, color: '#CBE04B' },
-          { name: '교통', tag: '+3%', pct: 14, color: 'rgba(22,25,28,.28)' },
+          { name: '카페 지출', tag: '+11%', pct: 34, color: 'var(--im-lime)' },
+          { name: '교통', tag: '+3%', pct: 14, color: 'rgba(var(--color-ink-rgb),.28)' },
         ] },
       { type: 'shift', tag: '도착일 영향 환산', from: '2028년 8월', to: '2028년 9월', note: '난기류 30일 지연' },
       { type: 'stat', rows: [{ label: '하루 예산 대비', value: '초과 3일', color: CO }, { label: '월 저축 페이스', value: '-8.4%', color: CO }] },
@@ -109,8 +109,8 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
     blocks: [
       { type: 'bars', rows: [
           { name: '배달비', tag: '+42%', pct: 86, color: CO, note: '최근 4주 평균 대비 · 기여도 1순위' },
-          { name: '카페 지출', tag: '+11%', pct: 34, color: '#CBE04B' },
-          { name: '교통', tag: '+3%', pct: 14, color: 'rgba(22,25,28,.28)' },
+          { name: '카페 지출', tag: '+11%', pct: 34, color: 'var(--im-lime)' },
+          { name: '교통', tag: '+3%', pct: 14, color: 'rgba(var(--color-ink-rgb),.28)' },
         ] },
       { type: 'shift', tag: '도착일 영향 환산', from: '2028년 8월', to: '2028년 9월', note: '난기류 30일 지연' },
       { type: 'stat', rows: [{ label: '하루 예산 대비', value: '초과 3일', color: CO }, { label: '월 저축 페이스', value: '-8.4%', color: CO }] },
@@ -159,8 +159,8 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
     code: 'UC-02', accent: BL, sub: '가게 흐름을 함께 봅니다,', title: '매출 상시 모니터링',
     blocks: [
       { type: 'bars', rows: [
-          { name: '5월', tag: '기준', pct: 92, color: 'rgba(22,25,28,.20)' },
-          { name: '7월', tag: '-9%', pct: 66, color: '#7DB5FF' },
+          { name: '5월', tag: '기준', pct: 92, color: 'rgba(var(--color-ink-rgb),.20)' },
+          { name: '7월', tag: '-9%', pct: 66, color: 'var(--im-blue)' },
           { name: '8월', tag: '-18%', pct: 54, color: CO, note: '최근 3개월 지속 감소 · 위험 후보 지표' },
         ] },
       { type: 'stat', rows: [{ label: '카드 매입', value: '연동 중' }, { label: '고정비', value: '월 4,120,000원' }, { label: '연체 이력', value: '없음', color: MD }], note: '연체 전 단계는 기존 정책금융의 사각지대입니다' },
@@ -228,7 +228,7 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
       { type: 'alert', tag: '위험 수준 도달', headline: '카드 한도 소진율 82%', note: '방금 결제 148,000원 · 리볼빙 잔액 3,260,000원' },
       { type: 'bars', rows: [
           { name: '리볼빙 잔액', tag: '1순위', pct: 78, color: CO, note: '이월 수수료가 목표 경로를 밀어냅니다' },
-          { name: '고정 구독', tag: '2순위', pct: 29, color: '#CBE04B' },
+          { name: '고정 구독', tag: '2순위', pct: 29, color: 'var(--im-lime)' },
         ] },
       { type: 'shift', tag: '비상자금 목표에 미치는 영향', from: '2027년 11월', to: '2027년 12월', note: '난기류 30일 지연' },
       { type: 'bubble', mascot: 'dandi', bg: M, text: '한도부터 낮추면 목표가 다시 앞으로 와요' },
@@ -241,7 +241,7 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
     blocks: [
       { type: 'bars', rows: [
           { name: '리볼빙 잔액', tag: '1순위', pct: 78, color: CO, note: '이월 수수료가 목표 경로를 밀어냅니다' },
-          { name: '고정 구독', tag: '2순위', pct: 29, color: '#CBE04B' },
+          { name: '고정 구독', tag: '2순위', pct: 29, color: 'var(--im-lime)' },
         ] },
       { type: 'shift', tag: '비상자금 목표에 미치는 영향', from: '2027년 11월', to: '2027년 12월', note: '난기류 30일 지연' },
       { type: 'bubble', mascot: 'dandi', bg: M, text: '한도부터 낮추면 목표가 다시 앞으로 와요' },
@@ -280,8 +280,8 @@ export const ucDefs: Record<UCScreenId, UCDef> = {
     code: 'UC-03', accent: LI, sub: '궤적에 반영됩니다,', title: 'FCPS 변화 추이',
     blocks: [
       { type: 'bars', rows: [
-          { name: '5월', tag: '', pct: 44, color: 'rgba(22,25,28,.20)' },
-          { name: '6월', tag: '', pct: 58, color: 'rgba(22,25,28,.28)' },
+          { name: '5월', tag: '', pct: 44, color: 'rgba(var(--color-ink-rgb),.20)' },
+          { name: '6월', tag: '', pct: 58, color: 'rgba(var(--color-ink-rgb),.28)' },
           { name: '7월', tag: '', pct: 76, color: M },
           { name: '8월', tag: '+34', pct: 100, color: INK, note: '최근 4개월 누적 변화' },
         ] },

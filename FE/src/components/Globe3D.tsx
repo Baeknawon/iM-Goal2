@@ -1,12 +1,12 @@
 import type { JourneyEvent, JourneyEventKind } from '../data/personas';
 
 const KIND_COLOR: Record<JourneyEventKind, string> = {
-    start: '#ffffff',
-    deviation: '#FF7A5C',
-    boost: '#E2F15E',
-    recovery: '#00C7A9',
-    mission: '#7DB5FF',
-    now: '#00C7A9',
+    start: 'var(--im-white)',
+    deviation: 'var(--color-danger)',
+    boost: 'var(--im-lime)',
+    recovery: 'var(--im-mint)',
+    mission: 'var(--im-blue)',
+    now: 'var(--im-mint)',
 };
 
 interface Props {
@@ -56,26 +56,26 @@ export function Globe3D({ events, onSelect }: Props) {
         <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', display: 'block' }}>
             <defs>
                 <radialGradient id="hemi" cx="42%" cy="88%" r="70%">
-                    <stop offset="0%" stopColor="#3A7CE0" />
-                    <stop offset="45%" stopColor="#1A4B7C" />
-                    <stop offset="78%" stopColor="#0A2340" />
-                    <stop offset="100%" stopColor="#071B33" />
+                    <stop offset="0%" stopColor="var(--color-globe-light)" />
+                    <stop offset="45%" stopColor="var(--color-hero)" />
+                    <stop offset="78%" stopColor="var(--color-hero-deep)" />
+                    <stop offset="100%" stopColor="var(--color-hero-deep)" />
                 </radialGradient>
                 <clipPath id="hemiClip"><circle cx={cx} cy={cy} r={R} /></clipPath>
             </defs>
 
             {/* 별 */}
             {STARS.map(([sx, sy, r], i) => (
-                <circle key={i} cx={sx} cy={sy} r={r} fill="#fff" opacity={0.7} />
+                <circle key={i} cx={sx} cy={sy} r={r} fill="var(--im-white)" opacity={0.7} />
             ))}
 
             {/* 반구 가장자리 글로우 */}
-            <circle cx={cx} cy={cy} r={R + 8} fill="none" stroke="rgba(80,150,255,.3)" strokeWidth={6} opacity={0.5} clipPath="url(#hemiClip)" />
+            <circle cx={cx} cy={cy} r={R + 8} fill="none" stroke="rgba(var(--color-blue-rgb),.3)" strokeWidth={6} opacity={0.5} clipPath="url(#hemiClip)" />
             {/* 지구 본체 (위 반구만 노출) */}
             <circle cx={cx} cy={cy} r={R} fill="url(#hemi)" />
 
             {/* 위경도 그리드 */}
-            <g clipPath="url(#hemiClip)" stroke="rgba(125,181,255,.2)" strokeWidth={1} fill="none">
+            <g clipPath="url(#hemiClip)" stroke="rgba(var(--color-blue-rgb),.2)" strokeWidth={1} fill="none">
                 {[0.4, 0.72, 1].map((k, i) => (
                     <ellipse key={`m${i}`} cx={cx} cy={cy} rx={R * k} ry={R} />
                 ))}
@@ -85,23 +85,23 @@ export function Globe3D({ events, onSelect }: Props) {
                     return <ellipse key={`p${i}`} cx={cx} cy={yy} rx={rx} ry={R * 0.09} />;
                 })}
                 {/* 능선(적도 라인) 강조 */}
-                <ellipse cx={cx} cy={cy} rx={R} ry={R * 0.11} stroke="rgba(125,181,255,.28)" />
+                <ellipse cx={cx} cy={cy} rx={R} ry={R * 0.11} stroke="rgba(var(--color-blue-rgb),.28)" />
             </g>
 
             {/* 우측 야간 명암 */}
-            <ellipse cx={cx + R * 0.5} cy={cy} rx={R * 0.62} ry={R} fill="rgba(3,8,16,.45)" clipPath="url(#hemiClip)" />
+            <ellipse cx={cx + R * 0.5} cy={cy} rx={R * 0.62} ry={R} fill="rgba(var(--color-ink-rgb),.45)" clipPath="url(#hemiClip)" />
 
             {/* 항로: 남은 경로(점선) + 지나온 경로(실선) */}
-            <path d={`${pathD} L${dest.x.toFixed(1)},${dest.y.toFixed(1)}`} fill="none" stroke="rgba(255,255,255,.3)" strokeWidth={2.5} strokeLinecap="round" strokeDasharray="1 7" />
-            <path d={traveledD} fill="none" stroke="#00C7A9" strokeWidth={3.5} strokeLinecap="round" />
+            <path d={`${pathD} L${dest.x.toFixed(1)},${dest.y.toFixed(1)}`} fill="none" stroke="rgba(var(--color-white-rgb),.3)" strokeWidth={2.5} strokeLinecap="round" strokeDasharray="1 7" />
+            <path d={traveledD} fill="none" stroke="var(--im-mint)" strokeWidth={3.5} strokeLinecap="round" />
 
             {/* 이벤트 마커 */}
             {pts.map((p, i) => {
                 const isBig = p.e.kind === 'now' || p.e.kind === 'start';
                 return (
                     <g key={i} style={{ cursor: 'pointer' }} onClick={() => onSelect?.(p.e)}>
-                        {p.e.kind === 'now' && <circle cx={p.x} cy={p.y} r={13} fill="#00C7A9" opacity={0.22} />}
-                        {p.e.kind === 'start' && <circle cx={p.x} cy={p.y} r={12} fill="none" stroke="#fff" strokeWidth={2} opacity={0.7} />}
+                        {p.e.kind === 'now' && <circle cx={p.x} cy={p.y} r={13} fill="var(--im-mint)" opacity={0.22} />}
+                        {p.e.kind === 'start' && <circle cx={p.x} cy={p.y} r={12} fill="none" stroke="var(--im-white)" strokeWidth={2} opacity={0.7} />}
                         <circle cx={p.x} cy={p.y} r={isBig ? 6.5 : 5} fill={KIND_COLOR[p.e.kind]} />
                         <circle cx={p.x} cy={p.y} r={16} fill="transparent" />
                     </g>
@@ -109,8 +109,8 @@ export function Globe3D({ events, onSelect }: Props) {
             })}
 
             {/* 도착 지점 (목표 100%) — 이중 링 마커 */}
-            <circle cx={dest.x} cy={dest.y} r={11} fill="none" stroke="#E2F15E" strokeWidth={2} opacity={0.75} />
-            <circle cx={dest.x} cy={dest.y} r={6} fill="#E2F15E" />
+            <circle cx={dest.x} cy={dest.y} r={11} fill="none" stroke="var(--im-lime)" strokeWidth={2} opacity={0.75} />
+            <circle cx={dest.x} cy={dest.y} r={6} fill="var(--im-lime)" />
         </svg>
     );
 }

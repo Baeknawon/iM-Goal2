@@ -1,3 +1,4 @@
+import type { RecoveryPlan } from './viewmodel/recoveryFlow';
 export type PersonaKey = 'A' | 'B' | 'C';
 
 export type EmptyTabKey = '소비분석' | '알림' | '미션' | '신용';
@@ -13,6 +14,9 @@ export type MissionResult = 'success' | 'fail' | 'give_up';
 
 /** FCPS(신용 궤적)에 반영되는 미션 이력 한 건. */
 export interface FcpsEntry {
+  recoveryPlan?: RecoveryPlan;
+  startedAt?: string | null;
+  completedAt?: string;
   result: MissionResult;
   label: string;   // "회복 미션 성공" 등
   mission: string; // 미션 이름
@@ -52,6 +56,8 @@ export interface AppState {
   quizPick: number | null;
   /** whether the current recovery mission (LEG 04) is still live vs. all-done history. */
   missionOn: boolean;
+  missionStartedAt: string | null;
+  activeRecoveryPlan: RecoveryPlan | null;
   /** true once the phase-2 (verification) UC chain has been completed for the current mission. */
   recovered: boolean;
   incomeMonthly: number;

@@ -3,88 +3,89 @@ import { useNavigate } from 'react-router-dom';
 import { Screen, Pill, ScreenBody } from '../components/ui';
 import { spendMap, dayTxns } from '../data/staticContent';
 import { color } from '../styles/theme';
+import { MonthPicker } from '../components/MonthPicker';
+import { useSpendPeriod } from '../store/spendPeriodStore';
+import { INITIAL_SPEND_MONTH, monthParts, calendarDays, formatCalendarAmount } from '../data/spendPeriod';
 
 const TODAY = 18;
 
 export function CalendarScreen() {
   const navigate = useNavigate();
-  const [selectedDay, setSelectedDay] = useState(TODAY);
+  const period = useSpendPeriod((s) => s.period);
+  const { year, month } = monthParts(period);
+  const hasData = period === INITIAL_SPEND_MONTH;
+  const [selection, setSelection] = useState({ period: INITIAL_SPEND_MONTH, day: TODAY });
+  const selectedDay = selection.period === period ? selection.day : null;
 
   const cells = useMemo(() => {
-    const out: { day: number | null; amt: number | undefined }[] = [];
-    for (let i = 0; i < 35; i++) {
-      const day = i - 2;
-      out.push(day < 1 || day > 31 ? { day: null, amt: undefined } : { day, amt: spendMap[day] });
-    }
-    return out;
-  }, []);
+    return calendarDays(period).map((day) => ({ day, amt: hasData && day !== null ? spendMap[day] : undefined }));
+  }, [period, hasData]);
 
   return (
     <Screen>
-      <div style={{ padding: '68px 22px 0' }}>
+      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill onClick={() => navigate('/spend')}>‹ 소비분석</Pill>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 15, fontWeight: 900 }}>
-            <span style={{ opacity: 0.4 }}>‹</span>7월<span style={{ opacity: 0.4 }}>›</span>
-          </div>
         </div>
-        <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>예산을 아낀 날은 민트색이에요</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.16, marginTop: 1 }}>소비 달력</div>
+        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>예산을 아낀 날은 민트색이에요</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>소비 달력</div>
       </div>
 
       <ScreenBody>
-        <div style={{ background: '#fff', borderRadius: 30, padding: 22, color: color.ink }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 6, fontSize: 11, fontWeight: 900, color: 'rgba(22,25,28,.56)', textAlign: 'center' }}>
+        <div className="calendar-month"><div className="calendar-year">{year}년</div><MonthPicker compact /></div>
+        <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-2-5)', color: color.ink }}>
+          <div className="calendar-unit">단위: 만원</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 6, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', textAlign: 'center' }}>
             {['일', '월', '화', '수', '목', '금', '토'].map((d) => <div key={d}>{d}</div>)}
           </div>
-          <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 6 }}>
+          <div style={{ marginTop: 'var(--space-1)', display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 6 }}>
             {cells.map((c, i) => {
               if (c.day === null) return <div key={i} style={{ height: 46 }} />;
               const has = c.amt !== undefined;
               const kind = !has ? 'none' : c.amt === 0 ? 'save' : c.amt! > 8000 ? 'over' : 'ok';
-              const bg = kind === 'save' ? color.mint : kind === 'over' ? '#C4472A' : kind === 'ok' ? '#EDF2F0' : 'transparent';
-              const fg = kind === 'over' ? '#fff' : kind === 'save' ? color.ink : 'rgba(10,30,26,.55)';
+              const bg = kind === 'save' ? color.mint : kind === 'over' ? 'var(--color-danger)' : kind === 'ok' ? 'var(--color-60-bg-base)' : 'transparent';
+              const fg = kind === 'over' ? 'var(--im-white)' : kind === 'save' ? color.ink : 'var(--color-60-text-secondary)';
               const isSelected = c.day === selectedDay;
               return (
                 <div
                   key={i}
-                  onClick={() => has && setSelectedDay(c.day!)}
+                  onClick={() => setSelection({ period, day: c.day! })}
                   style={{
                     height: 46, borderRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    gap: 1, background: bg, cursor: has ? 'pointer' : undefined,
-                    outline: isSelected ? '2px solid #16191C' : undefined, outlineOffset: isSelected ? 1 : undefined,
+                    gap: 1, background: bg, cursor: 'pointer',
+                    outline: isSelected ? '2px solid var(--color-60-text-primary)' : undefined, outlineOffset: isSelected ? 1 : undefined,
                   }}
                 >
-                  <span style={{ fontSize: 12.5, fontWeight: 900, color: fg }}>{c.day}</span>
-                  <span style={{ fontSize: 9.5, fontWeight: 900, color: fg, opacity: 0.7 }}>
-                    {has && c.amt! > 0 ? `${Math.round(c.amt! / 1000)}k` : kind === 'save' ? '0' : ''}
+                  <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: fg }}>{c.day}</span>
+                  <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: fg }}>
+                    {has ? formatCalendarAmount(c.amt!) : ''}
                   </span>
                 </div>
               );
             })}
           </div>
-          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(22,25,28,.08)', display: 'flex', gap: 14, fontSize: 11.5, fontWeight: 900 }}>
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--color-60-border)', display: 'flex', gap: 'var(--space-1-5)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)' }}>
             <Legend color={color.mint} label="예산 절약" />
-            <Legend color="#E9ECEE" label="보통" />
-            <Legend color="#C4472A" label="초과" />
+            <Legend color="var(--color-60-bg-base)" label="보통" />
+            <Legend color="var(--color-danger)" label="초과" />
           </div>
         </div>
 
-        <div style={{ marginTop: 14, background: 'rgba(22,25,28,.08)', borderRadius: 28, padding: 22 }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.63)' }}>7월 {selectedDay}일 · 주요 내역</div>
-          <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {(selectedDay === TODAY ? dayTxns : []).map((t) => (
+        <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)' }}>
+          <div style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>{month}월 {selectedDay !== null ? `${selectedDay}일 · 주요 내역` : '· 날짜를 선택해주세요'}</div>
+          <div style={{ marginTop: 'var(--space-1-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
+            {(hasData && selectedDay === TODAY ? dayTxns : []).map((t) => (
               <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900, background: t.iconBg, color: t.iconFg }}>{t.icon}</div>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', background: t.iconBg, color: t.iconFg }}>{t.icon}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15.5, fontWeight: 900 }}>{t.name}</div>
-                  <div style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(22,25,28,.61)', marginTop: 1 }}>{t.meta}</div>
+                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>{t.name}</div>
+                  <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{t.meta}</div>
                 </div>
-                <div style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: 16, fontWeight: 900 }}>{t.amount}</div>
+                <div style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>{t.amount}</div>
               </div>
             ))}
-            {selectedDay !== TODAY && (
-              <div style={{ fontSize: 13.5, fontWeight: 700, color: 'rgba(22,25,28,.5)' }}>내역이 없습니다.</div>
+            {(!hasData || selectedDay !== TODAY) && (
+              <div style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>내역이 없습니다.</div>
             )}
           </div>
         </div>
@@ -97,7 +98,7 @@ function Legend({ color: c, label }: { color: string; label: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       <div style={{ width: 12, height: 12, borderRadius: 4, background: c }} />
-      <span style={{ color: 'rgba(22,25,28,.63)' }}>{label}</span>
+      <span style={{ color: 'var(--color-60-text-secondary)' }}>{label}</span>
     </div>
   );
 }
