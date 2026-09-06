@@ -1,7 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, Pill } from '../components/ui';
 import { missionDefs, personaDefs } from '../data/personas';
+import { recoveryCriteria } from '../viewmodel/recoveryFlow';
+import { formatMissionDate } from '../data/mileageHistory';
 import { color } from '../styles/theme';
 
 /** Live progress tracker for the persona's current recovery mission, opened from the missions list. */
@@ -9,63 +11,96 @@ export function MissionLiveScreen() {
   const navigate = useNavigate();
   const persona = useAppStore((s) => s.persona);
   const deposit = useAppStore((s) => s.deposit);
+  const missionOn = useAppStore((s) => s.missionOn);
+  const missionResult = useAppStore((s) => s.missionResult);
+  const startedAt = useAppStore((s) => s.missionStartedAt);
+  const plan = useAppStore((s) => s.activeRecoveryPlan);
+  const selectedDays = useAppStore((s) => s.missionDays);
   const MI = missionDefs[persona];
   const P = personaDefs[persona];
 
-  const daysLeft = Math.max(1, MI.daysTotal - MI.daysDone);
-  const pct = Math.round((MI.daysDone / MI.daysTotal) * 100);
+  const totalDays = plan?.missionDays ?? selectedDays;
+  const daysDone = startedAt ? Math.min(totalDays, Math.max(0, Math.floor((Date.now() - new Date(startedAt).getTime()) / 86400000))) : 0;
+  const daysLeft = Math.max(0, totalDays - daysDone);
+  const pct = Math.round(daysDone / totalDays * 100);
 
   const checks = [
     { label: '보증금', value: `${deposit.toLocaleString()}원` },
-    { label: '기간', value: `${MI.daysTotal}일` },
+    { label: '시작일', value: formatMissionDate(startedAt) },
+    { label: '기간', value: `${totalDays}일` },
     { label: '난이도', value: MI.difficulty },
     { label: '목표', value: P.goalName },
   ];
 
+  if (!missionOn) return <Navigate to={missionResult ? '/release' : '/missionDetail'} replace />;
   return (
-    <Screen>
-      <div style={{ padding: '68px 22px 0', flex: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pill onClick={() => navigate('/missions')}>‹ 미션</Pill>
-          <Pill bg={color.mint} fg={color.ink}>진행 중</Pill>
+      <Screen>
+        <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Pill onClick={() => navigate('/missions')}>‹ 미션</Pill>
+            <Pill bg={color.mint} fg={color.ink}>진행 중</Pill>
+          </div>
+          <div style={{ marginTop: 18, fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{MI.leg}</div>
+          <div style={{ fontSize: 'var(--font-size-3xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.035em', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>
+            {MI.title1}<br />{MI.title2}
+          </div>
         </div>
-        <div style={{ marginTop: 18, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{MI.leg}</div>
-        <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-.035em', lineHeight: 1.22, marginTop: 1 }}>
-          {MI.title1}<br />{MI.title2}
-        </div>
-      </div>
-      <div style={{ flex: 1, overflow: 'auto', padding: '18px 22px 120px', display: 'flex', flexDirection: 'column', gap: 11 }}>
-        <div style={{ background: color.ink, borderRadius: 30, padding: 24, color: '#fff' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', color: color.mint }}>남은 기간</div>
-              <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 5 }}>
-                <span style={{ fontSize: 40, fontWeight: 900, letterSpacing: '-.04em' }}>{daysLeft}</span>
-                <span style={{ fontSize: 17, fontWeight: 900 }}>일</span>
+        <div style={{ flex: 1, overflow: 'auto', padding: '18px 22px 120px', display: 'flex', flexDirection: 'column', gap: 11 }}>
+          <div style={{ background: 'var(--color-hero)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)', color: 'var(--im-white)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: color.mint }}>남은 기간</div>
+                <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                  <span style={{ fontSize: 40, fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>{daysLeft}</span>
+                  <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>일</span>
+                </div>
               </div>
+              <div style={{ textAlign: 'right', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>{daysDone} / {totalDays}일 수행</div>
             </div>
-            <div style={{ textAlign: 'right', fontSize: 13, fontWeight: 900, color: 'rgba(255,255,255,.66)' }}>{MI.daysDone} / {MI.daysTotal}일 수행</div>
-          </div>
-          <div style={{ marginTop: 16, height: 11, borderRadius: 9999, background: 'rgba(255,255,255,.16)', overflow: 'hidden' }}>
-            <div style={{ width: `${pct}%`, height: '100%', borderRadius: 9999, background: color.mint, transition: 'width .5s ease' }} />
-          </div>
-        </div>
-        <div style={{ background: '#fff', borderRadius: 30, padding: 24, display: 'flex', flexDirection: 'column', gap: 13 }}>
-          {checks.map((c) => (
-            <div key={c.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-              <span style={{ fontSize: 13.5, fontWeight: 700, color: 'rgba(22,25,28,.62)' }}>{c.label}</span>
-              <span style={{ fontSize: 15, fontWeight: 900, letterSpacing: '-.015em' }}>{c.value}</span>
+            <div style={{ marginTop: 'var(--space-2)', height: 11, borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-white-rgb),.16)', overflow: 'hidden' }}>
+              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: color.mint, transition: 'width .5s ease' }} />
             </div>
-          ))}
+          </div>
+          <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)', display: 'flex', flexDirection: 'column', gap: 13 }}>
+            {checks.map((c) => (
+                <div key={c.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-1-5)' }}>
+                  <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>{c.label}</span>
+                  <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '-.015em' }}>{c.value}</span>
+                </div>
+            ))}
+          </div>
+          <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)' }}>
+            <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>지금 해야 하는 것</div>
+            <div style={{ marginTop: 9, fontSize: 'var(--font-size-sm)', lineHeight: 1.7, fontWeight: 'var(--font-weight-semibold)' }}>{MI.how}</div>
+          </div>
+          <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>
+            완료 기준: {recoveryCriteria[persona].rule}. 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
+          </div>
+
+          {/* 데모: 미션 결과 처리 (성공 / 실패 / 포기) */}
+          <div style={{ marginTop: 4, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>미션 결과 처리</div>
+          <div
+              onClick={() => { navigate('/verify?result=success'); }}
+              style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
+          >
+            성공 기록으로 판정 확인
+            <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>✓</span>
+          </div>
+          <div style={{ display: 'flex', gap: 'var(--component-gap)' }}>
+            <div
+                onClick={() => { navigate('/verify?result=fail'); }}
+                style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-danger-surface)', color: 'var(--color-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
+            >
+              실패 기록 확인
+            </div>
+            <div
+                onClick={() => { navigate('/verify?result=give_up'); }}
+                style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-30-surface-sub)', color: 'var(--color-60-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
+            >
+              중단하기
+            </div>
+          </div>
         </div>
-        <div style={{ background: '#fff', borderRadius: 30, padding: 24 }}>
-          <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.58)' }}>지금 해야 하는 것</div>
-          <div style={{ marginTop: 9, fontSize: 14.5, lineHeight: 1.7, fontWeight: 700 }}>{MI.how}</div>
-        </div>
-        <div style={{ background: 'rgba(22,25,28,.07)', borderRadius: 24, padding: 18, fontSize: 12.5, lineHeight: 1.7, fontWeight: 500, color: 'rgba(22,25,28,.62)' }}>
-          결제·거래 데이터로 자동 확인되니 따로 인증하지 않아도 됩니다. 기한 내 수행하면 보증금이 전액 돌아옵니다.
-        </div>
-      </div>
-    </Screen>
+      </Screen>
   );
 }

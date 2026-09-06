@@ -24,27 +24,27 @@ export function TypingScreen() {
           <Pill onClick={() => navigate('/input')}>‹ 입력 방식</Pill>
           <Pill>직접 입력</Pill>
         </div>
-        <div style={{ marginTop: 20, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>숫자만 넣으면 돼요,</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.16, marginTop: 1 }}>직접 입력할게요</div>
+        <div style={{ marginTop: 'var(--space-2-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>숫자만 넣으면 돼요,</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>직접 입력할게요</div>
 
-        <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 'var(--component-gap)' }}>
           {rows.map((r) => (
             <div
               key={r.label}
-              style={{ background: '#fff', borderRadius: 24, padding: '17px 20px', border: `2px solid ${r.emphasized ? color.mint : 'transparent'}` }}
+              style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: '17px 20px', border: `2px solid ${r.emphasized ? color.mint : 'transparent'}` }}
             >
-              <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.58)' }}>{r.label}</div>
-              <div style={{ marginTop: 5, fontSize: 20, fontWeight: 900, letterSpacing: '-.025em', color: color.ink }}>{r.value}</div>
+              <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>{r.label}</div>
+              <div style={{ marginTop: 5, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.025em', color: color.ink }}>{r.value}</div>
             </div>
           ))}
         </div>
 
         <div style={{ flex: 1 }} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'var(--space-1)' }}>
           {KEYS.map((k) => (
             <div
               key={k}
-              style={{ height: 52, borderRadius: 16, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, cursor: 'pointer', color: color.ink }}
+              style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-60-bg-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer', color: color.ink }}
             >
               {k}
             </div>
@@ -52,10 +52,10 @@ export function TypingScreen() {
         </div>
         <div
           onClick={() => navigate('/analyze')}
-          style={{ marginTop: 14, height: 60, borderRadius: 9999, background: color.ink, color: '#fff', fontSize: 16.5, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer' }}
+          style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: 'var(--color-action-bg)', color: 'var(--color-action-text)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', cursor: 'pointer' }}
         >
           이대로 항로 계산하기
-          <span style={{ width: 28, height: 28, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>›</span>
+          <span style={{ width: 28, height: 28, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>›</span>
         </div>
       </div>
     </Screen>

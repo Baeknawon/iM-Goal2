@@ -17,15 +17,15 @@ export function ParsedScreen() {
           <Pill onClick={() => navigate('/voice')}>‹ 다시 말하기</Pill>
           <Pill bg={color.mint} fg={color.ink}>인식 완료</Pill>
         </div>
-        <div style={{ marginTop: 20, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>이렇게 이해했어요,</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.16, marginTop: 1 }}>맞으면 계산할게요</div>
+        <div style={{ marginTop: 'var(--space-2-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>이렇게 이해했어요,</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>맞으면 계산할게요</div>
 
-        <div style={{ marginTop: 24, background: '#fff', borderRadius: 28, padding: 24, color: color.ink }}>
-          <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.58)' }}>인식된 문장</div>
-          <div style={{ marginTop: 9, fontSize: 21, fontWeight: 900, lineHeight: 1.5, letterSpacing: '-.025em' }}>
+        <div style={{ marginTop: 'var(--space-3)', background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-3)', color: color.ink }}>
+          <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>인식된 문장</div>
+          <div style={{ marginTop: 9, fontSize: 21, fontWeight: 'var(--font-weight-bold)', lineHeight: 1.5, letterSpacing: '-.025em' }}>
             {G.say1}<br />{G.say2}
           </div>
-          <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid rgba(22,25,28,.08)', display: 'flex', flexDirection: 'column', gap: 11 }}>
+          <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid var(--color-60-border)', display: 'flex', flexDirection: 'column', gap: 11 }}>
             <ParsedChip label="기간" value={G.spanLabel} />
             <ParsedChip label="목표 유형" value={G.goalType} />
             <ParsedChip label="금액" value={G.goalAmount} />
@@ -33,7 +33,7 @@ export function ParsedScreen() {
         </div>
 
         <div style={{ flex: 1 }} />
-        <CtaButton height={62} bg={color.ink} fg="#fff" arrowBg={color.mint} onClick={() => navigate('/analyze')}>
+        <CtaButton height={62} bg="var(--color-action-bg)" fg="var(--color-action-text)" arrowBg="var(--color-action-text)" onClick={() => navigate('/analyze')}>
           이대로 항로 계산하기
         </CtaButton>
       </div>
@@ -43,9 +43,9 @@ export function ParsedScreen() {
 
 function ParsedChip({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <div style={{ padding: '5px 11px', borderRadius: 9999, background: color.mintTintLight, fontSize: 11.5, fontWeight: 900, color: '#0A8873' }}>{label}</div>
-      <span style={{ fontSize: 15.5, fontWeight: 900 }}>{value}</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)' }}>
+      <div style={{ padding: '5px 11px', borderRadius: 'var(--radius-pill)', background: color.mintTintLight, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-accent-text)' }}>{label}</div>
+      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>{value}</span>
     </div>
   );
 }

@@ -1,0 +1,59 @@
+/* A native-style push banner; transaction actions open on tap. */
+.trigger-notification {
+  position: absolute;
+  top: 56px;
+  left: 12px;
+  right: 12px;
+  z-index: 9;
+  border-radius: 18px;
+  background: rgba(var(--color-white-rgb), .88);
+  border: 1px solid rgba(var(--color-white-rgb), .65);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: 0 8px 24px rgba(var(--color-ink-rgb), .14);
+  animation: dropIn .3s ease both;
+  color: var(--color-60-text-primary);
+}
+.trigger-notification-content {
+  display: block;
+  width: 100%;
+  padding: 12px 16px 16px;
+  border-radius: inherit;
+  text-align: left;
+}
+.trigger-notification-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 30px;
+  color: var(--color-60-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.trigger-notification-app-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--im-mint);
+  flex: none;
+}
+.trigger-notification-app-icon img { width: 22px; height: auto; display: block; }
+.trigger-notification-time { margin-left: auto; }
+.trigger-notification-message { display: block; margin-top: 8px; line-height: 1.5; }
+.trigger-notification-message strong { display: block; font-size: 15px; font-weight: 700; }
+.trigger-notification-message > span { display: block; margin-top: 2px; font-size: 14px; }
+.trigger-notification-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-60-text-secondary);
+}

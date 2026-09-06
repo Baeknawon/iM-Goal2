@@ -34,33 +34,33 @@ export function IncomeScreen() {
       />
       <div style={{ flex: 1, overflow: 'auto', padding: '18px 22px 34px', display: 'flex', flexDirection: 'column', gap: 11 }}>
         {fields.map((f) => (
-          <div key={f.label} style={{ background: '#fff', borderRadius: 28, padding: '20px 22px' }}>
-            <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.58)' }}>{f.label}</div>
-            <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div key={f.label} style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: '20px 22px' }}>
+            <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>{f.label}</div>
+            <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)' }}>
               <div
                 onClick={() => f.set(f.value - f.step)}
-                style={{ flex: 'none', width: 44, height: 44, borderRadius: '50%', background: 'rgba(22,25,28,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 900, cursor: 'pointer' }}
+                style={{ flex: 'none', width: 44, height: 44, borderRadius: '50%', background: 'var(--color-30-surface-sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
               >
                 −
               </div>
-              <div style={{ flex: 1, textAlign: 'center', fontSize: 24, fontWeight: 900, letterSpacing: '-.03em', whiteSpace: 'nowrap' }}>{won(f.value)}</div>
+              <div style={{ flex: 1, textAlign: 'center', fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', whiteSpace: 'nowrap' }}>{won(f.value)}</div>
               <div
                 onClick={() => f.set(f.value + f.step)}
-                style={{ flex: 'none', width: 44, height: 44, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 900, cursor: 'pointer' }}
+                style={{ flex: 'none', width: 44, height: 44, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
               >
                 +
               </div>
             </div>
-            <div style={{ marginTop: 11, fontSize: 12.5, lineHeight: 1.6, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{f.desc}</div>
+            <div style={{ marginTop: 11, fontSize: 'var(--font-size-2xs)', lineHeight: 1.6, fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>{f.desc}</div>
           </div>
         ))}
         <InfoNote>사업자는 월 매출을, 근로자는 월 급여를 입력하세요. 이 값으로 하루 예산과 도착일을 계산합니다.</InfoNote>
         <div
           onClick={() => { resetOnboarding(); navigate('/empty'); }}
-          style={{ marginTop: 4, height: 58, borderRadius: 9999, background: color.ink, color: '#fff', fontSize: 16.5, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer' }}
+          style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 4, height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: 'var(--color-action-bg)', color: 'var(--color-action-text)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', cursor: 'pointer' }}
         >
           이대로 시작하기
-          <span style={{ width: 26, height: 26, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>›</span>
+          <span style={{ width: 26, height: 26, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>›</span>
         </div>
       </div>
     </Screen>

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { Screen, ScreenHeader, Pill, InfoNote } from '../components/ui';
+import { Screen, ScreenHeader, Pill, InfoNote, CtaButton } from '../components/ui';
 import { color } from '../styles/theme';
 
 const items: { name: string; desc: string; required: boolean }[] = [
@@ -30,15 +30,15 @@ export function ConsentScreen() {
         sub="시작하기 전에,"
         title="동의가 필요해요"
       />
-      <div style={{ flex: 1, overflow: 'auto', padding: '18px 22px 34px', display: 'flex', flexDirection: 'column', gap: 9 }}>
+      <div className="consent-body" style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: 'var(--space-2) var(--screen-padding-x) var(--space-3)', display: 'flex', flexDirection: 'column', gap: 'var(--component-gap)' }}>
         <div
           onClick={toggleConsentAll}
-          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px', borderRadius: 26, cursor: 'pointer', background: color.ink, color: '#fff' }}
+          style={{ minHeight: 80, display: 'flex', alignItems: 'center', gap: 'var(--component-gap)', padding: 'var(--space-2) var(--space-2-5)', borderRadius: 'var(--radius-lg)', cursor: 'pointer', background: color.selected, color: color.ink, border: '1px solid var(--color-notification-unread-border)' }}
         >
-          <div style={{ flex: 'none', width: 28, height: 28, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900, background: allOn ? color.mint : 'rgba(255,255,255,.18)', color: allOn ? color.ink : 'transparent' }}>✓</div>
+          <div style={{ flex: 'none', width: 28, height: 28, borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-notification-unread-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', background: allOn ? color.mint : color.white, color: allOn ? color.ink : 'transparent' }}>✓</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-.015em' }}>전체 동의</div>
-            <div style={{ marginTop: 2, fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,.6)' }}>선택 항목까지 한 번에</div>
+            <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.015em' }}>전체 동의</div>
+            <div style={{ marginTop: 'var(--space-0-5)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-medium)', color: color.textSecondary }}>선택 항목까지 한 번에</div>
           </div>
         </div>
 
@@ -48,33 +48,32 @@ export function ConsentScreen() {
             <div
               key={c.name}
               onClick={() => toggleConsent(i)}
-              style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '16px 18px', borderRadius: 24, cursor: 'pointer', background: on ? '#fff' : 'rgba(22,25,28,.05)' }}
+              style={{ minHeight: 80, display: 'flex', alignItems: 'center', gap: 'var(--component-gap)', padding: 'var(--space-2) var(--space-2-5)', borderRadius: 'var(--radius-lg)', cursor: 'pointer', background: color.white, border: `1px solid ${on ? 'var(--color-notification-unread-border)' : color.line}` }}
             >
-              <div style={{ flex: 'none', width: 26, height: 26, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900, background: on ? color.mint : 'rgba(22,25,28,.10)', color: on ? color.ink : 'transparent' }}>✓</div>
+              <div style={{ flex: 'none', width: 28, height: 28, borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-60-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', background: on ? color.mint : color.bg, color: on ? color.ink : 'transparent' }}>✓</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  <span style={{ fontSize: 15, fontWeight: 900, letterSpacing: '-.015em' }}>{c.name}</span>
-                  <span style={{ flex: 'none', fontSize: 11, fontWeight: 900, color: c.required ? color.mintDark : 'rgba(22,25,28,.5)' }}>{c.required ? '필수' : '선택'}</span>
+                  <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: 'var(--letter-spacing-normal)' }}>{c.name}</span>
+                  <span style={{ flex: 'none', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: c.required ? color.mintDark : 'var(--color-60-text-secondary)' }}>{c.required ? '필수' : '선택'}</span>
                 </div>
-                <div style={{ marginTop: 2, fontSize: 12.5, lineHeight: 1.5, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{c.desc}</div>
+                <div style={{ marginTop: 'var(--space-0-5)', fontSize: 'var(--font-size-xs)', lineHeight: 'var(--line-height-normal)', fontWeight: 'var(--font-weight-medium)', color: color.textSecondary }}>{c.desc}</div>
               </div>
             </div>
           );
         })}
 
         <InfoNote>모든 연결은 조회 전용입니다. 신용조회 기록이 남지 않고, 설정에서 언제든 해제할 수 있어요.</InfoNote>
-
-        <div
+      </div>
+      <div style={{ flex: 'none', padding: 'var(--space-2) var(--screen-padding-x) max(34px, env(safe-area-inset-bottom))', background: color.white, borderTop: '1px solid var(--color-60-border)' }}>
+        <CtaButton
+          disabled={!requiredOk}
           onClick={() => { if (requiredOk) navigate('/linking'); }}
-          style={{
-            marginTop: 4, height: 58, borderRadius: 9999, fontSize: 16.5, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-            cursor: requiredOk ? 'pointer' : 'default',
-            background: requiredOk ? color.ink : 'rgba(22,25,28,.14)', color: requiredOk ? '#fff' : 'rgba(22,25,28,.4)',
-          }}
+          bg={requiredOk ? color.action : color.bgAlt}
+          fg={requiredOk ? color.onAction : color.textSecondary}
+          style={{ opacity: 1 }}
         >
           동의하고 계속
-          <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>›</span>
-        </div>
+        </CtaButton>
       </div>
     </Screen>
   );

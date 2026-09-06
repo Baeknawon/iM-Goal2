@@ -1,83 +1,100 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { missionDefs } from '../data/personas';
 import { Screen, Pill, ScreenBody, CtaButton } from '../components/ui';
 import { color } from '../styles/theme';
+import { RecoveryPlanCard } from '../components/RecoveryPlanCard';
+import { recoveryCriteria } from '../viewmodel/recoveryFlow';
+import type { MissionResult } from '../types';
 
+/** 판정 화면에서 정산한 결과만 표시한다. 직접 방문해도 정산하지 않는다. */
 export function ReleaseScreen() {
   const navigate = useNavigate();
   const persona = useAppStore((s) => s.persona);
   const deposit = useAppStore((s) => s.deposit);
-  const completeRecovery = useAppStore((s) => s.completeRecovery);
+  const missionResult = useAppStore((s) => s.missionResult);
+  const wallet = useAppStore((s) => s.wallet);
+  const missionOn = useAppStore((s) => s.missionOn);
+  const latest = useAppStore((s) => s.fcpsLog[0]);
+  const setMissionDays = useAppStore((s) => s.setMissionDays);
   const MI = missionDefs[persona];
-  const legCode = MI.leg.split(' · ')[0]; // e.g. "LEG 04"
+  const legCode = MI.leg.split(' · ')[0];
   const depositLabel = deposit.toLocaleString();
 
+  if (missionResult === null) return <Navigate to={missionOn ? '/verify?result=success' : '/missionDetail'} replace />;
+
+  const result: MissionResult = missionResult;
+  const V = resultView[result];
+
   return (
-    <Screen>
-      <div style={{ padding: '68px 22px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pill onClick={() => navigate('/token')}>‹ 보증금</Pill>
-          <Pill bg={color.mint} fg={color.ink}>구간 완주</Pill>
-        </div>
-        <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{legCode}를 완주했어요,</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.16, marginTop: 1 }}>보증금을 돌려드려요</div>
-      </div>
-
-      <ScreenBody>
-        <div style={{ background: color.mint, borderRadius: 30, padding: 24, color: color.ink }}>
-          <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.08em', opacity: 0.6 }}>환원 금액</div>
-          <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 6 }}>
-            <span style={{ fontSize: 44, fontWeight: 900, letterSpacing: '-.02em', whiteSpace: 'nowrap' }}>{depositLabel}</span>
-            <span style={{ fontSize: 18, fontWeight: 900 }}>원</span>
+      <Screen>
+        <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Pill onClick={() => navigate('/missions')}>‹ 미션</Pill>
+            <Pill bg={V.chipBg} fg={V.chipFg}>{V.chip}</Pill>
           </div>
-          <div style={{ marginTop: 14, fontSize: 14, lineHeight: 1.65, fontWeight: 700, opacity: 0.7 }}>iMKRW {depositLabel} 소각 → 원화 {depositLabel}원이 목표 계좌로 이체됩니다.</div>
+          <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{legCode} · {V.sub}</div>
+          <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>{V.title}</div>
         </div>
 
-        <div style={{ marginTop: 14, background: 'rgba(22,25,28,.08)', borderRadius: 28, padding: 22 }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: 'rgba(22,25,28,.63)' }}>처리 단계</div>
-          <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <StepRow done title="스마트계약 조건 충족 확인" desc="결제 내역 기준 자동 판정" />
-            <StepRow done title="iMKRW 소각" desc={`토큰 잔액 ${depositLabel} → 0`} />
-            <StepRow done title="원화 이체" desc="iM뱅크 목표 계좌 · 완료" />
+        <ScreenBody>
+          {result === 'success' && latest?.recoveryPlan && <RecoveryPlanCard plan={latest.recoveryPlan} success />}
+          {result !== 'success' && <div className="recovery-note"><h2 className="fcps-section-title">다음 시도는 부담을 줄여볼까요?</h2><p>{result === 'fail' ? recoveryCriteria[persona].fail : '이번에는 끝까지 수행하지 못했지만, 준비가 되면 다시 시작할 수 있어요.'}</p><p>이번 결과로 목표 회복 효과는 반영하지 않았어요. 7일 단위로 다시 시도하거나 기간과 보증금을 직접 조정할 수 있습니다.</p><CtaButton onClick={() => { setMissionDays(7); navigate('/missionDetail'); }}>7일 미션으로 다시 계획하기</CtaButton></div>}
+          {/* 지갑 반환 카드 — 세 결과 모두 전액 반환 */}
+          <div style={{ background: V.cardBg, borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)', color: V.cardFg }}>
+            <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', opacity: 0.65 }}>iMKRW 지갑으로 반환</div>
+            <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 6 }}>
+              <span style={{ fontSize: 44, fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em', whiteSpace: 'nowrap' }}>+{depositLabel}</span>
+              <span style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)' }}>iMKRW</span>
+            </div>
+            <div style={{ marginTop: 'var(--space-1-5)', fontSize: 'var(--font-size-sm)', lineHeight: 1.65, fontWeight: 'var(--font-weight-semibold)', opacity: 0.72 }}>{V.moneyNote}</div>
+            <div style={{ marginTop: 'var(--space-1-5)', paddingTop: 12, borderTop: '1px solid var(--color-60-border)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)' }}>
+              지갑 잔액 {wallet.toLocaleString()} iMKRW
+            </div>
           </div>
-        </div>
 
-        <div style={{ marginTop: 14, background: color.ink, borderRadius: 28, padding: 22, color: '#fff' }}>
-          <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '.08em', color: color.mint }}>함께 적립된 마일리지</div>
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: '-.035em' }}>+18</span>
-            <span style={{ fontSize: 15, fontWeight: 900, opacity: 0.6 }}>FCPS · 실버 612점</span>
+          {/* FCPS 반영 */}
+          <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-hero)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', color: 'var(--im-white)' }}>
+            <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: color.mint }}>FCPS에 기록됨</div>
+            <div style={{ marginTop: 'var(--space-1)', display: 'flex', alignItems: 'baseline', gap: 'var(--space-1)' }}>
+            <span style={{ fontSize: 32, fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.035em', color: V.delta >= 0 ? color.mint : color.coral }}>
+              {V.delta >= 0 ? '+' : ''}{V.delta}
+            </span>
+              <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', opacity: 0.65 }}>{V.fcpsLabel}</span>
+            </div>
+            <div style={{ marginTop: 'var(--space-1)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)', lineHeight: 1.6 }}>{V.fcpsNote}</div>
+            <CtaButton height={50} style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-sm)' }} arrowBg={color.ink} onClick={() => navigate('/fcps')}>점수 반영 내역 보기</CtaButton>
           </div>
-          <CtaButton height={52} style={{ marginTop: 16, fontSize: 15.5 }} arrowBg={color.ink} onClick={() => navigate('/mileage')}>마일리지 보기</CtaButton>
-        </div>
 
-        <CtaButton
-          height={62} style={{ marginTop: 14 }}
-          onClick={() => { completeRecovery(); navigate('/home'); }}
-        >
-          탑승권으로 돌아가기
-        </CtaButton>
-      </ScreenBody>
-    </Screen>
+          <CtaButton height={62} style={{ marginTop: 'var(--space-1-5)' }} onClick={() => navigate('/home')}>
+            목표 경로와 다음 행동 보기
+          </CtaButton>
+        </ScreenBody>
+      </Screen>
   );
 }
 
-function StepRow({ done, title, desc }: { done?: boolean; title: string; desc: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
-      <div
-        style={{
-          width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: done ? color.mint : 'rgba(22,25,28,.14)', color: color.ink, fontSize: 14, fontWeight: 900,
-        }}
-      >
-        {done ? '✓' : <div style={{ width: 12, height: 12, borderRadius: '50%', border: `2px solid ${color.mint}`, borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />}
-      </div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 15, fontWeight: 900 }}>{title}</div>
-        <div style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(22,25,28,.61)', marginTop: 1 }}>{desc}</div>
-      </div>
-    </div>
-  );
-}
+const resultView: Record<MissionResult, {
+  chip: string; chipBg: string; chipFg: string; sub: string; title: string;
+  cardBg: string; cardFg: string; moneyNote: string;
+  delta: number; fcpsLabel: string; fcpsNote: string;
+}> = {
+  success: {
+    chip: '미션 성공', chipBg: color.mint, chipFg: color.ink, sub: '완주했어요', title: '보증금을 돌려드려요',
+    cardBg: color.mint, cardFg: color.ink,
+    moneyNote: '기한 내 미션을 완수해 보증금이 iMKRW 지갑으로 전액 반환됐어요.',
+    delta: 18, fcpsLabel: '미션 성공 기록', fcpsNote: '성공 이력이 신용 궤적에 긍정적으로 반영됩니다.',
+  },
+  fail: {
+    chip: '미션 실패', chipBg: color.coralTint, chipFg: color.coralDark, sub: '이번엔 아쉬웠어요', title: '보증금은 돌려드려요',
+    cardBg: color.coralTintLight, cardFg: 'var(--color-60-text-primary)',
+    moneyNote: '실패했지만 보증금은 소각 없이 iMKRW 지갑으로 전액 반환됩니다.',
+    delta: -8, fcpsLabel: '미션 실패 기록', fcpsNote: '실패 이력도 신용 궤적에 기록돼요. 다음 미션으로 회복할 수 있어요.',
+  },
+  give_up: {
+    chip: '미션 포기', chipBg: 'rgba(var(--color-ink-rgb),.12)', chipFg: color.ink, sub: '미션을 중단했어요', title: '보증금은 돌려드려요',
+    cardBg: 'var(--color-60-bg-base)', cardFg: color.ink,
+    moneyNote: '포기해도 보증금은 iMKRW 지갑으로 전액 반환됩니다.',
+    delta: -5, fcpsLabel: '미션 포기 기록', fcpsNote: '포기 이력이 신용 궤적에 기록돼요. 언제든 다시 시작할 수 있어요.',
+  },
+};

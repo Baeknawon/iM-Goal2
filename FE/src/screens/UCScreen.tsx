@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { ucDefs, ucChainsP1, ucChainsP2 } from '../data/ucDefs';
 import type { UCScreenId } from '../types';
-import { Screen, BackToHome, ScreenBody } from '../components/ui';
+import { Screen, BackToHome, ScreenBody, CtaButton } from '../components/ui';
 import { UCBlockView } from '../components/UCBlockView';
 import { color } from '../styles/theme';
 
@@ -28,7 +28,7 @@ export function UCScreen() {
     return (
       <Screen>
         <ScreenBody>
-          <div style={{ padding: 24 }}>알 수 없는 화면입니다.</div>
+          <div style={{ padding: 'var(--space-3)' }}>알 수 없는 화면입니다.</div>
         </ScreenBody>
       </Screen>
     );
@@ -47,42 +47,40 @@ export function UCScreen() {
   const handleNext = () => {
     if (!isLast) { navigate(`/uc/${chain[chainIdx + 1]}`); return; }
     if (phase === 1) { navigate('/missionDetail'); return; }
-    if (phase === 2) { navigate('/release'); return; }
+    if (phase === 2) { navigate('/verify?result=success'); return; }
     navigate('/home');
   };
 
   return (
     <Screen>
-      <div style={{ padding: '68px 22px 0', flex: 'none' }}>
+      <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
-          <div style={{ padding: '9px 15px', borderRadius: 9999, fontSize: 12.5, fontWeight: 900, color: color.ink, background: uc.accent }}>{uc.code}</div>
+          {screenId !== 'u12' && <div style={{ padding: '9px 15px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: color.ink, background: uc.accent }}>{uc.code}</div>}
         </div>
-        <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>{uc.sub}</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.14, marginTop: 1 }}>{uc.title}</div>
-        {chain.length > 0 && (
-          <div style={{ marginTop: 15, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{uc.sub}</div>
+        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>{uc.title}</div>
+        {chain.length > 1 && screenId !== 'u12' && (
+          <div style={{ marginTop: 15, display: 'flex', alignItems: 'center', gap: 'var(--component-gap)' }}>
             <div style={{ flex: 1, display: 'flex', gap: 4 }}>
               {chain.map((k, i) => (
-                <div key={k} style={{ flex: 1, height: 4, borderRadius: 9999, background: i <= chainIdx ? color.mint : 'rgba(22,25,28,.14)' }} />
+                <div key={k} style={{ flex: 1, height: 4, borderRadius: 'var(--radius-pill)', background: i <= chainIdx ? color.mint : 'rgba(var(--color-ink-rgb),.14)' }} />
               ))}
             </div>
-            <span style={{ flex: 'none', fontSize: 11.5, fontWeight: 900, color: 'rgba(22,25,28,.58)' }}>{step}</span>
+            <span style={{ flex: 'none', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>{step}</span>
           </div>
         )}
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', padding: '16px 22px 34px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <ScreenBody padBottom={24}>
+        <div className="screen-stack">
         {uc.blocks.map((b, i) => (
           <UCBlockView key={i} block={b} accent={uc.accent} />
         ))}
-        <div
-          onClick={handleNext}
-          style={{ marginTop: 6, height: 56, borderRadius: 9999, background: color.ink, color: '#fff', fontSize: 16, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer' }}
-        >
-          {uc.cta}
-          <span style={{ width: 26, height: 26, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>›</span>
         </div>
+      </ScreenBody>
+      <div className="screen-action-footer">
+        <CtaButton onClick={handleNext}>{uc.cta}</CtaButton>
       </div>
     </Screen>
   );

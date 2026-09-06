@@ -1,89 +1,99 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { Screen, ScreenBody, CtaButton, BarcodeStrip, InfoNote } from '../components/ui';
+import { Screen, ScreenHeader, ScreenBody, CtaButton, Pill, InfoNote } from '../components/ui';
+import { goalPlanDefs, missionDefs } from '../data/personas';
+import { useJourney } from '../viewmodel/useJourney';
+import { DEPOSIT_MAX, DEPOSIT_STEP, parseWonLabel, recommendDeposit } from '../viewmodel/depositRecommendation';
 import { color } from '../styles/theme';
 
-const DEPOSIT_OPTIONS = [10000, 30000, 50000];
+const won = (value: number) => value.toLocaleString('ko-KR');
 
 export function TokenScreen() {
+  const persona = useAppStore((s) => s.persona);
+  return <DepositScreen key={persona} />;
+}
+
+function DepositScreen() {
   const navigate = useNavigate();
-  const deposit = useAppStore((s) => s.deposit);
-  const setDeposit = useAppStore((s) => s.setDeposit);
-  const setMissionOn = useAppStore((s) => s.setMissionOn);
+  const { persona, P, AP, saved, savedPct } = useJourney();
+  const wallet = useAppStore((s) => s.wallet);
+  const income = useAppStore((s) => s.incomeMonthly);
+  const fixed = useAppStore((s) => s.incomeFixed);
+  const spent = useAppStore((s) => s.spent);
+  const missionDays = useAppStore((s) => s.missionDays);
+  const history = useAppStore((s) => s.fcpsLog);
+  const missionOn = useAppStore((s) => s.missionOn);
+  const startMission = useAppStore((s) => s.startMission);
+  const goal = goalPlanDefs[persona];
+  const mission = missionDefs[persona];
+  const previousFailed = history.length > 0 && history[0].result !== 'success';
+  const result = recommendDeposit({ dailyBudget: P.dailyBudget, missionDays, spent, income, fixed,
+    monthlySaving: parseWonLabel(goal.monthly), wallet,
+    remainingGoal: Math.max(0, parseWonLabel(AP.target) - parseWonLabel(saved)), previousFailed });
+  const [custom, setCustom] = useState<number | null>(null);
+  const [draft, setDraft] = useState<number | null>(null);
+  const deposit = custom ?? result.recommended;
+  const shownDeposit = draft ?? deposit;
+  const topUp = Math.max(0, shownDeposit - wallet);
+  const alreadyLocked = missionOn;
 
   return (
     <Screen>
-      <div style={{ padding: '68px 22px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ padding: '9px 15px', borderRadius: 9999, background: 'rgba(22,25,28,.12)', fontSize: 13, fontWeight: 900 }}>iMKRW 스마트계약</div>
-          <div onClick={() => navigate('/settings')} style={{ width: 38, height: 38, borderRadius: '50%', background: color.sky, cursor: 'pointer' }} />
-        </div>
-        <div style={{ marginTop: 16, fontSize: 17, fontWeight: 700, color: 'rgba(22,25,28,.6)' }}>동의 없이는 예치되지 않아요,</div>
-        <div style={{ fontSize: 31, fontWeight: 900, letterSpacing: '-.04em', lineHeight: 1.14, marginTop: 1 }}>보증금 티켓</div>
-      </div>
-
-      <ScreenBody>
-        <div style={{ position: 'relative' }}>
-          <div style={{ background: '#fff', borderRadius: '28px 28px 0 0', padding: '22px 24px', color: color.ink }}>
-            <div style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '.1em', color: 'rgba(22,25,28,.58)' }}>DEPOSIT · LEG 04</div>
-            <div style={{ marginTop: 6, display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontSize: 42, fontWeight: 900, letterSpacing: '-.02em', whiteSpace: 'nowrap' }}>{deposit.toLocaleString()}</span>
-              <span style={{ fontSize: 17, fontWeight: 900 }}>iMKRW</span>
+      <ScreenHeader onBack={() => navigate('/missionDetail')} rightChip={<Pill>iMKRW 보증금</Pill>}
+        sub="목표를 지키는 작은 약속" title="내게 맞는 보증금" />
+      <ScreenBody padBottom={24}>
+        <div className="screen-stack">
+          <div className="deposit-recommendation">
+            <span className="deposit-eyebrow">AI 추천 · 현재 상황 기준</span>
+            <h2>{result.recommended > 0 ? '생활비 부담까지 생각한 금액이에요' : '지금은 생활비 여유를 먼저 확보해요'}</h2>
+            <div className="deposit-value"><strong>{won(shownDeposit)}</strong><span>iMKRW</span></div>
+            <div className="deposit-value-meta">
+              <span>{draft !== null ? '조정 중인 금액' : custom === null ? 'AI 추천 금액' : '직접 선택한 금액'} · {won(shownDeposit)}원</span>
+              <button type="button" className="deposit-change" disabled={result.recommended === 0 || alreadyLocked} aria-expanded={draft !== null} aria-controls="deposit-adjuster" onClick={() => setDraft(deposit)}>바꾸기</button>
             </div>
-            <div style={{ marginTop: 14, display: 'flex', gap: 8 }}>
-              {DEPOSIT_OPTIONS.map((v) => (
-                <div
-                  key={v}
-                  onClick={() => setDeposit(v)}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 15, fontWeight: 900, cursor: 'pointer',
-                    background: deposit === v ? color.navy : '#F2F5F4', color: deposit === v ? '#fff' : 'rgba(10,30,26,.5)',
-                  }}
-                >
-                  {v / 10000}만
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ position: 'relative', height: 26, background: '#fff', display: 'flex', alignItems: 'center' }}>
-            <div style={{ position: 'absolute', left: -13, width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
-            <div style={{ position: 'absolute', right: -13, width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
-            <div style={{ flex: 1, margin: '0 20px', height: 2, background: 'repeating-linear-gradient(90deg,#D8E2DF 0 6px,transparent 6px 12px)' }} />
-          </div>
-          <div style={{ background: '#fff', borderRadius: '0 0 28px 28px', padding: '20px 24px 24px', color: color.ink }}>
-            <div style={{ display: 'flex', gap: 9 }}>
-              <div style={{ flex: 1, background: color.mintTintLight, borderRadius: 20, padding: 16 }}>
-                <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: '.06em', color: '#0A8873' }}>도착하면</div>
-                <div style={{ marginTop: 7, fontSize: 14.5, lineHeight: 1.55, fontWeight: 900 }}>전액 반환<br />+ 우대금리 0.3%</div>
+            {draft !== null && <div id="deposit-adjuster" className="deposit-adjuster">
+              <label htmlFor="deposit-range">보증금 조정 <span>1,000원 단위</span></label>
+              <input id="deposit-range" type="range" min={DEPOSIT_STEP} max={DEPOSIT_MAX} step={DEPOSIT_STEP} value={draft}
+                aria-valuetext={`${won(draft)}원`} onChange={(event) => setDraft(Number(event.target.value))} />
+              <div className="deposit-range-labels"><span>1,000원</span><span>50,000원</span></div>
+              <p>추천 금액은 {won(result.recommended)}원이에요. {draft > result.recommended ? '더 예치해도 목표 달성이 빨라지는 것은 아니에요.' : '부담이 적은 금액으로 시작해도 괜찮아요.'}</p>
+              <button type="button" className="deposit-reset" onClick={() => setDraft(result.recommended)}>추천 금액으로 맞추기</button>
+              <div className="deposit-adjust-actions">
+                <CtaButton height={52} bg={color.bgAlt} onClick={() => setDraft(null)}>취소</CtaButton>
+                <CtaButton height={52} onClick={() => { setCustom(draft === result.recommended ? null : draft); setDraft(null); }}>금액 적용</CtaButton>
               </div>
-              <div style={{ flex: 1, background: '#FFEFEA', borderRadius: 20, padding: 16 }}>
-                <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: '.06em', color: '#C4472A' }}>이탈하면</div>
-                <div style={{ marginTop: 7, fontSize: 14.5, lineHeight: 1.55, fontWeight: 900, color: '#3A1A11' }}>내 목표 계좌로<br />자동 이동</div>
-              </div>
-            </div>
-            <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 13.5, fontWeight: 900, color: 'rgba(22,25,28,.63)' }}>진행 중인 예치</span>
-              <span style={{ fontSize: 13.5, fontWeight: 900, color: '#0A8873' }}>9 / 14일</span>
-            </div>
-            <div style={{ marginTop: 10, height: 12, borderRadius: 9999, background: '#E9ECEE', overflow: 'hidden' }}>
-              <div style={{ width: '64%', height: '100%', background: color.mint }} />
-            </div>
-            <BarcodeStrip height={40} />
+            </div>}
           </div>
-        </div>
-
-        <InfoNote>예치·반환 처리에 오류가 생기면 상태를 표시하고 재처리를 도와드립니다. 금액과 반환 기준은 금융·법무 검토 후 확정됩니다.</InfoNote>
-        <CtaButton height={62} bg={color.ink} fg="#fff" arrowBg={color.mint} style={{ marginTop: 14 }} onClick={() => { setMissionOn(true); navigate('/home'); }}>
-          동의하고 예치
-        </CtaButton>
-        <div
-          onClick={() => navigate('/release')}
-          style={{ marginTop: 10, height: 52, borderRadius: 9999, background: 'rgba(22,25,28,.08)', color: 'rgba(22,25,28,.72)', fontSize: 15, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-        >
-          해제 · 환원 화면 보기
+          <section className="deposit-reasons">
+            <h2>왜 이 금액을 추천했나요?</h2>
+            <p><b>{P.goalName}</b> 목표를 {savedPct}% 달성했어요. <b>{missionDays}일 동안 {mission.title1} {mission.title2}</b>를 실천할 때, 목표 저축과 생활비를 과하게 묶지 않도록 계산했어요.</p>
+            <dl>
+              <div><dt>하루 예산 × 미션 {missionDays}일</dt><dd>{won(result.periodBudget)}원</dd></div>
+              <div><dt>고정비·목표 저축 후 월 여유</dt><dd>{won(result.disposable)}원</dd></div>
+              <div><dt>현재 iMKRW 지갑</dt><dd>{won(wallet)}원</dd></div>
+            </dl>
+            <p>{mission.why}</p>
+            {previousFailed && <p>최근 미션이 완료되지 않아, 다시 시작하는 부담을 줄이도록 기본 추천액을 25% 낮췄어요.</p>}
+            <details>
+              <summary>추천 금액 계산 보기</summary>
+              <p>미션 기간 예산의 10%({won(Math.round(result.base))}원)에 오늘 초과 지출 보정액 {won(Math.round(result.adjustment))}원을 더했어요. 보정은 하루 예산까지만 반영하며, 초과분의 25%예요.</p>
+              <p>월 여유의 10%({won(Math.floor(result.cashCap))}원), 지갑의 60%({won(Math.floor(result.walletCap))}원), 남은 목표 금액, 5만원 중 가장 낮은 금액을 상한으로 적용하고 1,000원 단위로 내림했어요.</p>
+              <p>계산 결과는 예상치이며, 보증금만으로 목표 달성이나 수익을 보장하지 않아요.</p>
+            </details>
+          </section>
+          <div className="deposit-wallet"><span>예치 후 지갑 잔액</span><strong>{won(Math.max(0, wallet - shownDeposit))} iMKRW</strong></div>
+          {topUp > 0 && <InfoNote>선택 금액이 지갑 잔액보다 {won(topUp)}원 많아요. 아래 예치에 동의하면 부족분 {won(topUp)}원이 자동 충전된 뒤 예치됩니다.</InfoNote>}
+          <InfoNote>보증금은 미션 기간 동안만 묶입니다. 현재 기준으로는 성공·실패·포기 모두 전액 반환하고, 수행 결과만 FCPS에 기록해요. 추천 확인이나 금액 조정만으로는 예치되지 않아요.</InfoNote>
         </div>
       </ScreenBody>
+      <div className="screen-action-footer">
+        {alreadyLocked ? <CtaButton onClick={() => navigate('/missionLive')}>진행 중인 미션 보기</CtaButton>
+          : result.recommended === 0 ? <CtaButton onClick={() => navigate('/missionDetail')}>보증금 없는 미션 확인</CtaButton>
+          : <CtaButton disabled={draft !== null} onClick={() => { startMission(deposit); navigate('/missionLive'); }}>
+            {won(deposit)}원 예치 동의 · 시작
+          </CtaButton>}
+      </div>
     </Screen>
   );
 }
