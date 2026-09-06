@@ -1,11 +1,14 @@
+import { useAppStore } from '../store/appStore';
+import { financePlan, FINANCE_DATE } from '../viewmodel/finance';
+import { useSpending } from '../viewmodel/useSpending';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, ScreenBody } from '../components/ui';
 import { MonthPicker } from '../components/MonthPicker';
 import { SpendingRows } from '../components/SpendingRows';
 import { useSpendPeriod } from '../store/spendPeriodStore';
-import { spendingSummary } from '../data/spendingAnalytics';
-import { monthParts } from '../data/spendPeriod';
+
+import { INITIAL_SPEND_MONTH, monthParts } from '../data/spendPeriod';
 
 export function SpendScreen() {
   const period=useSpendPeriod(s=>s.period);
@@ -15,13 +18,15 @@ function SpendContent() {
   const navigate=useNavigate();
   const period=useSpendPeriod(s=>s.period);
   const {month}=monthParts(period);
-  const data=spendingSummary(period);
-  const budgets=useSpendPeriod(s=>s.budgets);
-  const setBudget=useSpendPeriod(s=>s.setBudget);
+  const data=useSpending(period);
+  const state=useAppStore();
+  const plan=financePlan(state);
+  const budgets=state.monthlyBudgets;
+  const setBudget=state.setMonthlyBudget;
   const [editing,setEditing]=useState(false);
   const [draft,setDraft]=useState('');
   const [selection,setSelection]=useState({period,week:2});
-  const budget=budgets[period];
+  const budget=budgets[period] ?? plan.recommendedBudget;
   const week=selection.period===period?selection.week:0;
   const selected=data.weeks[week];
   const difference=week>0?selected.amount-data.weeks[week-1].amount:null;
@@ -33,7 +38,7 @@ function SpendContent() {
         <span className="insight-caption">월 전체 기준 · {data.entries.length}건</span>
       </section>
       {data.entries.length>0?<>
-        <section className="insight-budget"><div className="insight-section-heading"><h2>{budget?'설정한 예산':'이번 달 예산을 정해보세요'}</h2><button onClick={()=>{setDraft(budget?String(budget):'');setEditing(!editing);}}>{budget?'변경':'설정하기'}</button></div>
+        <section className="insight-budget"><p className="insight-caption">목표와 연결된 예산 · {FINANCE_DATE} 기준</p>{period===INITIAL_SPEND_MONTH&&<p className="insight-secondary">월 저축 가능액 {plan.monthlySaving.toLocaleString()}원 · 예상 도착 {plan.eta}</p>}<div className="insight-section-heading"><h2>{budget?'설정한 예산':'이번 달 예산을 정해보세요'}</h2><button onClick={()=>{setDraft(budget?String(budget):'');setEditing(!editing);}}>{budget?'변경':'설정하기'}</button></div>
           {budget?<><div className="insight-budget-values"><b>{Math.abs(budget-data.total).toLocaleString()}원 {budget>=data.total?'남았어요':'초과했어요'}</b><span>예산 {budget.toLocaleString()}원</span></div><div className="insight-budget-track"><div style={{width:`${Math.min(100,data.total/budget*100)}%`}} /></div></>:<p className="insight-secondary">사용할 수 있는 금액을 정하면 소비 속도를 비교하기 쉬워요.</p>}
           {editing&&<form className="insight-budget-form" onSubmit={e=>{e.preventDefault();const value=Number(draft);if(Number.isFinite(value)&&value>0){setBudget(period,value);setEditing(false);}}}><label htmlFor="monthly-budget">월 예산 (원)</label><input id="monthly-budget" type="number" min="1" max="1000000000" required value={draft} onChange={e=>setDraft(e.target.value)} placeholder="예: 300000"/><div><button type="button" onClick={()=>setEditing(false)}>취소</button><button type="submit">예산 저장</button></div></form>}
         </section>

@@ -1,3 +1,4 @@
+import { initialGoal } from '../viewmodel/finance';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
@@ -13,6 +14,10 @@ import { color } from '../styles/theme';
  * 중간에 등장하고, 대화가 끝나면 리포트 화면(/report)으로 넘어갑니다.
  */
 export function ChatGoalScreen() {
+    const persona=useAppStore(s=>s.persona);
+    return <ScriptedGoalChat key={persona}/>;
+}
+function ScriptedGoalChat() {
     const navigate = useNavigate();
     const persona = useAppStore((s) => s.persona);
     const turns = goalChatDefs[persona];
@@ -25,6 +30,13 @@ export function ChatGoalScreen() {
     const [draft, setDraft] = useState('');
     const [listening, setListening] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const micTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const stopMic = () => {
+        if (micTimer.current !== null) clearTimeout(micTimer.current);
+        micTimer.current = null;
+        setListening(false);
+    };
+    useEffect(() => () => { if (micTimer.current !== null) clearTimeout(micTimer.current); }, []);
 
     const done = shown >= turns.length;
     const visible = turns.slice(0, shown);
@@ -51,6 +63,7 @@ export function ChatGoalScreen() {
     // 사용자 메시지 전송: 입력값이 있으면 그것을, 없으면 시나리오 예시 문장을 사용
     const sendUser = () => {
         if (!nextIsUser) return;
+        stopMic();
         const text = draft.trim() || exampleForNext;
         setUserSaid((m) => ({ ...m, [shown]: text }));
         setDraft('');
@@ -58,11 +71,13 @@ export function ChatGoalScreen() {
         setShown((n) => Math.min(turns.length, n + 1));
     };
 
-    // 음성 버튼(데모): 듣는 척하다가 예시 문장을 입력창에 채워 넣음
+    // Microphone animation only: fills the authored reply without requesting audio access.
     const toggleMic = () => {
-        if (listening) { setListening(false); return; }
+        if (!nextIsUser) return;
+        if (listening) { stopMic(); return; }
         setListening(true);
-        setTimeout(() => {
+        micTimer.current = setTimeout(() => {
+            micTimer.current = null;
             setDraft(exampleForNext);
             setListening(false);
         }, 1400);
@@ -105,7 +120,7 @@ export function ChatGoalScreen() {
                             <input
                                 value={draft}
                                 onChange={(e) => setDraft(e.target.value)}
-                                onKeyDown={(e) => { if (e.key === 'Enter') sendUser(); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); sendUser(); } }}
                                 placeholder={exampleForNext}
                                 style={{
                                     flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent',
@@ -115,7 +130,7 @@ export function ChatGoalScreen() {
                             {/* 음성 입력 버튼 */}
                             <button
                                 onClick={toggleMic}
-                                aria-label="음성으로 말하기"
+                                aria-label={listening ? "음성 입력 연출 멈추기" : "음성 입력 연출"} aria-pressed={listening}
                                 style={{
                                     flex: 'none', width: 44, height: 44, borderRadius: '50%', border: 'none', cursor: 'pointer',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-lg)',
@@ -123,7 +138,7 @@ export function ChatGoalScreen() {
                                     animation: listening ? 'ringPulse 1.2s infinite' : undefined,
                                 }}
                             >
-                                🎙
+                                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg>
                             </button>
                             {/* 보내기 버튼 */}
                             <button
@@ -139,12 +154,12 @@ export function ChatGoalScreen() {
                             </button>
                         </div>
                         <div style={{ marginTop: 'var(--space-1)', textAlign: 'center', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>
-                            직접 입력하거나 🎙 눌러 말해도 돼요
+                            보내기나 마이크를 눌러 대화를 이어가세요
                         </div>
                     </>
                 ) : done ? (
                     <div
-                        onClick={() => navigate('/report')}
+                        onClick={() => { useAppStore.getState().updateGoal(initialGoal(persona)); navigate('/report'); }}
                         style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',
                             height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: 'var(--color-action-bg)', color: 'var(--color-action-text)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer',

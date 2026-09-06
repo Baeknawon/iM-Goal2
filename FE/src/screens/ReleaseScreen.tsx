@@ -1,10 +1,13 @@
+import { recommendMission, failureReasons } from '../viewmodel/adaptiveMission';
+import { FailureReasonPicker } from '../components/FailureReasonPicker';
+import { RecoveryProgressCard } from '../components/RecoveryProgressCard';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { missionDefs } from '../data/personas';
 import { Screen, Pill, ScreenBody, CtaButton } from '../components/ui';
 import { color } from '../styles/theme';
 import { RecoveryPlanCard } from '../components/RecoveryPlanCard';
-import { recoveryCriteria } from '../viewmodel/recoveryFlow';
+
 import type { MissionResult } from '../types';
 
 /** 판정 화면에서 정산한 결과만 표시한다. 직접 방문해도 정산하지 않는다. */
@@ -17,7 +20,9 @@ export function ReleaseScreen() {
   const missionOn = useAppStore((s) => s.missionOn);
   const latest = useAppStore((s) => s.fcpsLog[0]);
   const setMissionDays = useAppStore((s) => s.setMissionDays);
-  const MI = missionDefs[persona];
+  const state=useAppStore();
+  const next=recommendMission(state);
+  const MI = latest?.missionSnapshot ?? missionDefs[persona];
   const legCode = MI.leg.split(' · ')[0];
   const depositLabel = deposit.toLocaleString();
 
@@ -38,8 +43,9 @@ export function ReleaseScreen() {
         </div>
 
         <ScreenBody>
+          {latest?.recovery && <RecoveryProgressCard recovery={latest.recovery} />}
           {result === 'success' && latest?.recoveryPlan && <RecoveryPlanCard plan={latest.recoveryPlan} success />}
-          {result !== 'success' && <div className="recovery-note"><h2 className="fcps-section-title">다음 시도는 부담을 줄여볼까요?</h2><p>{result === 'fail' ? recoveryCriteria[persona].fail : '이번에는 끝까지 수행하지 못했지만, 준비가 되면 다시 시작할 수 있어요.'}</p><p>이번 결과로 목표 회복 효과는 반영하지 않았어요. 7일 단위로 다시 시도하거나 기간과 보증금을 직접 조정할 수 있습니다.</p><CtaButton onClick={() => { setMissionDays(7); navigate('/missionDetail'); }}>7일 미션으로 다시 계획하기</CtaButton></div>}
+          {result !== 'success' && <div className="recovery-note"><h2 className="fcps-section-title">다음 시도는 부담을 줄여볼까요?</h2><p>{result === 'fail' ? latest?.missionSnapshot?.criteria.fail ?? '미션 기준을 충족하지 못한 기록입니다.' : '이번에는 끝까지 수행하지 못했지만, 준비가 되면 다시 시작할 수 있어요.'}</p><p>이번 결과로 목표 회복 효과는 반영하지 않았어요. 어려웠던 이유에 맞춰 다음 행동과 성공 기준을 조정해요.</p><FailureReasonPicker value={latest?.failureReason??'unknown'} onChange={state.setFailureReason}/><p className="fcps-description">선택한 이유: {failureReasons[latest?.failureReason??'unknown']}<br/>다음 미션: {next.title1} {next.title2}<br/>{next.why}</p><CtaButton onClick={() => { setMissionDays(7); navigate('/missionDetail'); }}>조정된 미션 확인하기</CtaButton></div>}
           {/* 지갑 반환 카드 — 세 결과 모두 전액 반환 */}
           <div style={{ background: V.cardBg, borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)', color: V.cardFg }}>
             <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', opacity: 0.65 }}>iMKRW 지갑으로 반환</div>
@@ -83,7 +89,7 @@ const resultView: Record<MissionResult, {
     chip: '미션 성공', chipBg: color.mint, chipFg: color.ink, sub: '완주했어요', title: '보증금을 돌려드려요',
     cardBg: color.mint, cardFg: color.ink,
     moneyNote: '기한 내 미션을 완수해 보증금이 iMKRW 지갑으로 전액 반환됐어요.',
-    delta: 18, fcpsLabel: '미션 성공 기록', fcpsNote: '성공 이력이 신용 궤적에 긍정적으로 반영됩니다.',
+    delta: 18, fcpsLabel: '미션 성공 기록', fcpsNote: '행동 미션 성공 기록이에요. 재무 회복과 4주 유지는 별도로 확인합니다.',
   },
   fail: {
     chip: '미션 실패', chipBg: color.coralTint, chipFg: color.coralDark, sub: '이번엔 아쉬웠어요', title: '보증금은 돌려드려요',

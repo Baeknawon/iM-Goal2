@@ -1,7 +1,9 @@
+import { currentMission, failureReasons } from '../viewmodel/adaptiveMission';
+import { RecoveryProgressCard } from '../components/RecoveryProgressCard';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, Brand } from '../components/ui';
-import { missionDefs } from '../data/personas';
+
 import { color } from '../styles/theme';
 import { mockMissionHistory, formatMissionDate } from '../data/mileageHistory';
 
@@ -19,7 +21,6 @@ interface Ticket {
 /** 미션 tab: every recovery mission (deposit-backed "LEG" tickets) — the current one plus completed history. */
 export function MissionsScreen() {
     const navigate = useNavigate();
-    const persona = useAppStore((s) => s.persona);
     const deposit = useAppStore((s) => s.deposit);
     const missionOn = useAppStore((s) => s.missionOn);
     const missionResult = useAppStore((s) => s.missionResult);
@@ -28,7 +29,8 @@ export function MissionsScreen() {
     const startedAt = useAppStore((s) => s.missionStartedAt);
     const entries = useAppStore((s) => s.fcpsLog);
     const activePlan = useAppStore((s) => s.activeRecoveryPlan);
-    const MI = missionDefs[persona];
+    const latestRecovery=entries[0]?.recovery;
+    const MI = currentMission(useAppStore());
 
     const curName = `${MI.title1} ${MI.title2}`;
     const tickets: Ticket[] = [
@@ -42,8 +44,8 @@ export function MissionsScreen() {
             : []),
         ...entries.map((entry, index) => ({
             leg: `최근 미션 ${entries.length - index} · 완료`, name: entry.mission,
-            days: entry.result === 'success' ? '미션 성공' : entry.result === 'fail' ? '미션 실패' : '미션 포기',
-            amount: entry.deposit, status: '전액 환원', live: false, go: '',
+            days: entry.result === 'success' ? '미션 성공' : (entry.result === 'fail' ? '미션 실패' : '미션 포기') + (entry.failureReason ? ' · '+failureReasons[entry.failureReason] : ''),
+            amount: entry.deposit, status: '전액 환원', live: false, go: entry.recovery ? '/recovery?completedAt='+encodeURIComponent(entry.recovery.completedAt) : '',
             date: entry.startedAt
                 ? `${formatMissionDate(entry.startedAt)} ~ ${formatMissionDate(entry.completedAt)}`
                 : `${formatMissionDate(entry.completedAt)} 완료`,
@@ -75,6 +77,7 @@ export function MissionsScreen() {
                     </div>
                 </div>
                 {missionOn && missionResult === null && <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>진행 중</div>}
+                {!missionOn && latestRecovery && <RecoveryProgressCard recovery={latestRecovery} />}
                 {tickets.map((t) => (
                     <div
                         key={t.leg}

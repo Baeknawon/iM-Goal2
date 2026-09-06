@@ -1,21 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { calculateFcps } from '../viewmodel/fcpsScore';
-import { fcpsFactors } from '../data/staticContent';
+import { behaviorFactors } from '../viewmodel/longTermHistory';
 import { Screen, ScreenHeader, ScreenBody, Card, InfoNote } from '../components/ui';
 import { color } from '../styles/theme';
 import { FCPS_INITIAL_SCORE, mockMileageHistory, formatMissionDate } from '../data/mileageHistory';
 
-const explanations = [
-  '일일 예산을 지킨 행동을 살펴봐요. 꾸준한 예산 준수 기록이 평가 근거가 됩니다.',
-  '시작한 미션을 끝까지 수행했는지 살펴봐요. 완료한 미션은 아래 이력에 반영돼요.',
-  '하루의 결과뿐 아니라 예산을 안정적으로 지키는 패턴을 살펴봐요.',
-  '목표를 향해 저축이 이어지는지 살펴봐요. 화면의 비율은 점수 자체가 아닌 행동 지표예요.',
-];
-
 export function FcpsDetailScreen() {
   const navigate = useNavigate();
-  const entries = useAppStore((s) => s.fcpsLog);
+  const state=useAppStore();
+  const entries=state.fcpsLog;
+  const factors=behaviorFactors(state);
   const score = calculateFcps(entries);
   return <Screen>
     <ScreenHeader onBack={() => navigate('/mileage')} sub="금융 행동의 기록" title="FCPS 점수 상세" />
@@ -41,11 +36,11 @@ export function FcpsDetailScreen() {
         </Card>
         <Card>
           <h2 className="fcps-section-title">어떤 행동을 보고 있나요?</h2>
-          {fcpsFactors.map((factor, i) => <details className="fcps-factor" key={factor.name}>
-            <summary><span>{factor.name}</span><strong>{factor.barPct}% · {factor.tag}</strong></summary>
-            <p className="fcps-description">{explanations[i]}</p>
+          {factors.map((factor) => <details className="fcps-factor" key={factor.name}>
+            <summary><span>{factor.name}</span><strong>{factor.tag}</strong></summary>
+            <p className="fcps-description">{factor.description}</p>
           </details>)}
-          <p className="fcps-description">위 비율은 행동 지표의 예시이며 점수 배점이 아닙니다. 적립 점수와 사유는 마일리지 기록에서 확인할 수 있어요.</p>
+          <p className="fcps-description">위 지표는 저장된 기록을 요약한 값이며 점수 배점이 아닙니다. 적립 점수와 사유는 마일리지 기록에서 확인할 수 있어요.</p>
         </Card>
         <Card>
           <h2 className="fcps-section-title">새로 쌓인 내역</h2>
@@ -55,7 +50,7 @@ export function FcpsDetailScreen() {
               <div className="fcps-history-total"><strong style={{ color: entry.delta >= 0 ? color.mintDark : color.coral }}>{entry.delta >= 0 ? '+' : ''}{entry.delta}점</strong><small>누적 {score.base + entries.slice(i).reduce((sum, item) => sum + item.delta, 0)}점</small></div>
             </div>)}
         </Card>
-        <InfoNote>점수 반영 기준: 미션 성공 +18점, 실패 −8점, 포기 −5점. 보증금 액수는 가산점에 영향을 주지 않으며, 반환과 행동 평가는 별개예요. FCPS는 공식 신용점수와 다릅니다.</InfoNote>
+        <InfoNote>점수 반영 기준: 미션 성공 +18점, 실패 −8점, 포기 −5점. 성공 점수는 행동 완료에 대한 기록이며 재무 회복이나 4주 유지 확인 점수가 아닙니다. 보증금 액수는 가산점에 영향을 주지 않으며, 반환과 행동 평가는 별개예요. FCPS는 공식 신용점수와 다릅니다.</InfoNote>
       </div>
     </ScreenBody>
   </Screen>;

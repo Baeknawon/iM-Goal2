@@ -1,94 +1,20 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { Screen, Pill, ScreenBody, CtaButton } from '../components/ui';
-import { supportProductDefs, fitColor } from '../data/staticContent';
-import type { BizTypeKey } from '../data/staticContent';
-import { supportLegNote } from '../data/personas';
-import { color } from '../styles/theme';
-
-const BIZ_TYPES: BizTypeKey[] = ['소상공인', '개인사업자'];
-
-export function SupportScreen() {
-  const navigate = useNavigate();
-  const persona = useAppStore((s) => s.persona);
-  const biz = useAppStore((s) => s.biz);
-  const setBiz = useAppStore((s) => s.setBiz);
-  const matched = supportProductDefs.filter((p) => p.bizTypes.includes(biz));
-
-  return (
-    <Screen bg={color.bg} style={{ color: color.ink }}>
-      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pill bg="rgba(var(--color-white-rgb),.9)" onClick={() => navigate('/products')}>‹ 라운지</Pill>
-          <Pill bg="var(--color-60-text-primary)" fg="var(--color-danger-surface)">✚ 확장 기능</Pill>
-        </div>
-        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', opacity: 0.6 }}>혼자 두지 않아요,</div>
-        <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>비상 착륙 안내</div>
-      </div>
-
-      <ScreenBody padBottom={34}>
-        <div style={{ background: 'var(--color-hero)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)', color: 'var(--im-white)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
-            <div style={{ width: 44, height: 44, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>A</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: color.mint }}>항로 A · 스스로 복귀</div>
-              <div style={{ marginTop: 3, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.025em' }}>회복 구간 미션</div>
-            </div>
-          </div>
-          <div style={{ marginTop: 'var(--space-1-5)', fontSize: 'var(--font-size-sm)', lineHeight: 1.65, color: 'var(--color-text-on-dark-muted)' }}>{supportLegNote[persona]}</div>
-          <CtaButton height={54} style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)' }} onClick={() => navigate('/missionDetail')}>회복 구간 보기</CtaButton>
-        </div>
-
-        <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
-            <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--color-danger)', color: 'var(--im-white)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)' }}>B</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-danger)' }}>항로 B · 외부 지원</div>
-              <div style={{ marginTop: 3, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.025em', color: color.ink }}>지원제도 매칭</div>
-            </div>
-          </div>
-          <div style={{ marginTop: 'var(--space-1-5)', fontSize: 'var(--font-size-sm)', lineHeight: 1.65, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>신청하지 않아도 서비스가 먼저 찾아 안내합니다. iM뱅크가 실제 취급하는 상품으로만 좁힙니다.</div>
-
-          <div style={{ marginTop: 'var(--space-2)', display: 'flex', gap: 'var(--space-1)' }}>
-            {BIZ_TYPES.map((b) => {
-              const on = biz === b;
-              return (
-                <div
-                  key={b}
-                  onClick={() => setBiz(b)}
-                  style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',
-                    flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer',
-                    background: on ? color.selected : 'var(--color-30-surface-sub)', color: on ? color.selectedText : 'var(--color-60-text-secondary)',
-                  }}
-                >
-                  {b}
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ marginTop: 'var(--space-1-5)', display: 'flex', flexDirection: 'column', gap: 'var(--component-gap)' }}>
-            {matched.map((p) => {
-              const fc = fitColor[p.fit];
-              return (
-                <div key={p.name} style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-                    <div style={{ flex: 1, fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em', color: color.ink }}>{p.name}</div>
-                    <div style={{ padding: '6px 12px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', background: fc.bg, color: fc.fg }}>{p.fit}</div>
-                  </div>
-                  <div style={{ marginTop: 'var(--space-1)', fontSize: 'var(--font-size-xs)', lineHeight: 1.6, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>{p.target}</div>
-                  <div style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-hero)', color: 'var(--im-white)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>{p.cta}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-text-on-dark-muted)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-semibold)' }}>
-          신용회복위원회 채무조정과 정부 정책서민금융은 공식 경로 안내로만 제공되며, 서비스가 직접 심사·연결하지 않습니다.
-        </div>
-      </ScreenBody>
-    </Screen>
-  );
+import { Screen, ScreenHeader, ScreenBody, Card, CtaButton, InfoNote } from '../components/ui';
+import { supportServices, matchesSupport } from '../data/supportServices';
+export function SupportScreen(){
+ const navigate=useNavigate(),s=useAppStore();
+ const [all,setAll]=useState(false);
+ const [selected,setSelected]=useState<string|null>(null);
+ const services=all?supportServices:supportServices.filter(service=>matchesSupport(service.id,s.persona));
+ return <Screen><ScreenHeader onBack={()=>navigate('/products')} sub="실천과 함께 필요한 지원도 찾아요" title="지원·상담 안내"/><ScreenBody padBottom={32}><div className="screen-stack">
+ <InfoNote>현재 상황과 관련된 상담 경로예요. 지원 대상 확정이나 신청 접수를 대신하지 않아요. 실제 조건·구비서류는 공식 공고와 상담에서 확인해주세요.</InfoNote>
+ <div className="insight-segment"><button aria-pressed={!all} onClick={()=>setAll(false)}>내 상황</button><button aria-pressed={all} onClick={()=>setAll(true)}>전체 경로</button></div>
+ {services.map(service=><Card key={service.id}><p className="insight-eyebrow">{service.group}</p><h2 className="fcps-section-title">{service.name}</h2><p className="fcps-description">{service.why}</p><p className="insight-caption">확인할 대상: {service.target}</p><CtaButton onClick={()=>setSelected(selected===service.id?null:service.id)}>{selected===service.id?'준비 내용 접기':'대상·준비·신청 경로 확인'}</CtaButton>
+ {selected===service.id&&<div style={{marginTop:16}}><fieldset className="recovery-options"><legend>상담 전 준비 목록</legend>{service.steps.map((step,i)=><label key={step}><input type="checkbox" checked={s.supportChecks[service.id]?.[i]??false} onChange={()=>s.toggleSupportCheck(service.id,i)}/>{step}</label>)}</fieldset><p className="insight-caption">준비 목록은 신청 필수서류 목록이 아니에요. 체크 여부는 이 기기에 저장됩니다.</p>
+ <a className="goal-save service-link" target="_blank" rel="noopener noreferrer" href={service.url} onClick={()=>s.markSupportVisit(service.id)}>공식 안내·신청 경로 열기 ↗</a>{'phone' in service&&<a className="goal-save service-link secondary-link" href={'tel:'+service.phone}>상담 전화 {service.phone}</a>}
+ {s.supportVisits[service.id]&&<p className="insight-caption">공식 경로 열기 선택: {new Date(s.supportVisits[service.id]).toLocaleDateString('ko-KR')} · 신청 완료 여부는 기관에서 확인</p>}<p className="insight-caption">안내 확인일 2026.09.06 · 외부 사이트에서 이어집니다.</p></div>}</Card>)}
+ <CtaButton onClick={()=>navigate('/missionDetail')}>실천할 미션도 살펴보기</CtaButton>
+ </div></ScreenBody></Screen>;
 }

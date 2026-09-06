@@ -1,3 +1,6 @@
+import { HistoryScreen } from './screens/HistoryScreen';
+import { DataSettingsScreen } from './screens/DataSettingsScreen';
+import { RecoveryScreen } from './screens/RecoveryScreen';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { PhoneFrame } from './components/PhoneFrame';
 import { GlobalAssistant } from './components/GlobalAssistant';
@@ -5,7 +8,7 @@ import { BottomNav, navScreens } from './components/BottomNav';
 import { useAppStore } from './store/appStore';
 
 import { PickerScreen } from './screens/PickerScreen';
-import { LoginScreen } from './screens/LoginScreen';
+import { BankHomeScreen } from './screens/BankHomeScreen';
 import { ConsentScreen } from './screens/ConsentScreen';
 import { LinkingScreen } from './screens/LinkingScreen';
 import { ConnectScreen } from './screens/ConnectScreen';
@@ -49,13 +52,13 @@ function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const alertOn = useAppStore((s) => s.alertOn);
-  const resetOnboarding = useAppStore((s) => s.resetOnboarding);
+
   const current = location.pathname.replace(/^\//, '');
   const showNav = navScreens.includes(current) && !alertOn;
-  const showSwitcher = current !== '' && current !== 'picker';
+  const showSwitcher = current !== '' && current !== 'picker' && current !== 'bank';
 
   const toPicker = () => {
-    resetOnboarding();
+
     navigate('/picker');
   };
 
@@ -64,7 +67,8 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<Navigate to="/picker" replace />} />
           <Route path="/picker" element={<PickerScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/bank" element={<BankHomeScreen />} />
+          <Route path="/login" element={<Navigate to="/bank" replace />} />
           <Route path="/consent" element={<ConsentScreen />} />
           <Route path="/linking" element={<LinkingScreen />} />
           <Route path="/connect" element={<ConnectScreen />} />
@@ -91,11 +95,14 @@ function AppShell() {
           <Route path="/cause" element={<CauseScreen />} />
           <Route path="/token" element={<TokenScreen />} />
           <Route path="/verify" element={<VerifyScreen />} />
+          <Route path="/recovery" element={<RecoveryScreen />} />
           <Route path="/release" element={<ReleaseScreen />} />
           <Route path="/mileage" element={<MileageScreen />} />
           <Route path="/fcps" element={<FcpsDetailScreen />} />
           <Route path="/products" element={<ProductsScreen />} />
           <Route path="/support" element={<SupportScreen />} />
+          <Route path="/history" element={<HistoryScreen />} />
+          <Route path="/dataSettings" element={<DataSettingsScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
           <Route path="/arrived" element={<ArrivedScreen />} />
           <Route path="/alerts" element={<AlertsScreen />} />
@@ -103,7 +110,7 @@ function AppShell() {
           <Route path="/missions" element={<MissionsScreen />} />
           <Route path="/missionLive" element={<MissionLiveScreen />} />
           <Route path="/uc/:id" element={<UCScreen />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/bank" replace />} />
         </Routes>
         {showSwitcher && (
             <div

@@ -23,13 +23,14 @@ const cards: Card[] = [
 /** Persona/situation picker: climb-demo's dark entry screen shown before the app itself. */
 export function PickerScreen() {
   const navigate = useNavigate();
+  const hasGoal=useAppStore(s=>s.hasGoal);
   const setPersona = useAppStore((s) => s.setPersona);
   const resetOnboarding = useAppStore((s) => s.resetOnboarding);
 
   const pick = (key: PersonaKey) => {
     setPersona(key);
     resetOnboarding();
-    navigate('/login');
+    navigate('/bank');
   };
 
   return (
@@ -48,9 +49,10 @@ export function PickerScreen() {
         상황을 하나 고르면<br />그 사람의 앱이 열립니다
       </div>
       <div style={{ position: 'relative', marginTop: 10, fontSize: 'var(--font-size-xs)', lineHeight: 1.65, fontWeight: 'var(--font-weight-medium)', color: color.textSecondary }}>
-        로그인부터 자산 연결, 목표 등록, 실시간 감지, 회복 미션까지 실제 순서대로 진행됩니다.
+        iM뱅크 홈에서 CLiMB를 만나고, 자산 연결부터 목표 등록, 실시간 감지, 회복 미션까지 이어집니다.
       </div>
 
+      <button type="button" className="goal-save" style={{position:'relative',marginTop:20}} onClick={()=>navigate(hasGoal?'/home':'/empty')}>현재 기록 이어보기</button><p className="insight-caption">아래 상황을 새로 선택하면 현재 기록을 초기화하고 시작해요.</p>
       <div style={{ position: 'relative', marginTop: 'var(--space-2-5)', display: 'flex', flexDirection: 'column', gap: 'var(--component-gap)' }}>
         {cards.map((c) => (
           <div

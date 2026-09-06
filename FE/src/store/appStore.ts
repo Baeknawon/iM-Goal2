@@ -1,6 +1,13 @@
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { localStateStorage, mergeStored, reportStorageError } from './localStorage';
+import { validSplit, type SalarySplit } from '../viewmodel/salaryAllocation';
+import { currentMission, recommendMission, failureReasons, type FailureReason } from '../viewmodel/adaptiveMission';
+import { recoveryBaseline, observationScenario, nextCheckStage, type CheckStage, type CheckScenario } from '../viewmodel/recoveryTracking';
+import { initialGoal, initialTransactions, financePlan, type GoalInput } from '../viewmodel/finance';
+import { INITIAL_SPEND_MONTH } from '../data/spendPeriod';
 import { create } from 'zustand';
 import type { AppState, PersonaKey, MissionResult, FcpsEntry } from '../types';
-import { incomeDefs, missionDefs } from '../data/personas';
+import { incomeDefs } from '../data/personas';
 import { recommendMissionDuration } from '../viewmodel/missionDuration';
 import { recoveryPlan } from '../viewmodel/recoveryFlow';
 
@@ -17,6 +24,12 @@ const fcpsByResult: Record<MissionResult, { label: string; delta: number }> = {
 const defaultConsents = [true, true, true, true, true, false];
 
 interface AppStore extends AppState {
+  setSalarySplit:(split:SalarySplit)=>void;
+  toggleSupportCheck:(id:string,index:number)=>void;
+  markSupportVisit:(id:string)=>void;
+
+  updateGoal: (goal: GoalInput) => void;
+  setMonthlyBudget: (period: number, value: number) => void;
   setPersona: (p: PersonaKey) => void;
   toggleConsent: (i: number) => void;
   toggleConsentAll: () => void;
@@ -24,10 +37,12 @@ interface AppStore extends AppState {
   resetQuiz: () => void;
   setMissionOn: (v: boolean) => void;
   completeRecovery: () => void;
+  recordRecoveryCheck: (completedAt: string, stage: CheckStage, scenario: CheckScenario) => void;
   /** 미션 시작: 지갑에서 보증금만큼 차감하고 미션을 진행 상태로 만듦. */
   startMission: (deposit: number) => void;
   /** 미션 종료(성공/실패/포기): 보증금을 지갑으로 반환하고 결과를 FCPS에 기록. */
-  finishMission: (result: MissionResult) => void;
+  finishMission: (result: MissionResult, reason?: FailureReason) => void;
+  setFailureReason: (reason: FailureReason) => void;
   incMonthly: (v: number) => void;
   incAssets: (v: number) => void;
   incFixed: (v: number) => void;
@@ -52,12 +67,13 @@ interface AppStore extends AppState {
 }
 
 // Per-persona "risk event just happened" spend figures, ported from pTrigger().
-const triggerSpend: Record<PersonaKey, number> = { A: 45600, B: 16800, C: 19200 };
 
-export const useAppStore = create<AppStore>((set) => ({
+export const useAppStore = create<AppStore>()(persist((set, get) => ({
+  salarySplit:null,salaryLog:[],supportChecks:{},supportVisits:{},
+  appliedRiskEvents: [], goal: initialGoal('A'), transactions: initialTransactions(), monthlyBudgets: {},
   alertOn: false,
   accepted: false,
-  spent: 3200,
+  spent: initialTransactions().filter(e=>e.period===INITIAL_SPEND_MONTH&&e.day===31).reduce((sum,e)=>sum+e.amount,0),
   big: false,
   fueled: false,
   goalCompleteSeen: false,
@@ -74,7 +90,7 @@ export const useAppStore = create<AppStore>((set) => ({
   quizPick: null,
   missionOn: false,
   missionStartedAt: null,
-  activeRecoveryPlan: null,
+  activeMission: null, activeRecoveryPlan: null, recoveryBaseline: null,
   recovered: false,
   incomeMonthly: incomeDefs.A.monthly,
   incomeAssets: incomeDefs.A.assets,
@@ -85,8 +101,15 @@ export const useAppStore = create<AppStore>((set) => ({
   missionResult: null,
   fcpsLog: [],
 
+  setSalarySplit: split=>set(s=>{if(!validSplit(split))return {};const budgets={...s.monthlyBudgets};delete budgets[INITIAL_SPEND_MONTH];return {salarySplit:[...split] as SalarySplit,monthlyBudgets:budgets};}),
+  toggleSupportCheck:(id,index)=>set(s=>{if(!['youth','business','debt','general'].includes(id)||!Number.isInteger(index)||index<0||index>2)return {};const checks=[...(s.supportChecks[id]??[false,false,false])];checks[index]=!checks[index];return {supportChecks:{...s.supportChecks,[id]:checks}};}),
+  markSupportVisit:id=>set(s=>['youth','business','debt','general'].includes(id)?{supportVisits:{...s.supportVisits,[id]:new Date().toISOString()}}:{}),
+  updateGoal: (goal) => set(() => goal.name.trim() && [goal.target,goal.saved,goal.months,goal.repayment].every(Number.isFinite) && goal.target>0 && goal.target<=1e12 && goal.saved>=0 && goal.saved<=goal.target && Number.isInteger(goal.months) && goal.months>=1 && goal.months<=600 && goal.repayment>=0 ? {goal:{...goal,name:goal.name.trim()}} : {}),
+  setMonthlyBudget: (period,value) => set(s => Number.isInteger(period) && Number.isFinite(value) && value>=0 && value<=1e9 ? {monthlyBudgets:{...s.monthlyBudgets,[period]:Math.round(value)}} : {}),
   setPersona: (p) => set({
-    persona: p, missionDays: recommendMissionDuration(p).days, alertOn: false, push: null, spent: 3200, missionOn: false, missionStartedAt: null, activeRecoveryPlan: null, recovered: false,
+    salarySplit:null,salaryLog:[],supportChecks:{},supportVisits:{},
+    appliedRiskEvents: [], goal: initialGoal(p), transactions: initialTransactions(), monthlyBudgets: {},
+    persona: p, missionDays: recommendMissionDuration(p).days, alertOn: false, push: null, spent: initialTransactions().filter(e=>e.period===INITIAL_SPEND_MONTH&&e.day===31).reduce((sum,e)=>sum+e.amount,0), missionOn: false, missionStartedAt: null, activeMission: null, activeRecoveryPlan: null, recoveryBaseline: null, recovered: false,
     fueled: false, goalCompleteSeen: false,
     wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [],
     incomeMonthly: incomeDefs[p].monthly, incomeAssets: incomeDefs[p].assets, incomeFixed: incomeDefs[p].fixed,
@@ -107,12 +130,16 @@ export const useAppStore = create<AppStore>((set) => ({
   // 미션 시작: iMKRW 머니에서 보증금만큼 묶임. 잔액이 부족하면 에이전트가 자동 충전 후 묶음.
   startMission: (dep) => set((s) => {
     if (s.missionOn || !Number.isFinite(dep) || dep < 0) return {};
+    const proposal = recommendMission(s);
+    if(!proposal.allowDeposit && dep>0)return {};
     const topUp = Math.max(0, dep - s.wallet); // 부족분 자동 충전
     const walletAfterTopUp = s.wallet + topUp; // 부족하면 dep만큼으로 채워짐
     return {
+      activeMission: proposal,
+      recoveryBaseline: recoveryBaseline(s),
       missionOn: true, alertOn: false, recovered: false, missionResult: null,
       missionStartedAt: new Date().toISOString(),
-      activeRecoveryPlan: recoveryPlan(s.persona, s.missionDays, s.spent),
+      activeRecoveryPlan: recoveryPlan(s.persona, s.missionDays, financePlan(s).today, financePlan(s), proposal.weeklySavings),
       deposit: dep,
       wallet: walletAfterTopUp - dep, // 보증금만큼 빠져나감 (묶임)
       locked: s.locked + dep,
@@ -121,19 +148,22 @@ export const useAppStore = create<AppStore>((set) => ({
   }),
 
   // 미션 종료(성공/실패/포기): 묶인 보증금이 iMKRW 머니로 반환되고 결과가 FCPS에 기록됨.
-  finishMission: (result) => set((s) => {
+  finishMission: (result, reason = 'unknown') => set((s) => {
     if (!s.missionOn || s.missionResult !== null) return {};
     const meta = fcpsByResult[result];
-    const MI = missionDefs[s.persona];
+    const MI = currentMission(s);
+    const completedAt = new Date().toISOString();
     const entry: FcpsEntry = {
+      missionSnapshot: MI, failureReason: result==='success'?undefined:(reason in failureReasons?reason:'unknown'),
       result, label: meta.label, mission: `${MI.title1} ${MI.title2}`,
-      startedAt: s.missionStartedAt, completedAt: new Date().toISOString(),
+      startedAt: s.missionStartedAt, completedAt,
+      recovery: result === 'success' ? {baseline:s.recoveryBaseline ?? recoveryBaseline(s),completedAt,status:'awaiting',observations:[]} : undefined,
       recoveryPlan: s.activeRecoveryPlan ?? undefined,
       deposit: s.deposit, delta: meta.delta,
     };
     return {
       missionOn: false,
-      recovered: result === 'success',
+      recovered: false,
       missionResult: result,
       missionDays: recommendMissionDuration(s.persona, result).days,
       wallet: s.wallet + s.deposit,          // 묶였던 보증금 반환
@@ -143,37 +173,44 @@ export const useAppStore = create<AppStore>((set) => ({
     };
   }),
 
-  // 성공 회복 (기존 흐름 유지 — ReleaseScreen에서 호출)
-  completeRecovery: () => set((s) => {
-    if (!s.missionOn || s.missionResult !== null) return {};
-    const meta = fcpsByResult.success;
-    const MI = missionDefs[s.persona];
-    const entry: FcpsEntry = {
-      result: 'success', label: meta.label, mission: `${MI.title1} ${MI.title2}`,
-      startedAt: s.missionStartedAt, completedAt: new Date().toISOString(),
-      recoveryPlan: s.activeRecoveryPlan ?? undefined,
-      deposit: s.deposit, delta: meta.delta,
-    };
-    return {
-      missionOn: false, recovered: true, missionResult: 'success',
-      missionDays: recommendMissionDuration(s.persona, 'success').days,
-      wallet: s.wallet + s.deposit,
-      locked: Math.max(0, s.locked - s.deposit),
-      fcpsLog: [entry, ...s.fcpsLog],
-      alertOn: false,
-    };
+  setFailureReason: reason => set(s => !s.missionOn && reason in failureReasons && s.fcpsLog[0] && s.fcpsLog[0].result!=='success' ? {fcpsLog:[{...s.fcpsLog[0],failureReason:reason},...s.fcpsLog.slice(1)]} : {}),
+  // Legacy entry point only settles the behavioral mission; it cannot confirm recovery.
+  completeRecovery: () => get().finishMission('success'),
+  recordRecoveryCheck: (completedAt, stage, scenario) => set(s => {
+    if(s.missionOn || !['improved','worse','missing'].includes(scenario))return {};
+    const latest=s.fcpsLog[0];
+    if(!latest?.recovery || latest.completedAt!==completedAt || latest.recovery.status==='confirmed' || latest.recovery.interrupted || nextCheckStage(latest.recovery)!==stage)return {};
+    const observation=observationScenario(latest.recovery,scenario);
+    const previous=latest.recovery.observations.at(-1);
+    if(previous && JSON.stringify(previous)===JSON.stringify(observation))return {};
+    const recovery={...latest.recovery,status:observation.status,observations:[...latest.recovery.observations,observation]};
+    return {recovered:observation.status==='confirmed',fcpsLog:[{...latest,recovery},...s.fcpsLog.slice(1)]};
   }),
-  incMonthly: (v) => set({ incomeMonthly: Math.max(0, v) }),
+  incMonthly: (v) => set({ incomeMonthly: Number.isFinite(v) ? Math.max(0, v) : 0 }),
   incAssets: (v) => set({ incomeAssets: Math.max(0, v) }),
   incFixed: (v) => set({ incomeFixed: Math.max(0, v) }),
   setAlertOn: (v) => set({ alertOn: v }),
   setPush: (p) => set({ push: p }),
   triggerPersonaAlert: (p) =>
-      set({ push: null, alertOn: true, hasGoal: true, spent: triggerSpend[p], recovered: false }),
+      set(s => {
+        const id='trigger-'+p;
+        const fcpsLog=s.fcpsLog.map((entry,i)=>i===0&&entry.recovery?{...entry,recovery:{...entry.recovery,status:'reintervene' as const,interrupted:true}}:entry);
+        if(p==='B')return {fcpsLog,incomeMonthly:s.appliedRiskEvents.includes(id)?s.incomeMonthly:Math.round(s.incomeMonthly*.82),appliedRiskEvents:[...new Set([...s.appliedRiskEvents,id])],push:null,alertOn:true,hasGoal:true,recovered:false};
+        const transactions=s.transactions.some(e=>e.id===id)?s.transactions:[...s.transactions,{id,period:INITIAL_SPEND_MONTH,day:31,category:p==='A'?0:3,name:p==='A'?'배달앱 추가 결제':'카드 추가 결제',amount:p==='A'?23000:148000}];
+        return {fcpsLog,transactions,push:null,alertOn:true,hasGoal:true,spent:transactions.filter(e=>e.period===INITIAL_SPEND_MONTH&&e.day===31).reduce((sum,e)=>sum+e.amount,0),recovered:false};
+      }),
   dismissAlert: () => set({ alertOn: false }),
   toggleAccepted: () => set((s) => ({ accepted: !s.accepted })),
   toggleBig: () => set((s) => ({ big: !s.big })),
-  setFueled: (v) => set((s) => ({ fueled: v, goalCompleteSeen: v ? false : s.goalCompleteSeen })),
+  setFueled: v=>set(s=>{
+    const id=s.persona+'-'+INITIAL_SPEND_MONTH;
+    if(!v)return {fueled:false};
+    if(s.salaryLog.some(r=>r.id===id))return {fueled:true};
+    const plan=financePlan(s);
+    const a={income:s.incomeMonthly,reserved:Math.min(s.incomeMonthly,s.incomeFixed+s.goal.repayment),saving:Math.min(plan.left,plan.monthlySaving),wallet:plan.walletReserve,living:Math.max(0,plan.disposable-Math.min(plan.left,plan.monthlySaving)-plan.walletReserve)};
+    if(a.income<=0)return {};
+    return {fueled:true,goalCompleteSeen:false,goal:{...s.goal,saved:s.goal.saved+a.saving},wallet:s.wallet+a.wallet,salaryLog:[{id,date:new Date().toISOString(),...a},...s.salaryLog]};
+  }),
   dismissGoalComplete: () => set({ goalCompleteSeen: true }),
   setHasGoal: (v) => set({ hasGoal: v }),
   setEmptyTab: (t) => set({ emptyTab: t }),
@@ -182,7 +219,7 @@ export const useAppStore = create<AppStore>((set) => ({
   setBiz: (t) => set({ biz: t }),
   setProdTab: (t) => set({ prodTab: t }),
   setMissionDays: (n) => set((s) => !s.missionOn && [7, 14, 21, 28].includes(n) ? { missionDays: n } : {}),
-  resetOnboarding: () => set({ activeRecoveryPlan: null, missionStartedAt: null, hasGoal: false, fueled: false, goalCompleteSeen: false, alertOn: false, spent: 3200, missionOn: false, recovered: false, wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [] }),
-  finishGoal: () => set({ hasGoal: true, alertOn: false, spent: 3200 }),
-  simulateOverspend: () => set({ alertOn: true, spent: 26200 }),
-}));
+  resetOnboarding: () => set({ salarySplit:null,salaryLog:[],supportChecks:{},supportVisits:{}, activeMission: null, activeRecoveryPlan: null, recoveryBaseline: null, missionStartedAt: null, hasGoal: false, fueled: false, goalCompleteSeen: false, alertOn: false, missionOn: false, recovered: false, wallet: WALLET_INITIAL, locked: 0, autoTopUp: 0, missionResult: null, fcpsLog: [] }),
+  finishGoal: () => set({ hasGoal: true, alertOn: false }),
+  simulateOverspend: () => get().triggerPersonaAlert(get().persona),
+}), {name:'im-goal-state-v1',version:1,onRehydrateStorage:()=> (_state,error)=>{if(error)reportStorageError();},storage:createJSONStorage(()=>localStateStorage),merge:mergeStored}));

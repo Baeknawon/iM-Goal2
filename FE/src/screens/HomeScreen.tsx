@@ -1,31 +1,32 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useJourney } from '../viewmodel/useJourney';
-import { acctDefs } from '../data/personas';
+
 import { phase2Start } from '../data/ucDefs';
 import { Screen, Brand, TicketShell, CtaButton, Mascot } from '../components/ui';
 import { AlertOverlay } from '../components/AlertOverlay';
 import { GoalCompleteOverlay } from '../components/GoalCompleteOverlay';
-import { RecoveryPlanCard } from '../components/RecoveryPlanCard';
+import { RecoveryProgressCard } from '../components/RecoveryProgressCard';
 import { color } from '../styles/theme';
 
 export function HomeScreen() {
   const navigate = useNavigate();
-  const { persona, P, fueled, spent, remaining, over, grade, dday, etaFull, etaNote, saved, savedPct, totalBalance } = useJourney();
-  const deposit = useAppStore((s) => s.deposit);
+  const { persona, P, AP, plan, fueled, spent, remaining, over, grade, dday, etaFull, etaNote, saved, savedPct, totalBalance } = useJourney();
+  const deposit = useAppStore((s) => s.locked);
   const alertOn = useAppStore((s) => s.alertOn);
   const missionOn = useAppStore((s) => s.missionOn);
+  const activeMission = useAppStore((s) => s.activeMission);
   const latest = useAppStore((s) => s.fcpsLog[0]);
   const recovered = useAppStore((s) => s.recovered);
   const goalCompleteSeen = useAppStore((s) => s.goalCompleteSeen);
   const triggerPersonaAlert = useAppStore((s) => s.triggerPersonaAlert);
 
   const showRecoverTrigger = missionOn && !recovered && !alertOn;
-  const showGoalComplete = fueled && !goalCompleteSeen && !alertOn;
+  const showGoalComplete = plan.left===0 && !goalCompleteSeen && !alertOn;
 
-  const AP = acctDefs[persona];
+
   const acctRows = fueled ? AP.post : AP.pre;
-  const fuelPct = Math.min(100, Math.round((spent / 8000) * 100));
+  const fuelPct = Math.min(100, Math.round((spent / Math.max(1,P.dailyBudget)) * 100));
 
   return (
       <Screen>
@@ -34,7 +35,7 @@ export function HomeScreen() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)', minWidth: 0 }}>
               <Brand size={23} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: '9px 15px', borderRadius: 'var(--radius-pill)', background: 'var(--color-30-surface-sub)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>
-                GOAL 0725 · {P.goalName} <span style={{ opacity: 0.5 }}>▾</span>
+                7월 31일 기준 · {P.goalName} <span style={{ opacity: 0.5 }}>▾</span>
               </div>
             </div>
             <button
@@ -145,9 +146,9 @@ export function HomeScreen() {
               }
           />
 
-          {recovered && !fueled && latest?.recoveryPlan && <div style={{ marginTop: 16 }}><RecoveryPlanCard plan={latest.recoveryPlan} success /><div className="recovery-note"><b>다음 행동: 절약 여유를 목표 저축으로 이어가세요</b><p>반환된 보증금은 기존 자금이에요. 목표 저축액은 아직 늘리지 않았습니다. 아래 분배 화면에서 계획을 확인하세요.</p></div></div>}
+          {!missionOn && latest?.recovery && <RecoveryProgressCard recovery={latest.recovery} />}
           {/* 급여 입금 알림 — 회복 완료 후 마지막 단계로만 노출 (분배 → 목표 달성) */}
-          {recovered && !fueled && (
+          {!missionOn && latest?.result === 'success' && !fueled && (
               <div
                   onClick={() => navigate('/salary')}
                   style={{
@@ -163,10 +164,10 @@ export function HomeScreen() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-white-rgb),.22)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.04em' }}>
                       <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--color-60-bg-surface)', animation: 'ringPulse 1.4s infinite' }} />
-                      방금 급여 입금 감지
+                      다음 저축 계획
                     </div>
-                    <div style={{ marginTop: 10, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>{AP.total}원 들어왔어요</div>
-                    <div style={{ marginTop: 4, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>3계좌로 자동 분배할까요?</div>
+                    <div style={{ marginTop: 10, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>월소득 {AP.total}원 기준</div>
+                    <div style={{ marginTop: 4, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>생활비와 목표 저축을 나눠볼까요?</div>
                     <div style={{ marginTop: 'var(--space-1-5)', display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', padding: '9px 16px', borderRadius: 'var(--radius-pill)', background: 'var(--color-hero)', color: 'var(--im-white)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>
                       분배 확인하기
                       <span style={{ width: 22, height: 22, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>›</span>
@@ -200,7 +201,7 @@ export function HomeScreen() {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '-.015em' }}>내 계좌 현황 · {totalBalance}원</div>
-                  <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{fueled ? '오늘 07:12 · 3계좌 자동 분배' : '3계좌 · 자세히 보기'}</div>
+                  <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>{fueled ? '분배 기록 반영' : '3계좌 · 자세히 보기'}</div>
                 </div>
                 {/* 계좌 색점 미니 요약 */}
                 <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -236,7 +237,7 @@ export function HomeScreen() {
           <div style={{ marginTop: 7, textAlign: 'center', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>실제 상황처럼 알림이 먼저 도착합니다</div>
           {showRecoverTrigger && (
               <div
-                  onClick={() => navigate(`/uc/${phase2Start[persona]}`)}
+                  onClick={() => navigate(activeMission && activeMission.level>0 ? '/verify?result=success' : `/uc/${phase2Start[persona]}`)}
                   style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
               >
                 회복 미션 성공 확인

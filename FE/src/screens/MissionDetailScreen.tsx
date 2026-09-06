@@ -1,10 +1,13 @@
+import { currentMission } from '../viewmodel/adaptiveMission';
+import { FailureReasonPicker } from '../components/FailureReasonPicker';
+import { financePlan } from '../viewmodel/finance';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, BackToHome, Pill, ScreenBody, CtaButton } from '../components/ui';
-import { missionDefs, missionProfileTags } from '../data/personas';
+import { missionProfileTags } from '../data/personas';
 import { RecoveryPlanCard } from '../components/RecoveryPlanCard';
-import { recoveryPlan, recoveryCriteria } from '../viewmodel/recoveryFlow';
+import { recoveryPlan } from '../viewmodel/recoveryFlow';
 import { recommendMissionDuration } from '../viewmodel/missionDuration';
 import { color } from '../styles/theme';
 
@@ -23,14 +26,17 @@ function MissionDetailContent() {
   const setMissionDays = useAppStore((s) => s.setMissionDays);
   const startMission = useAppStore((s) => s.startMission);
   const missionOn = useAppStore((s) => s.missionOn);
-  const spent = useAppStore((s) => s.spent);
+  const finance = financePlan(useAppStore());
+  const spent = finance.today;
   const lastResult = useAppStore((s) => s.fcpsLog[0]?.result);
   const activePlan = useAppStore((s) => s.activeRecoveryPlan);
   const recommendation = recommendMissionDuration(persona, lastResult);
   const [draftDays, setDraftDays] = useState<number | null>(null);
   const shownDays = missionOn ? (activePlan?.missionDays ?? missionDays) : draftDays ?? missionDays;
-  const MI = missionDefs[persona];
-  const plan = recoveryPlan(persona, shownDays, spent);
+  const state=useAppStore();
+  const MI = currentMission(state);
+  const last=state.fcpsLog[0];
+  const plan = missionOn && activePlan ? activePlan : recoveryPlan(persona, shownDays, spent, finance, MI.weeklySavings);
   const missionSave = plan.savings.toLocaleString() + '원';
 
   return (
@@ -38,14 +44,15 @@ function MissionDetailContent() {
       <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
-          <Pill>미션 DB 630건</Pill>
+          <Pill>내 상황에 맞춘 미션</Pill>
         </div>
         <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>AI 에이전트가 골라낸,</div>
         <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>회복 미션</div>
       </div>
 
       <ScreenBody>
-        <RecoveryPlanCard plan={plan} />
+        {!missionOn && last && last.result!=='success' && <section className="insight-section" style={{marginBottom:16}}><h2 className="fcps-section-title">지난 시도에서 바꾼 점</h2><p className="fcps-description">이전: {last.mission}<br/>이번: {MI.title1} {MI.title2}</p><FailureReasonPicker value={last.failureReason??'unknown'} onChange={state.setFailureReason}/><p className="fcps-description">{MI.why}</p>{last.failureReason==='expense'&&<CtaButton onClick={()=>navigate('/support')}>필요한 지원도 살펴보기</CtaButton>}</section>}
+        {MI.weeklySavings>0?<RecoveryPlanCard plan={plan} />:<div className="recovery-note"><b>이번에는 행동 준비부터</b><p>점검·설정만으로 실제 절약액을 계산할 수 없어 예상 절약액과 회복 일수는 0으로 표시해요. 행동 성공 이후 재무 변화는 별도로 확인합니다.</p></div>}
         <div style={{ position: 'relative' }}>
           <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: '28px 28px 0 0', padding: '22px 24px', color: color.ink }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -60,7 +67,7 @@ function MissionDetailContent() {
             </div>
             <section className="mission-duration">
               <div className="mission-duration-heading"><span className="deposit-eyebrow">AI 추천 기간 · {recommendation.days}일</span><button type="button" className="deposit-change" disabled={missionOn} aria-expanded={draftDays !== null} aria-controls="mission-duration-adjuster" onClick={() => setDraftDays(missionDays)}>세부 조정</button></div>
-              <p className="fcps-description">{recommendation.reason}</p>
+              <p className="fcps-description">{MI.level>0?'작은 행동부터 한 주 동안 시작해볼 수 있도록 7일을 추천해요.':recommendation.reason}</p>
               <p className="fcps-description">{missionOn ? '진행 중인 미션의 기간은 변경할 수 없어요.' : draftDays !== null ? '기간을 조정 중이에요. 적용하면 보증금 추천에도 반영돼요.' : missionDays === recommendation.days ? '추천 기간이 적용되어 있어요.' : '직접 선택한 기간이 적용되어 있어요.'}</p>
               {draftDays !== null && !missionOn && <div className="deposit-adjuster" id="mission-duration-adjuster">
                 <label htmlFor="mission-duration-range">미션 기간 <strong>{draftDays}일</strong></label>
@@ -89,12 +96,12 @@ function MissionDetailContent() {
                 <div style={{ marginTop: 6, fontSize: 'var(--font-size-sm)', lineHeight: 1.65, fontWeight: 'var(--font-weight-medium)' }}>{MI.how}</div>
               </div>
             </div>
-            <CtaButton disabled={draftDays !== null} style={{ marginTop: 16 }} onClick={() => navigate(missionOn ? '/missionLive' : '/token')}>{missionOn ? '진행 중인 미션 보기' : '보증금 걸고 탑승하기'}</CtaButton>
+            {(missionOn || MI.allowDeposit)&&<CtaButton disabled={draftDays !== null} style={{ marginTop: 16 }} onClick={() => navigate(missionOn ? '/missionLive' : '/token')}>{missionOn ? '진행 중인 미션 보기' : '보증금 걸고 탑승하기'}</CtaButton>}
             {!missionOn && <CtaButton disabled={draftDays !== null} bg={color.bgAlt} style={{ marginTop: 9 }} onClick={() => { startMission(0); navigate('/missionLive'); }}>보증금 없이 시작하기</CtaButton>}
           </div>
         </div>
 
-        <div className="recovery-note"><b>완료 기준</b><p>{recoveryCriteria[persona].rule}</p><b>보증금은 선택이에요</b><p>소비 가능한 돈을 잠시 분리해 실천을 돕습니다. 보증금 없이 참여해도 판정 기준과 FCPS 점수는 같고, 예치금은 성공·실패·포기 모두 전액 돌아옵니다.</p></div>
+        <div className="recovery-note"><b>완료 기준</b><p>{MI.criteria.rule}</p><b>보증금은 선택이에요</b><p>소비 가능한 돈을 잠시 분리해 실천을 돕습니다. 보증금 없이 참여해도 판정 기준과 FCPS 점수는 같고, 예치금은 성공·실패·포기 모두 전액 돌아옵니다.</p></div>
         <div style={{ marginTop: 18, fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em' }}>이 티켓을 만든 근거</div>
         <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>

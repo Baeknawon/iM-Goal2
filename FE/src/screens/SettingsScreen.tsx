@@ -71,16 +71,16 @@ export function SettingsScreen() {
 
         <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
           <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>안심 장치</div>
-          <SettingsRow icon="데" title="연동 데이터 관리" desc="언제든 해지 · 즉시 삭제" />
-          <SettingsRow icon="F" title="FCPS 제공 동의 관리" desc="여신심사 보조자료 제공 여부" />
-          <SettingsRow icon="비" iconBg="var(--color-danger-surface)" iconFg="var(--color-danger)" title="비상 착륙 안내 다시 보기" desc="위험 등급일 때 자동으로 열립니다" onClick={() => navigate('/support')} />
+          <SettingsRow icon="데" title="기기 기록 관리" desc="저장 내역 확인 · 초기화" onClick={() => navigate('/dataSettings')} />
+          <SettingsRow icon="F" title="동의 항목 확인" desc="설정한 동의 항목 확인·수정" onClick={() => navigate('/consent')} />
+          <SettingsRow icon="비" iconBg="var(--color-danger-surface)" iconFg="var(--color-danger)" title="비상 착륙 안내 다시 보기" desc="공식 지원 경로와 준비 목록" onClick={() => navigate('/support')} />
         </div>
 
-        <div style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-1-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}>
+        <div onClick={() => navigate('/support')} style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-1-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}>
           <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>☎</span>
-          전화 상담 1566-0000
+          공식 상담 경로 확인
         </div>
-        <div style={{ marginTop: 'var(--space-1-5)', textAlign: 'center', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>평일 09:00~18:00 · 대기 없이 담당자 연결</div>
+        <div style={{ marginTop: 'var(--space-1-5)', textAlign: 'center', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>기관별 상담 번호와 이용 안내를 확인해요.</div>
       </div>
     </Screen>
   );
