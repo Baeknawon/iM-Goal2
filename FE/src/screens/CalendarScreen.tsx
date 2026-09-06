@@ -1,16 +1,17 @@
+import { useSpending } from '../viewmodel/useSpending';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen, ScreenHeader, ScreenBody } from '../components/ui';
 import { MonthPicker } from '../components/MonthPicker';
 import { useSpendPeriod } from '../store/spendPeriodStore';
-import { spendingSummary } from '../data/spendingAnalytics';
+
 import { INITIAL_SPEND_MONTH, monthParts, calendarDays, formatCalendarAmount } from '../data/spendPeriod';
 
 export function CalendarScreen() {
   const navigate=useNavigate();
   const period=useSpendPeriod(s=>s.period);
   const {year,month}=monthParts(period);
-  const data=spendingSummary(period);
+  const data=useSpending(period);
   const [selection,setSelection]=useState({period:INITIAL_SPEND_MONTH,day:18});
   const selected=selection.period===period?selection.day:null;
   const rows=data.entries.filter(e=>e.day===selected);

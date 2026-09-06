@@ -26,9 +26,9 @@ export function spendEntries(period: number): SpendEntry[] {
   if (period === INITIAL_SPEND_MONTH - 1) return july.map((entry) => ({ ...entry, amount: Math.round(entry.amount * (entry.category === 0 ? .74 : .92) / 100) * 100 }));
   return [];
 }
-export function spendingSummary(period: number) {
-  const entries = spendEntries(period);
-  const previous = spendEntries(period - 1);
+export function spendingSummary(period: number, ledger?: (SpendEntry & {period:number})[]) {
+  const entries = ledger ? ledger.filter(e=>e.period===period) : spendEntries(period);
+  const previous = ledger ? ledger.filter(e=>e.period===period-1) : spendEntries(period - 1);
   const total = entries.reduce((sum, entry) => sum + entry.amount, 0);
   const previousTotal = previous.reduce((sum, entry) => sum + entry.amount, 0);
   const {year,month} = monthParts(period);

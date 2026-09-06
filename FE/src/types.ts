@@ -1,3 +1,7 @@
+import type { SalarySplit, SalaryRecord } from './viewmodel/salaryAllocation';
+import type { FailureReason, MissionProposal } from './viewmodel/adaptiveMission';
+import type { RecoveryBaseline, RecoveryTracking } from './viewmodel/recoveryTracking';
+import type { GoalInput, Transaction } from './viewmodel/finance';
 import type { RecoveryPlan } from './viewmodel/recoveryFlow';
 export type PersonaKey = 'A' | 'B' | 'C';
 
@@ -14,6 +18,9 @@ export type MissionResult = 'success' | 'fail' | 'give_up';
 
 /** FCPS(신용 궤적)에 반영되는 미션 이력 한 건. */
 export interface FcpsEntry {
+  failureReason?: FailureReason;
+  missionSnapshot?: MissionProposal;
+  recovery?: RecoveryTracking;
   recoveryPlan?: RecoveryPlan;
   startedAt?: string | null;
   completedAt?: string;
@@ -36,6 +43,15 @@ export type UCScreenId =
  * router (see AppRoutes), everything else lives here.
  */
 export interface AppState {
+  salarySplit: SalarySplit | null;
+  salaryLog: SalaryRecord[];
+  supportChecks: Record<string,boolean[]>;
+  supportVisits: Record<string,string>;
+
+  appliedRiskEvents: string[];
+  goal: GoalInput;
+  transactions: Transaction[];
+  monthlyBudgets: Record<number,number>;
   alertOn: boolean;
   accepted: boolean;
   spent: number;
@@ -57,8 +73,10 @@ export interface AppState {
   /** whether the current recovery mission (LEG 04) is still live vs. all-done history. */
   missionOn: boolean;
   missionStartedAt: string | null;
+  activeMission: MissionProposal | null;
   activeRecoveryPlan: RecoveryPlan | null;
-  /** true once the phase-2 (verification) UC chain has been completed for the current mission. */
+  recoveryBaseline: RecoveryBaseline | null;
+  /** True only after financial improvement and four-week maintenance are confirmed. */
   recovered: boolean;
   incomeMonthly: number;
   incomeAssets: number;

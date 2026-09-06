@@ -1,8 +1,9 @@
+import { currentMission } from '../viewmodel/adaptiveMission';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, ScreenHeader, ScreenBody, CtaButton, Pill, InfoNote } from '../components/ui';
-import { goalPlanDefs, missionDefs } from '../data/personas';
+
 import { useJourney } from '../viewmodel/useJourney';
 import { DEPOSIT_MAX, DEPOSIT_STEP, parseWonLabel, recommendDeposit } from '../viewmodel/depositRecommendation';
 import { color } from '../styles/theme';
@@ -16,21 +17,22 @@ export function TokenScreen() {
 
 function DepositScreen() {
   const navigate = useNavigate();
-  const { persona, P, AP, saved, savedPct } = useJourney();
+  const { P, AP, saved, savedPct, plan } = useJourney();
   const wallet = useAppStore((s) => s.wallet);
   const income = useAppStore((s) => s.incomeMonthly);
   const fixed = useAppStore((s) => s.incomeFixed);
-  const spent = useAppStore((s) => s.spent);
+  const spent = plan.today;
   const missionDays = useAppStore((s) => s.missionDays);
   const history = useAppStore((s) => s.fcpsLog);
   const missionOn = useAppStore((s) => s.missionOn);
   const startMission = useAppStore((s) => s.startMission);
-  const goal = goalPlanDefs[persona];
-  const mission = missionDefs[persona];
+
+  const mission = currentMission(useAppStore());
   const previousFailed = history.length > 0 && history[0].result !== 'success';
-  const result = recommendDeposit({ dailyBudget: P.dailyBudget, missionDays, spent, income, fixed,
-    monthlySaving: parseWonLabel(goal.monthly), wallet,
+  const recommendation = recommendDeposit({ dailyBudget: P.dailyBudget, missionDays, spent, income, fixed,
+    monthlySaving: plan.monthlySaving, wallet,
     remainingGoal: Math.max(0, parseWonLabel(AP.target) - parseWonLabel(saved)), previousFailed });
+  const result = mission.allowDeposit ? recommendation : {...recommendation,recommended:0};
   const [custom, setCustom] = useState<number | null>(null);
   const [draft, setDraft] = useState<number | null>(null);
   const deposit = custom ?? result.recommended;
@@ -46,7 +48,7 @@ function DepositScreen() {
         <div className="screen-stack">
           <div className="deposit-recommendation">
             <span className="deposit-eyebrow">AI 추천 · 현재 상황 기준</span>
-            <h2>{result.recommended > 0 ? '생활비 부담까지 생각한 금액이에요' : '지금은 생활비 여유를 먼저 확보해요'}</h2>
+            <h2>{!mission.allowDeposit ? '준비 미션은 보증금 없이 시작해요' : result.recommended > 0 ? '생활비 부담까지 생각한 금액이에요' : '지금은 생활비 여유를 먼저 확보해요'}</h2>
             <div className="deposit-value"><strong>{won(shownDeposit)}</strong><span>iMKRW</span></div>
             <div className="deposit-value-meta">
               <span>{draft !== null ? '조정 중인 금액' : custom === null ? 'AI 추천 금액' : '직접 선택한 금액'} · {won(shownDeposit)}원</span>

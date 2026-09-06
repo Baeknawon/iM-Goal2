@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/tabs.css';
 import './styles/notifications.css';
 import './styles/global.css';
+import './styles/bank.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

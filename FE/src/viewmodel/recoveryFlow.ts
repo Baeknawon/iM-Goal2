@@ -1,3 +1,4 @@
+import type { financePlan } from './finance';
 import { acctDefs, goalPlanDefs, personaDefs } from '../data/personas';
 import { parseWonLabel } from './depositRecommendation';
 import type { PersonaKey } from '../types';
@@ -13,15 +14,15 @@ export interface RecoveryPlan {
 const weeklySavings = { A: 16000, B: 42000, C: 22000 };
 
 /** 시연 가정: 절약액을 전액 목표 저축에 이어갈 때의 환산 효과. 실제 이체가 아님. */
-export function recoveryPlan(persona: PersonaKey, missionDays: number, spent: number): RecoveryPlan {
+export function recoveryPlan(persona: PersonaKey, missionDays: number, spent: number, finance?: ReturnType<typeof financePlan>, savingPerWeek = weeklySavings[persona]): RecoveryPlan {
   const account = acctDefs[persona];
-  const delayedDday = Number(account.ddayLate.replace(/\D/g, ''));
-  const delayDays = delayedDday - Number(account.dday.replace(/\D/g, ''));
-  const savings = Math.round(weeklySavings[persona] * missionDays / 7);
-  const dailySaving = parseWonLabel(goalPlanDefs[persona].monthly) / 30;
+  const delayedDday = finance ? (finance.daysLeft ?? 0) : Number(account.ddayLate.replace(/\D/g, ''));
+  const delayDays = finance ? finance.delayDays : delayedDday - Number(account.dday.replace(/\D/g, ''));
+  const savings = Math.round(savingPerWeek * missionDays / 7);
+  const dailySaving = (finance ? finance.monthlySaving : parseWonLabel(goalPlanDefs[persona].monthly)) / 30;
   return { missionDays, savings, delayDays, delayedDday,
     recoverDays: dailySaving > 0 ? Math.min(delayDays, Math.floor(savings / dailySaving)) : 0,
-    overspend: Math.max(0, spent - personaDefs[persona].dailyBudget),
+    overspend: Math.max(0, spent - (finance ? finance.dailyBudget : personaDefs[persona].dailyBudget)),
   };
 }
 

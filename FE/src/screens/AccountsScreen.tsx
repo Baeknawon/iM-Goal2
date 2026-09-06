@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useJourney } from '../viewmodel/useJourney';
-import { acctDefs } from '../data/personas';
+
 import { Screen, BackToHome, Pill, ScreenBody } from '../components/ui';
 import { color } from '../styles/theme';
 
@@ -12,9 +12,9 @@ import { color } from '../styles/theme';
  */
 export function AccountsScreen() {
     const navigate = useNavigate();
-    const { persona, fueled } = useJourney();
-    const deposit = useAppStore((s) => s.deposit); // 실제 예치한 보증금
-    const AP = acctDefs[persona];
+    const { persona, AP, fueled } = useJourney();
+    const deposit = useAppStore((s) => s.wallet+s.locked); // 실제 예치한 보증금
+
     const baseRows = fueled ? AP.post : AP.pre;
 
     // 보증금 계좌(민트)는 실제 예치 금액(deposit)으로 표시 통일
@@ -35,7 +35,7 @@ export function AccountsScreen() {
                         {fueled ? '방금 변동' : '분배 대기'}
                     </Pill>
                 </div>
-                <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{fueled ? '오늘 07:12 · 3계좌 자동 분배' : `어제 23:50 기준 · 페르소나 ${persona}`}</div>
+                <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{fueled ? '분배 기록 반영 후 잔액' : `어제 23:50 기준 · 페르소나 ${persona}`}</div>
                 <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>내 계좌 현황</div>
             </div>
 

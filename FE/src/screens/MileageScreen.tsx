@@ -4,11 +4,13 @@ import { Screen, ScreenBody } from '../components/ui';
 import { useAppStore } from '../store/appStore';
 import { calculateFcps } from '../viewmodel/fcpsScore';
 import { mockMileageHistory, FCPS_INITIAL_SCORE, formatMissionDate } from '../data/mileageHistory';
-import { fcpsFactors } from '../data/staticContent';
+import { behaviorFactors } from '../viewmodel/longTermHistory';
 
 export function MileageScreen() {
   const navigate=useNavigate();
-  const entries=useAppStore(s=>s.fcpsLog);
+  const state=useAppStore();
+  const entries=state.fcpsLog;
+  const factors=behaviorFactors(state);
   const score=calculateFcps(entries);
   const [recent,setRecent]=useState(false);
   const [selection,setSelection]=useState<number|null>(null);
@@ -45,7 +47,7 @@ export function MileageScreen() {
       <section className="insight-section"><div className="insight-section-heading"><h2>최근 쌓인 기록</h2><button onClick={()=>navigate('/fcps')}>전체 기록 ›</button></div>
         {points.slice(1).reverse().slice(0,3).map((p,i)=><button className="insight-history" key={`${p.date}-${i}`} onClick={()=>navigate('/fcps')}><span className="insight-history-mark">{p.delta<0?'−':'+'}</span><span><b>{p.title}</b><small>{p.date}</small></span><strong className={p.delta<0?'insight-negative':'insight-positive'}>{p.delta>0?'+':''}{p.delta}점</strong></button>)}
       </section>
-      <section className="insight-section"><div className="insight-section-heading"><h2>나의 금융 습관</h2><span>행동 지표 예시</span></div>{fcpsFactors.map(f=><button className="insight-habit" key={f.name} onClick={()=>navigate('/fcps')}><span>{f.name}</span><b>{f.tag}</b><span aria-hidden="true">›</span></button>)}</section>
+      <section className="insight-section"><div className="insight-section-heading"><h2>나의 금융 습관</h2><button onClick={()=>navigate('/history')}>3·6개월 보기 ›</button></div>{factors.map(f=><button className="insight-habit" key={f.name} onClick={()=>navigate('/fcps')}><span>{f.name}</span><b>{f.tag}</b><span aria-hidden="true">›</span></button>)}</section>
       <section className="insight-coach"><img src="/assets/ddokdi-credit.png" alt=""/><div><h2>다음 기록도 함께 만들어봐요</h2><p>내 상황에 맞는 미션을 실천하고 변화를 확인하세요.</p><button onClick={()=>navigate('/missionDetail')}>실천할 미션 보기 ›</button></div></section>
       <button className="insight-habit" onClick={()=>navigate('/products')}><span>나에게 맞는 iM 상품</span><span aria-hidden="true">›</span></button>
     </div></ScreenBody></Screen>;

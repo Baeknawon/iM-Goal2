@@ -1,9 +1,11 @@
+import { GoalEditor } from '../components/GoalEditor';
 import { useState } from 'react';
 import { useJourney } from '../viewmodel/useJourney';
 import { Screen, BackToHome, Pill, ScreenBody } from '../components/ui';
 import { Globe3D } from '../components/Globe3D';
-import { paceTargets } from '../data/staticContent';
-import { journeyEventsDefs, type JourneyEvent, type JourneyEventKind } from '../data/personas';
+import { useSpending } from '../viewmodel/useSpending';
+import { INITIAL_SPEND_MONTH } from '../data/spendPeriod';
+import { type JourneyEvent, type JourneyEventKind } from '../data/personas';
 import { color } from '../styles/theme';
 
 const LEGEND: { kind: JourneyEventKind; label: string; c: string }[] = [
@@ -14,9 +16,12 @@ const LEGEND: { kind: JourneyEventKind; label: string; c: string }[] = [
 ];
 
 export function DetailScreen() {
-  const { persona, P, AP, dday, saved, savedPct, delayed } = useJourney();
-  const events = journeyEventsDefs[persona];
-  const [selected, setSelected] = useState<JourneyEvent>(() => events.find((e) => e.kind === 'now') ?? events[events.length - 1]);
+  const { plan, P, AP, dday, saved, savedPct, delayed } = useJourney();
+  const spending=useSpending(INITIAL_SPEND_MONTH);
+  const events:JourneyEvent[]=[{progress:0,kind:'start',label:'목표 계획',date:'계획',detail:plan.goal.name+' '+plan.goal.target.toLocaleString()+'원'}, {progress:savedPct/100,kind:'now',label:'현재 위치',date:'7월 31일',detail:'목표에 '+saved.toLocaleString()+' 모았어요 · '+savedPct+'%'}];
+  const [selectedKind, setSelectedKind] = useState<JourneyEventKind>('now');
+  const selected=events.find(e=>e.kind===selectedKind) ?? events[events.length-1];
+  const setSelected=(e:JourneyEvent)=>setSelectedKind(e.kind);
 
   return (
       <Screen>
@@ -30,6 +35,7 @@ export function DetailScreen() {
         </div>
 
         <ScreenBody>
+        <GoalEditor />
           {/* 3D 지구본 항로 카드 */}
           <div
               style={{
@@ -66,7 +72,7 @@ export function DetailScreen() {
               <div style={{ marginTop: 4, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-medium)', lineHeight: 1.55, color: 'var(--color-text-on-dark-muted)' }}>{selected.detail}</div>
               {selected.kind === 'now' && (
                   <div style={{ marginTop: 'var(--space-1)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: delayed ? 'var(--color-danger-on-dark)' : color.mint }}>
-                    {delayed ? `지연 예상 · ${AP.etaDelayed} 도착 예정` : `지금 페이스면 ${AP.etaFast} 도착 예정`}
+                    {delayed ? `지연 예상 · ${AP.etaDelayed} 도착 예정` : `현재 예산이면 ${AP.etaFast} 도착 예정`}
                   </div>
               )}
             </div>
@@ -123,30 +129,30 @@ export function DetailScreen() {
 
           <div style={{ marginTop: 'var(--space-1-5)', background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-accent-text)' }}>페이스 추이 · 주별 저축</div>
-              <div style={{ padding: '5px 11px', borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-mint-rgb),.16)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-lime-text)' }}>양호</div>
+              <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-accent-text)' }}>소비 추이 · 7월 주차별</div>
+              <div style={{ padding: '5px 11px', borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-mint-rgb),.16)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-lime-text)' }}>거래 기준</div>
             </div>
             <div style={{ marginTop: 18, display: 'flex', gap: 'var(--space-1)', alignItems: 'flex-end', height: 110 }}>
-              {paceTargets.map((h, i) => (
+              {spending.weeks.map((week, i) => (
                   <div
                       key={i}
                       style={{
-                        flex: 1, height: `${h}%`, borderRadius: '8px 8px 0 0',
+                        flex: 1, height: `${week.amount/Math.max(1,...spending.weeks.map(w=>w.amount))*100}%`, borderRadius: '8px 8px 0 0',
                         background: i === 7 ? color.mint : i === 5 ? 'var(--im-beige)' : 'rgba(var(--color-ink-rgb),.16)',
                       }}
                   />
               ))}
             </div>
             <div style={{ marginTop: 'var(--space-1)', display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>
-              <span>6월 1주</span><span>목표 페이스</span><span>이번 주</span>
+              <span>7월 1주</span><span>주차별 소비</span><span>마지막 주</span>
             </div>
             <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid var(--color-60-border)', display: 'flex', gap: 22 }}>
               <div>
                 <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>주 평균</div>
-                <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginTop: 3 }}>{AP.weekAvg}</div>
+                <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginTop: 3 }}>{Math.round(spending.total/spending.weeks.length).toLocaleString()}원</div>
               </div>
               <div>
-                <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>필요 페이스</div>
+                <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>주 예산 환산</div>
                 <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', marginTop: 3, color: 'var(--color-accent-text)' }}>{AP.needPace}</div>
               </div>
             </div>

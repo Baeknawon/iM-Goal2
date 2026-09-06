@@ -1,8 +1,9 @@
+import { currentMission } from '../viewmodel/adaptiveMission';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, Pill } from '../components/ui';
-import { missionDefs, personaDefs } from '../data/personas';
-import { recoveryCriteria } from '../viewmodel/recoveryFlow';
+import { personaDefs } from '../data/personas';
+
 import { formatMissionDate } from '../data/mileageHistory';
 import { color } from '../styles/theme';
 
@@ -16,7 +17,7 @@ export function MissionLiveScreen() {
   const startedAt = useAppStore((s) => s.missionStartedAt);
   const plan = useAppStore((s) => s.activeRecoveryPlan);
   const selectedDays = useAppStore((s) => s.missionDays);
-  const MI = missionDefs[persona];
+  const MI = currentMission(useAppStore());
   const P = personaDefs[persona];
 
   const totalDays = plan?.missionDays ?? selectedDays;
@@ -74,7 +75,7 @@ export function MissionLiveScreen() {
             <div style={{ marginTop: 9, fontSize: 'var(--font-size-sm)', lineHeight: 1.7, fontWeight: 'var(--font-weight-semibold)' }}>{MI.how}</div>
           </div>
           <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>
-            완료 기준: {recoveryCriteria[persona].rule}. 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
+            완료 기준: {MI.criteria.rule}. 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
           </div>
 
           {/* 데모: 미션 결과 처리 (성공 / 실패 / 포기) */}

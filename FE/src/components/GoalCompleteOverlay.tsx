@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useJourney } from '../viewmodel/useJourney';
-import { goalSetupDefs } from '../data/personas';
+
 import { color } from '../styles/theme';
 
 /**
@@ -11,10 +11,10 @@ import { color } from '../styles/theme';
  */
 export function GoalCompleteOverlay() {
   const navigate = useNavigate();
-  const persona = useAppStore((s) => s.persona);
+
   const dismissGoalComplete = useAppStore((s) => s.dismissGoalComplete);
-  const { AP } = useJourney();
-  const G = goalSetupDefs[persona];
+  const { AP, plan } = useJourney();
+  const G = {ticketGoal:plan.goal.name+' '+plan.goal.target.toLocaleString()+'원'};
 
   return (
     <div

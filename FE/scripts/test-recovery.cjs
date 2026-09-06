@@ -40,7 +40,8 @@ for (const persona of ['A', 'B', 'C']) {
       assert.ok(state().fcpsLog[0].completedAt);
       assert.equal(state().fcpsLog[0].recoveryPlan.missionDays, 7);
       assert.equal(state().spent, spent); // Completion must not erase overspending.
-      assert.equal(state().recovered, result === 'success');
+      assert.equal(state().recovered, false);
+      assert.equal(state().fcpsLog[0].recovery?.status, result==='success'?'awaiting':undefined);
       assert.equal(calculateFcps(state().fcpsLog).total, 612 + ({success:18,fail:-8,give_up:-5}[result]));
       state().finishMission(result);
       state().completeRecovery(); // Reload / alternate completion must be idempotent.

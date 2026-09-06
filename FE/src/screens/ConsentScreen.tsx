@@ -12,7 +12,7 @@ const items: { name: string; desc: string; required: boolean }[] = [
   { name: '마케팅 정보 수신', desc: '상품 추천·이벤트 알림 (선택)', required: false },
 ];
 
-/** 동의 1/4 — my-data & consent checklist shown right after login, before linking. */
+/** 동의 1/4 — CLiMB bank-home banner opens MyData consent before linking. */
 export function ConsentScreen() {
   const navigate = useNavigate();
   const consents = useAppStore((s) => s.consents);
@@ -25,7 +25,7 @@ export function ConsentScreen() {
   return (
     <Screen>
       <ScreenHeader
-        onBack={() => navigate('/login')}
+        onBack={() => navigate('/bank')}
         rightChip={<Pill>동의 1/4</Pill>}
         sub="시작하기 전에,"
         title="동의가 필요해요"

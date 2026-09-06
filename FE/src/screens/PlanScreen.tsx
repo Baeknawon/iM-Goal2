@@ -8,8 +8,8 @@ import { color } from '../styles/theme';
 export function PlanScreen() {
   const navigate = useNavigate();
   const finishGoal = useAppStore((s) => s.finishGoal);
-  const { persona, P, AP } = useJourney();
-  const G = goalSetupDefs[persona];
+  const { persona, P, AP, plan } = useJourney();
+  const G = {...goalSetupDefs[persona],ticketGoal:plan.goal.name+' '+plan.goal.target.toLocaleString()+'원',monthly:plan.monthlySaving.toLocaleString()+'원',calc1:plan.reasons[0],calc2:plan.reasons[2]};
 
   return (
     <Screen style={{ animation: 'slideUp .4s ease both' }}>

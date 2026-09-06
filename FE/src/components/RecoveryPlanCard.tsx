@@ -3,7 +3,7 @@ import type { RecoveryPlan } from '../viewmodel/recoveryFlow';
 
 export function RecoveryPlanCard({ plan, success = false }: { plan: RecoveryPlan; success?: boolean }) {
   return <Card style={{ marginBottom: 16 }}>
-    <h2 className="fcps-section-title">{success ? '이번 행동이 목표에 준 변화' : '이 미션이 목표에 도움이 되는 이유'}</h2>
+    <h2 className="fcps-section-title">{success ? '저축으로 이어갈 때의 예상 효과' : '이 미션이 목표에 도움이 되는 이유'}</h2>
     <p className="fcps-description">{plan.overspend > 0 ? `하루 예산보다 ${plan.overspend.toLocaleString()}원 초과했어요. ` : ''}최근 소비·재무 상황을 반영한 예상 경로는 {plan.delayDays}일 지연 상태예요.</p>
     <div className="recovery-metrics">
       <div><span>{plan.missionDays}일 실천 시 절약 예상</span><strong>{plan.savings.toLocaleString()}원</strong></div>
