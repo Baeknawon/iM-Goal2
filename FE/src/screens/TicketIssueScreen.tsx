@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { goalPlanDefs, personaDefs, acctDefs } from '../data/personas';
+import { goalPlanDefs, personaDefs } from '../data/personas';
+import { useJourney } from '../viewmodel/useJourney';
 import { Screen } from '../components/ui';
 import { color } from '../styles/theme';
 
@@ -19,7 +20,7 @@ export function TicketIssueScreen() {
     const finishGoal = useAppStore((s) => s.finishGoal);
     const R = goalPlanDefs[persona];
     const P = personaDefs[persona];
-    const AP = acctDefs[persona];
+    const { AP } = useJourney();
 
     useEffect(() => {
         finishGoal();

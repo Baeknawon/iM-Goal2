@@ -77,12 +77,6 @@ function DepositScreen() {
             </dl>
             <p>{mission.why}</p>
             {previousFailed && <p>최근 미션이 완료되지 않아, 다시 시작하는 부담을 줄이도록 기본 추천액을 25% 낮췄어요.</p>}
-            <details>
-              <summary>추천 금액 계산 보기</summary>
-              <p>미션 기간 예산의 10%({won(Math.round(result.base))}원)에 오늘 초과 지출 보정액 {won(Math.round(result.adjustment))}원을 더했어요. 보정은 하루 예산까지만 반영하며, 초과분의 25%예요.</p>
-              <p>월 여유의 10%({won(Math.floor(result.cashCap))}원), 지갑의 60%({won(Math.floor(result.walletCap))}원), 남은 목표 금액, 5만원 중 가장 낮은 금액을 상한으로 적용하고 1,000원 단위로 내림했어요.</p>
-              <p>계산 결과는 예상치이며, 보증금만으로 목표 달성이나 수익을 보장하지 않아요.</p>
-            </details>
           </section>
           <div className="deposit-wallet"><span>예치 후 지갑 잔액</span><strong>{won(Math.max(0, wallet - shownDeposit))} iMKRW</strong></div>
           {topUp > 0 && <InfoNote>선택 금액이 지갑 잔액보다 {won(topUp)}원 많아요. 아래 예치에 동의하면 부족분 {won(topUp)}원이 자동 충전된 뒤 예치됩니다.</InfoNote>}

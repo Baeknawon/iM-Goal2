@@ -1,5 +1,6 @@
 import { GoalEditor } from '../components/GoalEditor';
 import { financePlan, FINANCE_DATE } from '../viewmodel/finance';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { goalPlanDefs } from '../data/personas';
@@ -14,9 +15,13 @@ import { color } from '../styles/theme';
 export function GoalReportScreen() {
     const navigate = useNavigate();
     const persona = useAppStore((s) => s.persona);
+    const beginGoalPlan = useAppStore((s) => s.beginGoalPlan);
+    // 리포트는 항상 "지금 계획을 세우는 시점" → 모아둔 돈 0부터 시작. 저장된 후반 상태가 있어도 되돌린다.
+    useEffect(() => { beginGoalPlan(); }, [beginGoalPlan]);
     const state=useAppStore();
     const plan=financePlan(state);
-    const R = {...goalPlanDefs[persona],goalName:plan.goal.name,goalAmount:plan.goal.target.toLocaleString()+'원',span:plan.goal.months+'개월',eta:plan.eta,monthly:plan.monthlySaving.toLocaleString()+'원',dailyBudget:plan.dailyBudget.toLocaleString()+'원',summary:plan.goal.name+' 목표에 남은 '+plan.left.toLocaleString()+'원을 모으는 계획이에요.',reasons:plan.reasons};
+    // 리포트는 목표설정 직후 "이 계획대로면 언제 도착"을 보여주므로 계획 기간 기준 도착일(plannedEta)을 쓴다.
+    const R = {...goalPlanDefs[persona],goalName:plan.goal.name,goalAmount:plan.goal.target.toLocaleString()+'원',span:plan.goal.months+'개월',eta:plan.plannedEta,monthly:plan.monthlySaving.toLocaleString()+'원',dailyBudget:plan.dailyBudget.toLocaleString()+'원',summary:plan.goal.name+' 목표에 모아둔 돈 '+plan.goal.saved.toLocaleString()+'원 · 남은 '+plan.left.toLocaleString()+'원을 모으는 계획이에요.',reasons:plan.reasons};
 
     return (
         <Screen>
@@ -30,7 +35,10 @@ export function GoalReportScreen() {
             </div>
 
             <div style={{ flex: 1, overflow: 'auto', padding: '16px 22px 34px' }}>
-                <GoalEditor /><p className="insight-caption">{FINANCE_DATE} 기준 · 이자·세금 제외 · 예상 기간은 월 30일 환산</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-1)', marginBottom: 'var(--space-1-5)' }}>
+                    <p className="insight-caption" style={{ margin: 0 }}>{FINANCE_DATE} 기준 · 이자·세금 제외 · 월 30일 환산</p>
+                    <GoalEditor />
+                </div>
                 {/* 요약 카드 */}
                 <div style={{ background: 'var(--color-hero)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2-5)', color: 'var(--im-white)' }}>
                     <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: color.mint }}>GOAL SUMMARY</div>

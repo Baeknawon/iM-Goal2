@@ -1,11 +1,11 @@
 import { currentMission, failureReasons } from '../viewmodel/adaptiveMission';
-import { RecoveryProgressCard } from '../components/RecoveryProgressCard';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { Screen, Brand } from '../components/ui';
 
 import { color } from '../styles/theme';
 import { mockMissionHistory, formatMissionDate } from '../data/mileageHistory';
+import type { MissionResult } from '../types';
 
 interface Ticket {
     leg: string;
@@ -16,6 +16,8 @@ interface Ticket {
     status: string;
     live: boolean;
     go: string;
+    /** 회복 확인 상세로 가는 경로 (있으면 "회복보기" 버튼 노출). */
+    recoveryGo?: string;
 }
 
 /** 미션 tab: every recovery mission (deposit-backed "LEG" tickets) — the current one plus completed history. */
@@ -29,7 +31,7 @@ export function MissionsScreen() {
     const startedAt = useAppStore((s) => s.missionStartedAt);
     const entries = useAppStore((s) => s.fcpsLog);
     const activePlan = useAppStore((s) => s.activeRecoveryPlan);
-    const latestRecovery=entries[0]?.recovery;
+    const finishMission = useAppStore((s) => s.finishMission);
     const MI = currentMission(useAppStore());
 
     const curName = `${MI.title1} ${MI.title2}`;
@@ -45,7 +47,9 @@ export function MissionsScreen() {
         ...entries.map((entry, index) => ({
             leg: `최근 미션 ${entries.length - index} · 완료`, name: entry.mission,
             days: entry.result === 'success' ? '미션 성공' : (entry.result === 'fail' ? '미션 실패' : '미션 포기') + (entry.failureReason ? ' · '+failureReasons[entry.failureReason] : ''),
-            amount: entry.deposit, status: '전액 환원', live: false, go: entry.recovery ? '/recovery?completedAt='+encodeURIComponent(entry.recovery.completedAt) : '',
+            amount: entry.deposit, status: '전액 환원', live: false,
+            go: entry.recovery ? '/recovery?completedAt='+encodeURIComponent(entry.recovery.completedAt) : '',
+            recoveryGo: entry.result === 'success' && entry.recovery ? '/recovery?completedAt='+encodeURIComponent(entry.recovery.completedAt) : undefined,
             date: entry.startedAt
                 ? `${formatMissionDate(entry.startedAt)} ~ ${formatMissionDate(entry.completedAt)}`
                 : `${formatMissionDate(entry.completedAt)} 완료`,
@@ -77,10 +81,9 @@ export function MissionsScreen() {
                     </div>
                 </div>
                 {missionOn && missionResult === null && <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>진행 중</div>}
-                {!missionOn && latestRecovery && <RecoveryProgressCard recovery={latestRecovery} />}
                 {tickets.map((t) => (
+                    <div key={t.leg} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                     <div
-                        key={t.leg}
                         onClick={() => { if (t.go) navigate(t.go); }}
                         style={{ position: 'relative', display: 'flex', alignItems: 'stretch', borderRadius: 'var(--radius-lg)', cursor: t.go ? 'pointer' : 'default', background: t.live ? color.hero : 'var(--im-white)', color: t.live ? 'var(--im-white)' : color.ink, opacity: t.go || t.live ? 1 : 0.92 }}
                     >
@@ -102,6 +105,38 @@ export function MissionsScreen() {
                             <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '-.02em' }}>{t.amount > 0 ? `${t.amount.toLocaleString()}원` : '—'}</div>
                             <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', opacity: 0.55 }}>iMKRW</div>
                         </div>
+                    </div>
+                    {t.live && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-0-5)' }}>
+                            <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>미션 결과를 선택하면 보증금이 전액 환원돼요</div>
+                            <div style={{ display: 'flex', gap: 'var(--space-0-5)' }}>
+                                {[
+                                    { result: 'success' as MissionResult, label: '미션 성공', primary: true },
+                                    { result: 'fail' as MissionResult, label: '실패', primary: false },
+                                    { result: 'give_up' as MissionResult, label: '중단', primary: false },
+                                ].map((opt) => (
+                                    <button
+                                        key={opt.result}
+                                        type="button"
+                                        onClick={() => { finishMission(opt.result); navigate('/release'); }}
+                                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '13px 12px', borderRadius: 'var(--radius-lg)', border: opt.primary ? 'none' : '1px solid rgba(var(--color-ink-rgb),.12)', background: opt.primary ? color.mint : 'var(--im-white)', color: color.ink, fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.01em', cursor: 'pointer' }}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    {t.recoveryGo && (
+                        <button
+                            type="button"
+                            onClick={() => navigate(t.recoveryGo!)}
+                            style={{ alignSelf: 'stretch', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-0-5)', padding: '13px 16px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(var(--color-ink-rgb),.12)', background: 'var(--im-white)', color: color.ink, fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.01em', cursor: 'pointer' }}
+                        >
+                            회복 확인 경로 보기
+                            <span aria-hidden="true" style={{ color: color.mintDark }}>›</span>
+                        </button>
+                    )}
                     </div>
                 ))}
                 <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>

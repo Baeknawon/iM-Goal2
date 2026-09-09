@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Screen, Brand, TicketShell, CtaButton, InfoNote } from '../components/ui';
+import { Screen, Brand, TicketShell, CtaButton } from '../components/ui';
 import { color } from '../styles/theme';
 
 export function EmptyHomeScreen() {
@@ -57,7 +57,6 @@ export function EmptyHomeScreen() {
                 </div>
               }
           />
-          <InfoNote>목적지가 없어도 소비분석은 볼 수 있어요. 하단 탭에서 지난 3개월 소비 흐름을 확인해 보세요.</InfoNote>
         </div>
       </Screen>
   );

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { alertDefs, personaDefs, acctDefs } from '../data/personas';
+import { alertDefs } from '../data/personas';
+import { useJourney } from '../viewmodel/useJourney';
 import { phase1Start } from '../data/ucDefs';
 import { CtaButton } from './ui';
 import { color } from '../styles/theme';
@@ -15,13 +16,13 @@ export function AlertOverlay() {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   const persona = useAppStore((s) => s.persona);
-  const spent = useAppStore((s) => s.spent);
   const dismissAlert = useAppStore((s) => s.dismissAlert);
   const AL = alertDefs[persona];
-  const AP = acctDefs[persona];
+  const { AP, plan } = useJourney();
 
+  // 하루 예산·오늘 지출은 financePlan 단일 소스를 사용 (홈 화면과 동일 기준).
   const alertHead = persona === 'A'
-      ? `오늘 예산을 ${Math.max(0, spent - personaDefs.A.dailyBudget).toLocaleString('en-US')}원 초과했어요`
+      ? `오늘 예산을 ${Math.max(0, plan.today - plan.dailyBudget).toLocaleString('en-US')}원 초과했어요`
       : AL.headFallback;
 
   return (
@@ -35,7 +36,7 @@ export function AlertOverlay() {
             </span>
             <span role="status" className="trigger-notification-message">
               <strong>{alertHead}</strong>
-              <span>도착 예정일이 {AP.eta} → {AP.etaDelayed}로 지연</span>
+              <span>{plan.delayDays > 0 ? `도착 예정일이 ${AP.eta} → ${AP.etaDelayed}로 지연` : `현재 예측 도착일 ${AP.etaFast}`}</span>
             </span>
           </button>
           <button type="button" className="trigger-notification-close" aria-label="알림 닫기" onClick={dismissAlert}>×</button>

@@ -17,7 +17,7 @@ export const personaDefs: Record<PersonaKey, PersonaDef> = {
     code: 'GOAL',
     goalAmountLabel: '3,000만원',
     goalName: '전세보증금',
-    dailyBudget: 27400,
+    dailyBudget: 26677,
     triggerLabel: '배달 23,000원 결제 발생시키기',
     accent: color.mint,
   },
@@ -26,7 +26,7 @@ export const personaDefs: Record<PersonaKey, PersonaDef> = {
     code: 'GOAL',
     goalAmountLabel: '사업 안정화',
     goalName: '매출 회복',
-    dailyBudget: 9600,
+    dailyBudget: 9290,
     triggerLabel: '8월 매출 -18% 감지 발생시키기',
     accent: color.mint,
   },
@@ -35,7 +35,7 @@ export const personaDefs: Record<PersonaKey, PersonaDef> = {
     code: 'GOAL',
     goalAmountLabel: '600만원',
     goalName: '비상자금',
-    dailyBudget: 11200,
+    dailyBudget: 10967,
     triggerLabel: '카드 148,000원 결제 발생시키기',
     accent: color.mint,
   },
@@ -45,7 +45,7 @@ export interface GoalSetupDef {
   voiceHint: string; // one-line quoted example shown on the "음성으로 말하기" input-mode card
   say1: string; // recognized-speech line 1 (quoted)
   say2: string; // recognized-speech line 2 (quoted)
-  spanLabel: string; // "24개월 · 2028년 8월까지"
+  spanLabel: string; // "24개월 · 2028.07.20 도착"
   goalType: string; // "주거 · 전세보증금"
   goalAmount: string; // "30,000,000원"
   ticketGoal: string; // "전세보증금 3,000만원" — shown on the finished plan ticket
@@ -59,23 +59,23 @@ export const goalSetupDefs: Record<PersonaKey, GoalSetupDef> = {
   A: {
     voiceHint: '"2년 안에 전세보증금 3,000만원"',
     say1: '"2년 안에 전세보증금', say2: '3,000만원 모으고 싶어요"',
-    spanLabel: '24개월 · 2028년 8월까지', goalType: '주거 · 전세보증금', goalAmount: '30,000,000원',
+    spanLabel: '24개월 · 2028.07.20 도착', goalType: '주거 · 전세보증금', goalAmount: '30,000,000원',
     ticketGoal: '전세보증금 3,000만원', monthly: '83.3만원',
-    calc1: '월소득 250만 − 고정비 84만 − 저축 83.3만', calc2: '= 82.7만원 ÷ 30일 (안전마진 적용)',
+    calc1: '월소득 250만 − 고정비 84만 − 저축 83.3만', calc2: '= 소비예산 82.7만 ÷ 31일 = 하루 26,677원',
   },
   B: {
     voiceHint: '"운영자금 1,200만원을 반년 안에"',
     say1: '"가게 운영자금 1,200만원을', say2: '반년 안에 만들고 싶어요"',
-    spanLabel: '6개월 · 2027년 2월까지', goalType: '사업 · 운영 안정화', goalAmount: '12,360,000원',
-    ticketGoal: '운영자금 1,236만원', monthly: '206만원',
-    calc1: '월매출 620만 − 고정비 412만 − 적립 206만', calc2: '= 28.8만원 ÷ 30일 (매출 변동 반영)',
+    spanLabel: '6개월 · 2027.01.27 도착', goalType: '사업 · 운영 안정화', goalAmount: '12,360,000원',
+    ticketGoal: '운영자금 1,236만원', monthly: '179.2만원',
+    calc1: '월매출 620만 − 고정비 412만 − 적립 179.2만', calc2: '= 소비예산 28.8만 ÷ 31일 = 하루 9,290원',
   },
   C: {
     voiceHint: '"리볼빙 정리하고 비상자금 600만원"',
     say1: '"리볼빙 정리하고 비상자금', say2: '600만원 만들고 싶어요"',
-    spanLabel: '15개월 · 2027년 11월까지', goalType: '부채 정리 · 비상자금', goalAmount: '6,000,000원',
+    spanLabel: '15개월 · 2027.10.24 도착', goalType: '부채 정리 · 비상자금', goalAmount: '6,000,000원',
     ticketGoal: '비상자금 600만원', monthly: '40만원',
-    calc1: '월소득 285만 − 고정비 78만 − 리볼빙 상환 133만', calc2: '= 33.6만원 ÷ 30일 (한도 회복 우선)',
+    calc1: '월소득 285만 − 고정비 78만 − 리볼빙 상환 133만 − 저축 40만', calc2: '= 소비예산 34만 ÷ 31일 = 하루 10,967원',
   },
 };
 
@@ -100,9 +100,9 @@ export interface GoalPlanDef {
   goalName: string;     // "전세보증금"
   goalAmount: string;   // "3,000만원"
   span: string;         // "24개월"
-  eta: string;          // "2028년 8월"
+  eta: string;          // "2028.07.20"
   monthly: string;      // "83.3만원"
-  dailyBudget: string;  // "27,400원"
+  dailyBudget: string;  // "26,677원"
   summary: string;      // 리포트 상단 한 줄 요약
   reasons: string[];    // 리포트 "이 계획을 세운 근거"
   products: {           // 리포트에 담기는 추천 상품(대화에서 언급된 것과 동일)
@@ -123,7 +123,7 @@ export const goalChatDefs: Record<PersonaKey, ChatTurn[]> = {
     { from: 'user', text: '잘 모르겠어요. 그냥 2년 안에는 옮기고 싶은데 얼마가 필요한지도 감이 안 와요.' },
     { from: 'ai', text: '연결된 소비·소득 내역을 보니 월 250만원 소득에 고정비 84만원이에요. 청년 전세 기준으로 보증금 3,000만원 정도면 현실적인 목표예요.' },
     { from: 'user', text: '3,000만원이요? 2년 안에 그게 돼요?' },
-    { from: 'ai', text: '됩니다. 24개월로 나누면 매달 83.3만원씩 모으면 돼요. 지금 소비 습관이면 하루 여윳돈은 27,400원으로 잡혀요.' },
+    { from: 'ai', text: '됩니다. 24개월로 나누면 매달 83.3만원씩 모으면 돼요. 지금 소비 습관이면 하루 여윳돈은 26,677원으로 잡혀요.' },
     { from: 'product', product: {
         tag: 'iM뱅크 추천 · 목표 연계',
         name: 'iM 목표적금 (24개월)',
@@ -146,7 +146,7 @@ export const goalChatDefs: Record<PersonaKey, ChatTurn[]> = {
     { from: 'user', text: '맞아요. 근데 얼마를 모아둬야 마음이 놓일지 모르겠어요.' },
     { from: 'ai', text: '보통 고정비 3개월치를 비상 버퍼로 잡아요. 사장님은 약 1,236만원이에요. 6개월 안에 만드는 걸 목표로 해볼까요?' },
     { from: 'user', text: '6개월이면 매달 얼마씩이에요?' },
-    { from: 'ai', text: '매달 206만원씩이에요. 매출 변동을 반영하면 하루 운영 여윳돈은 9,600원으로 잡혀요.' },
+    { from: 'ai', text: '매달 179.2만원씩이에요. 매출 변동을 반영하면 하루 운영 여윳돈은 9,290원으로 잡혀요.' },
     { from: 'product', product: {
         tag: 'iM뱅크 추천 · 사업자',
         name: '소상공인 119Plus',
@@ -162,7 +162,7 @@ export const goalChatDefs: Record<PersonaKey, ChatTurn[]> = {
     { from: 'user', text: '비상금은 얼마 정도가 적당해요?' },
     { from: 'ai', text: '생활비 약 3개월치인 600만원을 목표로 잡을게요. 15개월로 나누면 매달 40만원이에요.' },
     { from: 'user', text: '리볼빙부터 어떻게 하는 게 좋아요?' },
-    { from: 'ai', text: '한도를 조금 낮추고 신규 리볼빙을 멈추면 이자 부담이 확 줄어요. 하루 여윳돈은 11,200원으로 잡았어요.' },
+    { from: 'ai', text: '한도를 조금 낮추고 신규 리볼빙을 멈추면 이자 부담이 확 줄어요. 하루 여윳돈은 10,967원으로 잡았어요.' },
     { from: 'product', product: {
         tag: 'iM뱅크 추천 · 부채 조정',
         name: '대환대출 · 한도 조정 상담',
@@ -176,13 +176,13 @@ export const goalChatDefs: Record<PersonaKey, ChatTurn[]> = {
 /** 대화 끝에서 확정되는 목표 계획 + 리포트에 고정 표시되는 값. */
 export const goalPlanDefs: Record<PersonaKey, GoalPlanDef> = {
   A: {
-    goalName: '전세보증금', goalAmount: '3,000만원', span: '24개월', eta: '2028년 8월',
-    monthly: '83.3만원', dailyBudget: '27,400원',
+    goalName: '전세보증금', goalAmount: '3,000만원', span: '24개월', eta: '2028.07.20',
+    monthly: '83.3만원', dailyBudget: '26,677원',
     summary: '2년 안에 전세보증금 3,000만원을 모으는 계획이에요.',
     reasons: [
       '월소득 250만원 · 고정비 84만원 기준으로 계산했어요',
       '자립준비청년 요건을 충족해 정책상품을 함께 넣었어요',
-      '하루 27,400원 예산이면 무리 없이 지킬 수 있어요',
+      '하루 26,677원 예산이면 무리 없이 지킬 수 있어요',
     ],
     products: [
       { tag: '목표 연계', name: 'iM 목표적금 (24개월)', reason: '만기가 도착 예정일과 같아 목표 계좌로 자동 연결', k1: '금리', v1: '연 3.6%', k2: '월 납입', v2: '83만원' },
@@ -190,26 +190,26 @@ export const goalPlanDefs: Record<PersonaKey, GoalPlanDef> = {
     ],
   },
   B: {
-    goalName: '매출 회복 버퍼', goalAmount: '1,236만원', span: '6개월', eta: '2027년 2월',
-    monthly: '206만원', dailyBudget: '9,600원',
+    goalName: '매출 회복 버퍼', goalAmount: '1,236만원', span: '6개월', eta: '2027.01.27',
+    monthly: '179.2만원', dailyBudget: '9,290원',
     summary: '반년 안에 고정비 3개월치 버퍼 1,236만원을 만드는 계획이에요.',
     reasons: [
       '최근 3개월 매출 -18% · 고정비 월 412만원을 반영했어요',
       '연체 전 단계라 지원제도를 먼저 연결할 수 있어요',
-      '매출 변동을 반영해 하루 9,600원으로 잡았어요',
+      '매출 변동을 반영해 하루 9,290원으로 잡았어요',
     ],
     products: [
       { tag: '사업자', name: '소상공인 119Plus', reason: '연체 전 단계 · 만기연장과 금리감면 우선 대상', k1: '지원', v1: '만기연장', k2: '대상', v2: '연체 전' },
     ],
   },
   C: {
-    goalName: '비상자금', goalAmount: '600만원', span: '15개월', eta: '2027년 11월',
-    monthly: '40만원', dailyBudget: '11,200원',
+    goalName: '비상자금', goalAmount: '600만원', span: '15개월', eta: '2027.10.24',
+    monthly: '40만원', dailyBudget: '10,967원',
     summary: '리볼빙을 정리하면서 비상자금 600만원을 모으는 계획이에요.',
     reasons: [
       '한도 소진율 82% · 리볼빙 잔액 326만원을 반영했어요',
       '한도를 낮추면 이자 부담이 줄어 목표가 앞당겨져요',
-      '하루 11,200원 예산으로 15개월간 모아요',
+      '하루 10,967원 예산으로 15개월간 모아요',
     ],
     products: [
       { tag: '부채 조정', name: '대환대출 · 한도 조정 상담', reason: '소진율 82%를 낮춰 이자 부담 완화', k1: '월 절감', v1: '4.1만원', k2: '소진율', v2: '82→55%' },
@@ -227,6 +227,7 @@ export interface JourneyEvent {
   label: string;      // "배달 지출 급증" 등
   date: string;       // "3월"
   detail: string;     // 한 줄 설명
+  id?: string;        // 타임라인/지구본 선택 식별자 (동적 여정에서 사용)
 }
 
 /**
@@ -281,7 +282,7 @@ export interface MissionDef {
 export const missionDefs: Record<PersonaKey, MissionDef> = {
   A: {
     leg: 'LEG 04 · 회복 구간', difficulty: '난이도 보통', title1: '배달 주문을', title2: '주 1회로 줄이기',
-    why: '배달 지출이 4주 평균 대비 34.5% 늘었고, 하루 예산 27,400원을 이번 주 3회 초과했습니다.',
+    why: '배달 지출이 4주 평균 대비 34.5% 늘었고, 하루 예산 26,677원을 이번 주 3회 초과했습니다.',
     how: '배달앱 알림을 끄고 주 1회만 허용합니다. 결제 내역으로 자동 확인되니 인증은 필요 없습니다.',
     daysDone: 9, daysTotal: 14,
   },
@@ -301,9 +302,9 @@ export const missionDefs: Record<PersonaKey, MissionDef> = {
 
 /** The "이 티켓을 만든 근거" tag row on MissionDetail — grounded in each persona's own goal/budget/risk data. */
 export const missionProfileTags: Record<PersonaKey, string[]> = {
-  A: ['목표 전세보증금 3,000만원', '여정 24개월', '진행 68%', '하루 예산 27,400원', '배달 빈도 증가', '구간 3건 · 성공 2', '항로 주의'],
-  B: ['목표 매출 회복 · 사업 안정화', '여정 6개월', '진행 42%', '하루 예산 9,600원', '매출 3개월 연속 감소', '구간 4건 · 성공 2', '항로 위험'],
-  C: ['목표 비상자금 600만원', '여정 15개월', '진행 31%', '하루 예산 11,200원', '한도 소진율 급등', '구간 3건 · 성공 2', '항로 위험'],
+  A: ['목표 전세보증금 3,000만원', '여정 24개월', '진행 68%', '하루 예산 26,677원', '배달 빈도 증가', '구간 3건 · 성공 2', '항로 주의'],
+  B: ['목표 매출 회복 · 사업 안정화', '여정 6개월', '진행 42%', '하루 예산 9,290원', '매출 3개월 연속 감소', '구간 4건 · 성공 2', '항로 위험'],
+  C: ['목표 비상자금 600만원', '여정 15개월', '진행 31%', '하루 예산 10,967원', '한도 소진율 급등', '구간 3건 · 성공 2', '항로 위험'],
 };
 
 export interface CauseRow {
@@ -411,7 +412,7 @@ export const alertDefs: Record<PersonaKey, AlertDef> = {
     iconBg: 'var(--color-danger-surface)',
     iconFg: 'var(--color-danger)',
     riskTag: '위험 지수 · 순항 68 → 이탈 31',
-    riskBody: '하루 예산 27,400원 중 45,600원을 썼습니다. 배달 지출이 4주 평균 대비 +34.5%입니다.',
+    riskBody: '하루 예산 26,677원 중 45,600원을 썼습니다. 배달 지출이 4주 평균 대비 +34.5%입니다.',
     causeScreen: 'u13',
   },
   B: {
@@ -477,52 +478,52 @@ export const acctDefs: Record<PersonaKey, AcctDef> = {
     pre: [
       { name: '목표 저축', desc: '전세보증금 3,000만원 · 97% 도달', amount: '29,167,000', delta: '지난달 +833,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '30,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '생활비 계좌', desc: '하루 27,400원 × 남은 45일', amount: '1,233,000', delta: '이번 주 -74,000', dotColor: color.sky },
+      { name: '생활비 계좌', desc: '하루 26,677원 × 남은 45일', amount: '1,233,000', delta: '이번 주 -74,000', dotColor: color.sky },
     ],
     post: [
       { name: '목표 저축', desc: '전세보증금 3,000만원 · 100% 도달', amount: '30,000,000', delta: '+833,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '30,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '생활비 계좌', desc: '하루 27,400원 × 남은 45일', amount: '1,233,000', delta: '+1,233,000', dotColor: color.sky },
+      { name: '생활비 계좌', desc: '하루 26,677원 × 남은 45일', amount: '1,233,000', delta: '+1,233,000', dotColor: color.sky },
     ],
     total: '2,066,000', prePct: 97, postPct: 100, left: '833,000원',
-    now: '2026년 8월', eta: '2028년 8월', etaShort: "'28.08", etaLate: "'28.09",
+    now: '2026.07.31', eta: '2028.07.20', etaShort: '2028.07.20', etaLate: '2028.08.19',
     dday: 'D-730', ddayLate: 'D-760', span: '24개월',
-    target: '30,000,000원', etaFast: '2028년 6월', weekAvg: '208,000원', needPace: '192,000원',
-    etaDelayed: '2028년 9월', delayNote: '난기류 30일 지연',
+    target: '30,000,000원', etaFast: '2028.06.10', weekAvg: '208,000원', needPace: '192,000원',
+    etaDelayed: '2028.08.19', delayNote: '난기류 30일 지연',
   },
   B: {
     pre: [
       { name: '사업 안정화', desc: '고정비 3개월 버퍼 · 83% 도달', amount: '10,300,000', delta: '지난달 +2,060,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '50,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '운영비 계좌', desc: '하루 9,600원 × 남은 30일', amount: '288,000', delta: '매출 -18%', dotColor: color.sky },
+      { name: '운영비 계좌', desc: '하루 9,290원 × 남은 30일', amount: '288,000', delta: '매출 -18%', dotColor: color.sky },
     ],
     post: [
       { name: '사업 안정화', desc: '고정비 3개월 버퍼 · 100% 도달', amount: '12,360,000', delta: '+2,060,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '50,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '운영비 계좌', desc: '하루 9,600원 × 남은 30일', amount: '288,000', delta: '+288,000', dotColor: color.sky },
+      { name: '운영비 계좌', desc: '하루 9,290원 × 남은 30일', amount: '288,000', delta: '+288,000', dotColor: color.sky },
     ],
     total: '2,398,000', prePct: 83, postPct: 100, left: '2,060,000원',
-    now: '2026년 8월', eta: '2027년 2월', etaShort: "'27.02", etaLate: "'27.04",
+    now: '2026.07.31', eta: '2027.01.27', etaShort: '2027.01.27', etaLate: '2027.03.28',
     dday: 'D-180', ddayLate: 'D-240', span: '6개월',
-    target: '12,360,000원', etaFast: '2027년 1월', weekAvg: '120,000원', needPace: '166,000원',
-    etaDelayed: '2027년 4월', delayNote: '난기류 60일 지연',
+    target: '12,360,000원', etaFast: '2026.12.28', weekAvg: '120,000원', needPace: '166,000원',
+    etaDelayed: '2027.03.28', delayNote: '난기류 60일 지연',
   },
   C: {
     pre: [
       { name: '비상자금', desc: '목표 600만원 · 93% 도달', amount: '5,600,000', delta: '지난달 +400,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '20,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '생활비 계좌', desc: '하루 11,200원 × 남은 45일', amount: '504,000', delta: '리볼빙 -326,000', dotColor: color.sky },
+      { name: '생활비 계좌', desc: '하루 10,967원 × 남은 45일', amount: '504,000', delta: '리볼빙 -326,000', dotColor: color.sky },
     ],
     post: [
       { name: '비상자금', desc: '목표 600만원 · 100% 도달', amount: '6,000,000', delta: '+400,000', dotColor: color.navy },
       { name: '보증금 예치', desc: 'iMKRW 스마트계약 · 고정 예치', amount: '20,000', delta: '변동 없음', dotColor: color.mint },
-      { name: '생활비 계좌', desc: '하루 11,200원 × 남은 45일', amount: '504,000', delta: '+504,000', dotColor: color.sky },
+      { name: '생활비 계좌', desc: '하루 10,967원 × 남은 45일', amount: '504,000', delta: '+504,000', dotColor: color.sky },
     ],
     total: '904,000', prePct: 93, postPct: 100, left: '400,000원',
-    now: '2026년 8월', eta: '2027년 11월', etaShort: "'27.11", etaLate: "'27.12",
+    now: '2026.07.31', eta: '2027.10.24', etaShort: '2027.10.24', etaLate: '2027.11.23',
     dday: 'D-450', ddayLate: 'D-480', span: '15개월',
-    target: '6,000,000원', etaFast: '2027년 10월', weekAvg: '69,000원', needPace: '64,000원',
-    etaDelayed: '2027년 12월', delayNote: '난기류 30일 지연',
+    target: '6,000,000원', etaFast: '2027.09.24', weekAvg: '69,000원', needPace: '64,000원',
+    etaDelayed: '2027.11.23', delayNote: '난기류 30일 지연',
   },
 };
 
@@ -539,16 +540,16 @@ export const salarySplitDefs: Record<PersonaKey, SalarySplitRow[]> = {
   A: [
     { name: '목표 저축', desc: '전세보증금 목표 계좌', amount: '833,000원', pct: '40%', dotColor: color.navy },
     { name: '보증금 예치', desc: 'iMKRW 스마트계약', amount: '30,000원', pct: '2%', dotColor: color.mint },
-    { name: '생활비 계좌', desc: '일일 예산 27,400원 기준', amount: '1,203,000원', pct: '58%', dotColor: color.sky },
+    { name: '생활비 계좌', desc: '일일 예산 26,677원 기준', amount: '1,203,000원', pct: '58%', dotColor: color.sky },
   ],
   B: [
     { name: '사업 안정화', desc: '고정비 버퍼 계좌', amount: '2,060,000원', pct: '86%', dotColor: color.navy },
     { name: '보증금 예치', desc: 'iMKRW 스마트계약', amount: '50,000원', pct: '2%', dotColor: color.mint },
-    { name: '운영비 계좌', desc: '일일 예산 9,600원 기준', amount: '288,000원', pct: '12%', dotColor: color.sky },
+    { name: '운영비 계좌', desc: '일일 예산 9,290원 기준', amount: '288,000원', pct: '12%', dotColor: color.sky },
   ],
   C: [
     { name: '비상자금', desc: '비상자금 목표 계좌', amount: '400,000원', pct: '44%', dotColor: color.navy },
     { name: '보증금 예치', desc: 'iMKRW 스마트계약', amount: '20,000원', pct: '2%', dotColor: color.mint },
-    { name: '생활비 계좌', desc: '일일 예산 11,200원 기준', amount: '484,000원', pct: '54%', dotColor: color.sky },
+    { name: '생활비 계좌', desc: '일일 예산 10,967원 기준', amount: '484,000원', pct: '54%', dotColor: color.sky },
   ],
 };
