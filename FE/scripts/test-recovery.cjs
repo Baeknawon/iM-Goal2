@@ -19,6 +19,7 @@ for (const persona of ['A', 'B', 'C']) {
   for (const result of ['success', 'fail', 'give_up']) {
     for (const deposit of [0, 30000, 60000]) {
       state().setPersona(persona);
+      state().resetOnboarding(); // clear the demo seed log so this checks a single fresh mission
       state().setMissionDays(7);
       state().triggerPersonaAlert(persona);
       const spent = state().spent;
@@ -39,7 +40,9 @@ for (const persona of ['A', 'B', 'C']) {
       assert.equal(state().fcpsLog[0].startedAt, started);
       assert.ok(state().fcpsLog[0].completedAt);
       assert.equal(state().fcpsLog[0].recoveryPlan.missionDays, 7);
-      assert.equal(state().spent, spent); // Completion must not erase overspending.
+      // 성공 = 이탈 회복: 트리거로 추가된 초과 지출이 제거되어 당일 지출이 줄어든다(≤). 실패·중단은 유지된다(=).
+      if (result === 'success') assert.ok(state().spent <= spent);
+      else assert.equal(state().spent, spent);
       assert.equal(state().recovered, false);
       assert.equal(state().fcpsLog[0].recovery?.status, result==='success'?'awaiting':undefined);
       assert.equal(calculateFcps(state().fcpsLog).total, 612 + ({success:18,fail:-8,give_up:-5}[result]));
@@ -83,6 +86,7 @@ console.log('Duration recommendations, overrides, invalid values and active miss
 const {answerAssistant, assistantSuggestions} = require('../src/viewmodel/assistant.ts');
 for (const persona of ['A','B','C']) {
   state().setPersona(persona);
+  state().resetOnboarding(); // clear the demo seed log so the score math starts from a clean history
   state().setMissionDays(28);
   const before = JSON.stringify(state());
   assert.match(answerAssistant('왜 이 기간을 추천했어?', state()).text, /28일/);

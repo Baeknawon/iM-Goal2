@@ -23,6 +23,7 @@ for(const persona of ['A','B','C']){
 }
 store.getState().setPersona('A');
 const before=store.getState().goal;store.getState().updateGoal({...before,target:-1});assert.deepEqual(store.getState().goal,before);
-const initial=financePlan(store.getState());store.getState().incMonthly(store.getState().incomeMonthly+100000);assert.ok(financePlan(store.getState()).dailyBudget>initial.dailyBudget);
+// 계획 저축은 상품 연계 고정값이라 소득이 늘어도 그대로, 대신 남는 소득이 소비예산으로 가 하루 예산이 커진다.
+const initial=financePlan(store.getState());store.getState().incMonthly(store.getState().incomeMonthly+100000);const afterInc=financePlan(store.getState());assert.ok(afterInc.dailyBudget>initial.dailyBudget);assert.equal(afterInc.monthlySaving,initial.monthlySaving);
 store.getState().setFueled(true);const saved=store.getState().goal.saved;assert.ok(saved>before.saved);store.getState().setFueled(true);assert.equal(store.getState().goal.saved,saved);
 console.log('Finance checks passed: goal input, budgets, ETA, shared ledger, three persona triggers, idempotency, no capacity, completion and saving.');

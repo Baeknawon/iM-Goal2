@@ -1,7 +1,7 @@
 import { currentMission } from '../viewmodel/adaptiveMission';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { Screen, Pill } from '../components/ui';
+import { Screen, Pill, CtaButton } from '../components/ui';
 import { personaDefs } from '../data/personas';
 
 import { formatMissionDate } from '../data/mileageHistory';
@@ -37,8 +37,7 @@ export function MissionLiveScreen() {
   return (
       <Screen>
         <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Pill onClick={() => navigate('/missions')}>‹ 미션</Pill>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Pill bg={color.mint} fg={color.ink}>진행 중</Pill>
           </div>
           <div style={{ marginTop: 18, fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>{MI.leg}</div>
@@ -75,32 +74,11 @@ export function MissionLiveScreen() {
             <div style={{ marginTop: 9, fontSize: 'var(--font-size-sm)', lineHeight: 1.7, fontWeight: 'var(--font-weight-semibold)' }}>{MI.how}</div>
           </div>
           <div style={{ background: 'var(--color-30-surface-sub)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-2)', fontSize: 'var(--font-size-2xs)', lineHeight: 1.7, fontWeight: 'var(--font-weight-medium)', color: 'var(--color-60-text-secondary)' }}>
-            완료 기준: {MI.criteria.rule}. 아래 결과를 선택해 판정 근거를 확인합니다. 성공·실패·포기 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
+            완료 기준: {MI.criteria.rule}. 미션 결과(성공·실패·중단)는 미션 리스트에서 선택합니다. 어느 경우든 보증금 {deposit.toLocaleString()}원은 지갑으로 돌아오고, 결과만 FCPS에 기록됩니다.
           </div>
-
-          {/* 데모: 미션 결과 처리 (성공 / 실패 / 포기) */}
-          <div style={{ marginTop: 4, fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>미션 결과 처리</div>
-          <div
-              onClick={() => { navigate('/verify?result=success'); }}
-              style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
-          >
-            성공 기록으로 판정 확인
-            <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>✓</span>
-          </div>
-          <div style={{ display: 'flex', gap: 'var(--component-gap)' }}>
-            <div
-                onClick={() => { navigate('/verify?result=fail'); }}
-                style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-danger-surface)', color: 'var(--color-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
-            >
-              실패 기록 확인
-            </div>
-            <div
-                onClick={() => { navigate('/verify?result=give_up'); }}
-                style={{ minHeight: 'var(--btn-height-lg)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  flex: 1, height: 'var(--btn-height-lg)', borderRadius: 'var(--radius-lg)', background: 'var(--color-30-surface-sub)', color: 'var(--color-60-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
-            >
-              중단하기
-            </div>
-          </div>
+          <CtaButton height={54} style={{ marginTop: 'var(--space-0-5)' }} onClick={() => navigate('/missions')}>
+            미션 리스트 보러가기
+          </CtaButton>
         </div>
       </Screen>
   );

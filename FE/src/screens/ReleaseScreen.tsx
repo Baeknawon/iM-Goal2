@@ -7,6 +7,7 @@ import { missionDefs } from '../data/personas';
 import { Screen, Pill, ScreenBody, CtaButton } from '../components/ui';
 import { color } from '../styles/theme';
 import { RecoveryPlanCard } from '../components/RecoveryPlanCard';
+import { goalSavedLatePhase } from '../viewmodel/finance';
 
 import type { MissionResult } from '../types';
 
@@ -20,6 +21,8 @@ export function ReleaseScreen() {
   const missionOn = useAppStore((s) => s.missionOn);
   const latest = useAppStore((s) => s.fcpsLog[0]);
   const setMissionDays = useAppStore((s) => s.setMissionDays);
+  const goal = useAppStore((s) => s.goal);
+  const updateGoal = useAppStore((s) => s.updateGoal);
   const state=useAppStore();
   const next=recommendMission(state);
   const MI = latest?.missionSnapshot ?? missionDefs[persona];
@@ -72,7 +75,12 @@ export function ReleaseScreen() {
             <CtaButton height={50} style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-sm)' }} arrowBg={color.ink} onClick={() => navigate('/fcps')}>점수 반영 내역 보기</CtaButton>
           </div>
 
-          <CtaButton height={62} style={{ marginTop: 'var(--space-1-5)' }} onClick={() => navigate('/home')}>
+          <CtaButton height={62} style={{ marginTop: 'var(--space-1-5)' }} onClick={() => {
+            // 리포트 진입에서 goal.saved=0으로 리셋된 상태가 남아 있으면 여정 상세가 0%로 보인다.
+            // 미션 완료(회복) 직후이므로 진행 상태(후반)를 복원한 뒤 여정 상세로 이동한다.
+            if (goal.saved === 0) updateGoal({ ...goal, saved: Math.min(goal.target, goalSavedLatePhase[persona]) });
+            navigate('/detail');
+          }}>
             목표 경로와 다음 행동 보기
           </CtaButton>
         </ScreenBody>

@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { useJourney } from '../viewmodel/useJourney';
 
-import { phase2Start } from '../data/ucDefs';
 import { Screen, Brand, TicketShell, CtaButton, Mascot } from '../components/ui';
 import { AlertOverlay } from '../components/AlertOverlay';
 import { GoalCompleteOverlay } from '../components/GoalCompleteOverlay';
@@ -15,7 +14,6 @@ export function HomeScreen() {
   const deposit = useAppStore((s) => s.locked);
   const alertOn = useAppStore((s) => s.alertOn);
   const missionOn = useAppStore((s) => s.missionOn);
-  const activeMission = useAppStore((s) => s.activeMission);
   const latest = useAppStore((s) => s.fcpsLog[0]);
   const recovered = useAppStore((s) => s.recovered);
   const goalCompleteSeen = useAppStore((s) => s.goalCompleteSeen);
@@ -94,7 +92,7 @@ export function HomeScreen() {
                       </div>
                     </div>
                     <div style={{ flex: 'none', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em' }}>{saved}원</div>
+                      <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em' }}>{saved}</div>
                       <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginTop: 'var(--space-0-5)' }}>목표 {AP.target}</div>
                     </div>
                   </div>
@@ -140,7 +138,7 @@ export function HomeScreen() {
                     <div style={{ width: `${fuelPct}%`, height: '100%', borderRadius: 'var(--radius-pill)', transition: 'width .5s ease', background: over ? 'var(--color-danger)' : 'rgba(var(--color-ink-rgb),.28)' }} />
                   </div>
                   <CtaButton height={52} bg="var(--color-action-bg)" fg="var(--color-action-text)" arrowBg="var(--color-action-text)" style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-sm)' }} onClick={() => navigate('/detail')}>
-                    {over ? '왜 이탈했는지 보기' : '여정 상세 보기'}
+                    여정 상세 보기
                   </CtaButton>
                 </>
               }
@@ -164,10 +162,10 @@ export function HomeScreen() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-white-rgb),.22)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.04em' }}>
                       <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--color-60-bg-surface)', animation: 'ringPulse 1.4s infinite' }} />
-                      다음 저축 계획
+                      급여 입금 감지
                     </div>
-                    <div style={{ marginTop: 10, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>월소득 {AP.total}원 기준</div>
-                    <div style={{ marginTop: 4, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>생활비와 목표 저축을 나눠볼까요?</div>
+                    <div style={{ marginTop: 10, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>급여가 감지되었어요</div>
+                    <div style={{ marginTop: 4, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>월소득 {AP.total}원 · 생활비와 목표 저축을 나눠볼까요?</div>
                     <div style={{ marginTop: 'var(--space-1-5)', display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', padding: '9px 16px', borderRadius: 'var(--radius-pill)', background: 'var(--color-hero)', color: 'var(--im-white)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>
                       분배 확인하기
                       <span style={{ width: 22, height: 22, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>›</span>
@@ -237,11 +235,11 @@ export function HomeScreen() {
           <div style={{ marginTop: 7, textAlign: 'center', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)' }}>실제 상황처럼 알림이 먼저 도착합니다</div>
           {showRecoverTrigger && (
               <div
-                  onClick={() => navigate(activeMission && activeMission.level>0 ? '/verify?result=success' : `/uc/${phase2Start[persona]}`)}
+                  onClick={() => navigate('/missions')}
                   style={{ minHeight: 'var(--btn-height-xl)', flexShrink: 0, lineHeight: 'var(--line-height-snug)', textAlign: 'center',  marginTop: 'var(--space-1-5)', height: 'var(--btn-height-xl)', borderRadius: 'var(--radius-lg)', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--component-gap)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', cursor: 'pointer' }}
               >
-                회복 미션 성공 확인
-                <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>✓</span>
+                미션 리스트에서 결과 확인하기
+                <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)' }}>›</span>
               </div>
           )}
         </div>
