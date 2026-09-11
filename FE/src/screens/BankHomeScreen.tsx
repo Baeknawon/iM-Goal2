@@ -52,8 +52,9 @@ export function BankHomeScreen() {
     </header>
     <div className="bank-scroll" ref={scroll}>
       <section className="bank-intro" id="bank-top" aria-label="CLiMB 서비스 소개">
-        <button className="bank-climb" onClick={start}>
-          <span className="bank-climb-copy"><span className="bank-climb-tag">iM뱅크와 함께, CLiMB</span><strong>내 꿈에 가까워지는<br />오늘의 금융 습관</strong><span className="bank-climb-description">목표부터 소비 관리, 맞춤 미션까지<br />나만의 AI 금융 페이스메이커</span><span className="bank-climb-link">CLiMB 시작하기 <span aria-hidden="true">↗</span></span></span>
+        <button className="bank-climb bank-climb--cta" onClick={start}>
+          <img className="bank-climb-logo" src="/assets/climb_logo.png" alt="CLiMB" />
+          <span className="bank-climb-copy"><span className="bank-climb-tag">iM뱅크와 함께</span><strong>내 꿈에 가까워지는<br />오늘의 금융 습관</strong><span className="bank-climb-description">목표부터 소비 관리, 맞춤 미션까지<br />나만의 AI 금융 페이스메이커</span><span className="bank-climb-link">지금 눌러 CLiMB 시작하기 <span aria-hidden="true">↗</span></span></span>
           <img src="/assets/pair-map.png" alt="함께 지도를 펼쳐 보는 단디와 똑디" />
         </button>
       </section>

@@ -84,6 +84,8 @@ button:active { filter: brightness(.96); }
 /* 배포/실사용 모드: 앱은 항상 뷰포트를 꽉 채운다(디바이스 베젤 없음). */
 .app-stage { width: 100vw; height: 100dvh; padding: 0; overflow: hidden; }
 .phone-frame { width: 100vw; height: 100dvh; border-radius: 0; box-shadow: none; }
+/* iOS 프레임(발표·녹화) 모드: 가짜 상태바/아일랜드를 피하도록 상단 여백을 되돌린다. */
+.phone-frame--ios { --screen-pad-top: 68px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -335,7 +335,7 @@ export function PresenterScreen() {
         {/* 폰은 항상 중앙 고정. 오른쪽 컬럼은 폰 기준 absolute라 가이드가 떠도 폰이 밀리지 않는다. */}
         <div style={phoneAnchorStyle}>
           <div style={phoneWrapStyle}>
-            <iframe ref={iframeRef} title="iM-Goal 데모" src="/bank" onLoad={handleLoad} style={iframeStyle} />
+            <iframe ref={iframeRef} title="iM-Goal 데모" src="/bank?ios=1" onLoad={handleLoad} style={iframeStyle} />
             {!ready && <div style={loadingStyle}>화면을 불러오는 중…</div>}
           </div>
           <div style={rightColStyle}>
