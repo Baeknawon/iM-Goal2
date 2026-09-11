@@ -1,6 +1,19 @@
 import { useState, useEffect, type CSSProperties } from 'react';
 import { useLocation } from 'react-router-dom';
 
+/** /present 가 임베드한 iframe(발표·녹화용) 안에서 실행 중인지 판단. 그 경우 데모 가이드를 숨긴다. */
+function isPresenterEmbed(): boolean {
+  try {
+    if (typeof window === 'undefined') return false;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('ios') === '1') return true;
+    if (sessionStorage.getItem('imgoal-ios-frame') === '1') return true;
+    return window.self !== window.top; // iframe 안에서 로드된 경우
+  } catch {
+    return true; // 크로스오리진 iframe 접근 예외 → 임베드로 간주하고 숨김
+  }
+}
+
 /**
  * 심사위원이 직접 데모를 실행할 때의 안내 오버레이 (모바일·데스크톱 공용).
  * - 평소: 화면 우하단에 작은 반투명 "?" 버튼만 떠 있어 실제 앱 느낌을 해치지 않는다.
@@ -72,8 +85,8 @@ export function DemoGuide() {
     return () => window.clearTimeout(t);
   }, [hint]);
 
-  // 프레젠터 화면에서는 가이드를 띄우지 않는다.
-  if (location.pathname.startsWith('/present')) return null;
+  // 프레젠터 화면, 그리고 프레젠터가 임베드한 iframe(발표·녹화용) 안에서는 가이드를 띄우지 않는다.
+  if (location.pathname.startsWith('/present') || isPresenterEmbed()) return null;
 
   const { tip, step } = guideFor(location.pathname);
   const openSheet = () => { setOpen(true); setSeen(true); setHint(false); };
