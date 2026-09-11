@@ -4,6 +4,7 @@ import { RecoveryScreen } from './screens/RecoveryScreen';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { PhoneFrame } from './components/PhoneFrame';
 import { GlobalAssistant } from './components/GlobalAssistant';
+import { DemoGuide } from './components/DemoGuide';
 import { BottomNav, navScreens } from './components/BottomNav';
 import { useAppStore } from './store/appStore';
 
@@ -47,6 +48,7 @@ import { AlertsScreen } from './screens/AlertsScreen';
 import { QuizScreen } from './screens/QuizScreen';
 import { MissionsScreen } from './screens/MissionsScreen';
 import { MissionLiveScreen } from './screens/MissionLiveScreen';
+import { PresenterScreen } from './screens/PresenterScreen';
 
 function AppShell() {
   const location = useLocation();
@@ -132,14 +134,28 @@ function AppShell() {
 
 export default function App() {
   return (
-      <div className="app-stage"
-          style={{
-            minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'var(--color-30-surface-sub)',
-            padding: 32, boxSizing: 'border-box',
-          }}
-      >
-        <AppShell />
-      </div>
+      <>
+        <Routes>
+          {/* 발표용 프레젠테이션 셸: 폰 프레임/탭 없이 전체 화면 */}
+          <Route path="/present" element={<PresenterScreen />} />
+          {/* 그 외 모든 경로: 기존 앱 셸 */}
+          <Route
+              path="*"
+              element={
+                <div className="app-stage"
+                    style={{
+                      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'var(--color-30-surface-sub)',
+                      padding: 32, boxSizing: 'border-box',
+                    }}
+                >
+                  <AppShell />
+                </div>
+              }
+          />
+        </Routes>
+        {/* 심사위원용 데모 가이드 (하단 바 + 전체 순서). /present에서는 스스로 숨김. */}
+        <DemoGuide />
+      </>
   );
 }

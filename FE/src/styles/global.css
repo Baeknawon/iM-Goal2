@@ -190,3 +190,9 @@ button:active { filter: brightness(.96); }
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+
+/* 체험 가이드 버튼 강조: 테두리(민트)를 함께 깜빡여 주목을 끈다. */
+@keyframes guideBorderBlink {
+  0%, 100% { border-color: rgba(var(--color-mint-rgb), 0); }
+  50% { border-color: rgba(var(--color-mint-rgb), 1); }
+}
