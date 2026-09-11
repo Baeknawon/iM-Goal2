@@ -28,7 +28,7 @@ export function AccountsScreen() {
 
     return (
         <Screen>
-            <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+            <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <BackToHome />
                     <Pill bg={fueled ? color.mintTintLight : 'rgba(var(--color-blue-rgb),.22)'} fg={fueled ? 'var(--color-accent-text)' : 'var(--color-info-text)'}>

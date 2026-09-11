@@ -62,7 +62,7 @@ export function MissionsScreen() {
 
     return (
         <Screen>
-            <div style={{ padding: '60px var(--screen-padding-x) 0', flex: 'none' }}>
+            <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0', flex: 'none' }}>
                 <Brand size={20} style={{ marginBottom: 'var(--space-1-5)' }} />
                 <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>약속하고, 지키고, 돌려받기</div>
                 <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>회복 미션</div>

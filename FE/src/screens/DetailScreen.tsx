@@ -52,7 +52,7 @@ export function DetailScreen() {
 
   return (
       <Screen>
-        <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+        <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <BackToHome />
             <Pill bg={color.mint} fg={color.ink}>{dday}</Pill>

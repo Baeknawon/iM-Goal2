@@ -92,6 +92,9 @@
 
   --screen-padding-x: var(--space-2-5); /* 모바일 화면 좌우 여백 (20px) */
   --screen-padding-y: var(--space-2);   /* 모바일 화면 상하 여백 (16px) */
+  /* 화면 상단 여백: 디바이스 베젤을 제거한 풀스크린 모드이므로, 시스템 상태바(safe-area)만 피하고
+     콘텐츠는 최대한 위로 올린다. (예전 68px 고정 → safe-area + 24px) */
+  --screen-pad-top: calc(env(safe-area-inset-top) + 24px);
   --card-padding-x:   var(--space-2-5); /* 카드 내부 좌우 여백 (20px) */
   --card-padding-y:   var(--space-2-5); /* 카드 내부 상하 여백 (20px) */
   --section-gap:      var(--space-3);   /* 섹션 간 간격 (24px) */

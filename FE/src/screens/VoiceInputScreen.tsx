@@ -13,7 +13,7 @@ export function VoiceInputScreen() {
 
   return (
     <Screen bg="var(--color-60-bg-base)">
-      <div style={{ padding: '70px 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill bg="rgba(var(--color-ink-rgb),.14)" onClick={() => navigate('/input')}>‹ 입력 방식</Pill>
           <Pill bg={color.mint} fg={color.ink}>

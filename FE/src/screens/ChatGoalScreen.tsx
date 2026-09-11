@@ -85,7 +85,7 @@ function ScriptedGoalChat() {
 
     return (
         <Screen bg="var(--color-60-bg-base)">
-            <div style={{ padding: '58px 18px 0', flex: 'none' }}>
+            <div style={{ padding: 'var(--screen-pad-top) 18px 0', flex: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Pill bg="rgba(var(--color-ink-rgb),.14)" onClick={() => navigate('/home')}>‹ 홈</Pill>
                     <Pill bg={color.mint} fg={color.ink}>

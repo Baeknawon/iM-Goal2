@@ -13,12 +13,14 @@ export function Screen({ children, bg = color.bg, style }: { children: ReactNode
 
 /** Standard header block: back pill + right-side chip, then sub/title pair. */
 export function ScreenHeader({
-  onBack, backLabel = '‹ 뒤로', rightChip, sub, title, padTop = 68,
+  onBack, backLabel = '‹ 뒤로', rightChip, sub, title, padTop,
 }: {
   onBack?: () => void; backLabel?: string; rightChip?: ReactNode; sub: ReactNode; title: ReactNode; padTop?: number;
 }) {
+  // padTop 미지정 시 풀스크린 상단 여백 토큰(safe-area + 24px)을 사용한다.
+  const topPad = padTop != null ? `${padTop}px` : 'var(--screen-pad-top)';
   return (
-    <div className="screen-header" style={{ padding: `${padTop}px var(--screen-padding-x) 0`, flex: 'none' }}>
+    <div className="screen-header" style={{ padding: `${topPad} var(--screen-padding-x) 0`, flex: 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {onBack ? <Pill onClick={onBack}>{backLabel}</Pill> : <span />}
         {rightChip}

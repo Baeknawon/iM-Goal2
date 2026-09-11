@@ -10,7 +10,7 @@ export function ArrivedScreen() {
 
   return (
       <Screen>
-        <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+        <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0', flex: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <BackToHome />
             <Pill bg={color.mint} fg={color.ink}>ARRIVED</Pill>

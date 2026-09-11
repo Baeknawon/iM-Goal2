@@ -10,7 +10,7 @@ export function CauseScreen() {
   const causes = causesByPersona[persona];
   return (
     <Screen bg="var(--color-60-bg-base)">
-      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+      <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
           <Pill bg="var(--color-danger)" fg="var(--color-60-text-primary)">✚ 확장 기능</Pill>
