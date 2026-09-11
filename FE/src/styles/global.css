@@ -81,15 +81,9 @@ button:active { filter: brightness(.96); }
   border: 1px solid var(--color-60-border);
 }
 
-@media (max-width: 480px) {
-  .app-stage { padding: 0 !important; }
-  .phone-frame {
-    width: 100% !important;
-    height: 100dvh !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-}
+/* 배포/실사용 모드: 앱은 항상 뷰포트를 꽉 채운다(디바이스 베젤 없음). */
+.app-stage { width: 100vw; height: 100dvh; padding: 0; overflow: hidden; }
+.phone-frame { width: 100vw; height: 100dvh; border-radius: 0; box-shadow: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
