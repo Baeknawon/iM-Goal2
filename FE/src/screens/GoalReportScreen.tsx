@@ -25,7 +25,7 @@ export function GoalReportScreen() {
 
     return (
         <Screen>
-            <div style={{ padding: '58px 22px 0', flex: 'none' }}>
+            <div style={{ padding: 'var(--screen-pad-top) 22px 0', flex: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Pill onClick={() => navigate('/chat')}>‹ 대화</Pill>
                     <Pill bg={color.mint} fg={color.ink}>AI 목표 리포트</Pill>

@@ -28,7 +28,7 @@ export function HomeScreen() {
 
   return (
       <Screen>
-        <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+        <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)', minWidth: 0 }}>
               <Brand size={23} />

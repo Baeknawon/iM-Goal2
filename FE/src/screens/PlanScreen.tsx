@@ -13,7 +13,7 @@ export function PlanScreen() {
 
   return (
     <Screen style={{ animation: 'slideUp .4s ease both' }}>
-      <div style={{ padding: '70px 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', overflow: 'auto' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', overflow: 'auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 'none' }}>
           <Pill bg={color.mint} fg={color.ink}>발권 완료 · 3/3</Pill>
           <div style={{ width: 38, height: 38, borderRadius: '50%', background: color.mint }} />

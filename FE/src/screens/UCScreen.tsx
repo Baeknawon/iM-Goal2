@@ -53,7 +53,7 @@ export function UCScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+      <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0', flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
           {screenId !== 'u12' && <div style={{ padding: '9px 15px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: color.ink, background: uc.accent }}>{uc.code}</div>}

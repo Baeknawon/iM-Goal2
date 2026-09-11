@@ -20,7 +20,7 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+      <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <BackToHome />
           <Pill>MY PASSPORT</Pill>

@@ -19,7 +19,7 @@ export function TypingScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '70px 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill onClick={() => navigate('/input')}>‹ 입력 방식</Pill>
           <Pill>직접 입력</Pill>

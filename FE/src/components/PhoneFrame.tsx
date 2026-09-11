@@ -24,9 +24,8 @@ const frameStyle: CSSProperties = {
   position: 'relative',
   background: 'var(--color-60-bg-base)',
   fontFamily: 'var(--font-family-sans)',
-  // 노치/상태바 영역만큼 아래로 밀어 콘텐츠가 시스템 UI와 겹치지 않게 한다.
-  paddingTop: 'env(safe-area-inset-top)',
   boxSizing: 'border-box',
 };
+// 참고: 시스템 상태바/노치 회피는 각 화면의 상단 여백 토큰(--screen-pad-top = safe-area + 24px)에서 처리한다.
 
 const contentStyle: CSSProperties = { height: '100%', position: 'relative' };

@@ -21,7 +21,7 @@ export function LinkingScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '70px 22px 34px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
         <Pill style={{ alignSelf: 'flex-end' }}>동의 2/4</Pill>
         <div style={{ marginTop: 'var(--space-2-5)', fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-60-text-secondary)' }}>잠시만요,</div>
         <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', lineHeight: 'var(--line-height-snug)', marginTop: 'var(--space-0-5)' }}>

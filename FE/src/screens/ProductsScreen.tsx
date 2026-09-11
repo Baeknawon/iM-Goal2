@@ -19,7 +19,7 @@ export function ProductsScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+      <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill onClick={() => navigate('/mileage')}>‹ 마일리지</Pill>
           <Pill bg={color.mint} fg={color.ink}>✚ SILVER 라운지</Pill>

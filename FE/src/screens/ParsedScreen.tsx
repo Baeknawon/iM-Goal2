@@ -12,7 +12,7 @@ export function ParsedScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '70px 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill onClick={() => navigate('/voice')}>‹ 다시 말하기</Pill>
           <Pill bg={color.mint} fg={color.ink}>인식 완료</Pill>

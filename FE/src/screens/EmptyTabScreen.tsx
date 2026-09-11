@@ -18,7 +18,7 @@ export function EmptyTabScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+      <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0', flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--component-gap)' }}>
           <Brand size={23} />
           <div style={{ padding: '9px 15px', borderRadius: 'var(--radius-pill)', background: 'var(--color-30-surface-sub)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>목표 미등록</div>

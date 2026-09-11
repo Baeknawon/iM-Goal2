@@ -36,7 +36,7 @@ export function PickerScreen() {
     <div
       style={{
         height: '100%', background: color.bg, color: color.ink, boxSizing: 'border-box',
-        padding: '64px 22px 30px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'auto',
+        padding: 'var(--screen-pad-top) 22px 30px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'auto',
       }}
     >
       <div style={{ position: 'absolute', top: -90, right: -80, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle,rgba(var(--color-mint-rgb),.3),transparent 70%)', pointerEvents: 'none' }} />

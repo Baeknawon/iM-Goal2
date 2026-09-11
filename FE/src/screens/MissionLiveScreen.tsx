@@ -36,7 +36,7 @@ export function MissionLiveScreen() {
   if (!missionOn) return <Navigate to={missionResult ? '/release' : '/missionDetail'} replace />;
   return (
       <Screen>
-        <div style={{ padding: '68px var(--screen-padding-x) 0', flex: 'none' }}>
+        <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0', flex: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Pill bg={color.mint} fg={color.ink}>진행 중</Pill>
           </div>

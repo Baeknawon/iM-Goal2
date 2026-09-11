@@ -36,7 +36,7 @@ export function ReleaseScreen() {
 
   return (
       <Screen>
-        <div style={{ padding: '68px var(--screen-padding-x) 0' }}>
+        <div style={{ padding: 'var(--screen-pad-top) var(--screen-padding-x) 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Pill onClick={() => navigate('/missions')}>‹ 미션</Pill>
             <Pill bg={V.chipBg} fg={V.chipFg}>{V.chip}</Pill>

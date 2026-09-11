@@ -24,7 +24,7 @@ export function AnalyzeScreen() {
 
   return (
     <Screen>
-      <div style={{ padding: '74px 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ padding: 'var(--screen-pad-top) 22px 34px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pill>CHECK-IN · 2/3</Pill>
           <div style={{ width: 38, height: 38, borderRadius: '50%', background: color.mint }} />

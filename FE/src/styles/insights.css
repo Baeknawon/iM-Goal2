@@ -1,5 +1,5 @@
 /* Financial summaries: calm surfaces, clear figures and consistent reading order. */
-.insight-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:64px 24px 0; flex:none; }
+.insight-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:var(--screen-pad-top) 24px 0; flex:none; }
 .insight-header h1 { margin:0; font-size:22px; line-height:1.4; letter-spacing:var(--letter-spacing-heading); font-weight:var(--font-weight-bold); }
 .insight-header > button { min-height:var(--touch-target-min); font-size:var(--font-size-xs); color:var(--color-60-text-secondary); }
 .insight-stack { display:flex; flex-direction:column; gap:16px; }
