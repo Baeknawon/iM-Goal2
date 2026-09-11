@@ -16,7 +16,6 @@ interface Card {
 
 const cards: Card[] = [
   { key: 'A', badge: '🧑‍🎓', name: '자립준비청년', hook: '신용 이력이 없어요', desc: '전세보증금 3,000만원을 24개월 안에 모으고 싶지만, 신용조회 기록도 대출 이력도 없습니다.', accent: color.mint, meta: '신파일러 · 24세' },
-  { key: 'B', badge: '🏪', name: '소상공인', hook: '매출이 줄고 있어요', desc: '연체는 없지만 3개월째 매출이 18% 감소했습니다. 위험 등급이 되면 지원제도까지 같이 안내합니다.', accent: color.sky, meta: '취약차주 · 41세' },
   { key: 'C', badge: '💳', name: '리볼빙 청년', hook: '한도가 자꾸 차요', desc: '카드 한도 소진율 82%, 리볼빙 잔액 326만원. 결제 60초 안에 개입합니다.', accent: 'var(--im-lime)', meta: '청년 직장인 · 29세' },
 ];
 
