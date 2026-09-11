@@ -144,9 +144,9 @@ export default function App() {
               element={
                 <div className="app-stage"
                     style={{
-                      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: 'var(--color-30-surface-sub)',
-                      padding: 32, boxSizing: 'border-box',
+                      width: '100vw', height: '100dvh', overflow: 'hidden',
+                      background: 'var(--color-60-bg-base)',
+                      padding: 0, boxSizing: 'border-box',
                     }}
                 >
                   <AppShell />
