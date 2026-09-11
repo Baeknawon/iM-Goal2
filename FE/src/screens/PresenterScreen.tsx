@@ -360,37 +360,38 @@ export function PresenterScreen() {
 const PHONE_W = 402;
 const PHONE_H = 874;
 
-const stageStyle: CSSProperties = { position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', background: '#000', color: '#fff', fontFamily: 'var(--font-family-sans, sans-serif)' };
+// 프레젠터 크롬은 어두운 발표용 셸이지만, 팔레트를 앱 디자인 토큰(브랜드 딥그린 + iM 민트)에 맞춘다.
+const stageStyle: CSSProperties = { position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', background: 'var(--color-hero-deep)', color: 'var(--im-white)', fontFamily: 'var(--font-family-sans, sans-serif)' };
 
-const leftStyle: CSSProperties = { width: 340, flex: 'none', padding: '40px 40px', display: 'flex', flexDirection: 'column', gap: 24, height: '100%', boxSizing: 'border-box' };
+const leftStyle: CSSProperties = { width: 340, flex: 'none', padding: '40px 40px', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', height: '100%', boxSizing: 'border-box' };
 const brandRowStyle: CSSProperties = { display: 'flex', alignItems: 'center', gap: 10, flex: 'none' };
-const brandStyle: CSSProperties = { fontSize: 20, fontWeight: 800, letterSpacing: '-.01em', color: '#fff' };
-const brandDivStyle: CSSProperties = { fontSize: 16, color: 'rgba(255,255,255,.4)' };
-const brandSubStyle: CSSProperties = { fontSize: 16, fontWeight: 600, color: 'rgba(255,255,255,.85)' };
+const brandStyle: CSSProperties = { fontSize: 'var(--font-size-xl)', fontWeight: 800, letterSpacing: '-.01em', color: 'var(--im-white)' };
+const brandDivStyle: CSSProperties = { fontSize: 'var(--font-size-md)', color: 'rgba(var(--color-white-rgb),.4)' };
+const brandSubStyle: CSSProperties = { fontSize: 'var(--font-size-md)', fontWeight: 600, color: 'rgba(var(--color-white-rgb),.85)' };
 const navListStyle: CSSProperties = { display: 'flex', flexDirection: 'column', flex: 1, overflow: 'auto', minHeight: 0 };
-const groupTitleStyle: CSSProperties = { fontSize: 12, fontWeight: 800, letterSpacing: '.08em', color: '#3FD3B0' };
+const groupTitleStyle: CSSProperties = { fontSize: 'var(--font-size-2xs)', fontWeight: 800, letterSpacing: '.08em', color: 'var(--im-mint)' };
 const subItemStyle = (activeItem: boolean): CSSProperties => ({
-  textAlign: 'left', width: '100%', padding: '7px 12px', borderRadius: 9, cursor: 'pointer',
+  textAlign: 'left', width: '100%', padding: '7px 12px', borderRadius: 'var(--radius-md)', cursor: 'pointer',
   border: '1px solid transparent',
-  background: activeItem ? 'rgba(63,211,176,.16)' : 'transparent',
-  borderColor: activeItem ? 'rgba(63,211,176,.5)' : 'transparent',
-  color: activeItem ? '#fff' : 'rgba(255,255,255,.55)',
-  fontSize: 14, fontWeight: 600, letterSpacing: '-.01em', transition: 'all .15s ease',
+  background: activeItem ? 'rgba(var(--color-mint-rgb),.16)' : 'transparent',
+  borderColor: activeItem ? 'rgba(var(--color-mint-rgb),.5)' : 'transparent',
+  color: activeItem ? 'var(--im-white)' : 'rgba(var(--color-white-rgb),.55)',
+  fontSize: 'var(--font-size-sm)', fontWeight: 600, letterSpacing: '-.01em', transition: 'var(--transition-fast)',
 });
 const controlRowStyle: CSSProperties = { display: 'flex', alignItems: 'center', gap: 10, flex: 'none' };
-const ctrlBtnStyle: CSSProperties = { flex: 1, height: 42, borderRadius: 10, border: '1px solid rgba(255,255,255,.2)', background: 'transparent', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' };
-const chatAdvanceStyle: CSSProperties = { flex: 'none', height: 44, borderRadius: 10, border: 'none', background: '#3FD3B0', color: '#04201A', fontSize: 14, fontWeight: 800, cursor: 'pointer', marginBottom: 4 };
+const ctrlBtnStyle: CSSProperties = { flex: 1, height: 42, borderRadius: 'var(--radius-md)', border: '1px solid rgba(var(--color-white-rgb),.2)', background: 'transparent', color: 'var(--im-white)', fontSize: 'var(--font-size-sm)', fontWeight: 600, cursor: 'pointer' };
+const chatAdvanceStyle: CSSProperties = { flex: 'none', height: 44, borderRadius: 'var(--radius-md)', border: 'none', background: 'var(--im-mint)', color: 'var(--color-hero-deep)', fontSize: 'var(--font-size-sm)', fontWeight: 800, cursor: 'pointer', marginBottom: 4 };
 
-const centerStyle: CSSProperties = { flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000' };
+const centerStyle: CSSProperties = { flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-hero-deep)' };
 // 폰 크기만큼의 앵커. 오른쪽 컬럼을 이 앵커 기준 absolute로 붙여 폰 위치가 고정되게 한다.
 const phoneAnchorStyle: CSSProperties = { position: 'relative', height: 'min(96vh, 874px)', aspectRatio: `${PHONE_W} / ${PHONE_H}` };
 // 폰 오른쪽 바깥에 절대 배치 → 가이드 카드가 생겨도 폰 위치에 영향 없음.
 const rightColStyle: CSSProperties = { position: 'absolute', left: '100%', top: 0, marginLeft: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20, width: 240 };
 const scrollColStyle: CSSProperties = { display: 'flex', flexDirection: 'column', gap: 12 };
-const hintCardStyle: CSSProperties = { background: 'rgba(63,211,176,.12)', border: '1px solid rgba(63,211,176,.4)', borderRadius: 14, padding: '14px 16px', maxWidth: 240 };
-const hintLabelStyle: CSSProperties = { fontSize: 12, fontWeight: 800, letterSpacing: '.04em', color: '#3FD3B0' };
-const hintTextStyle: CSSProperties = { marginTop: 8, fontSize: 15, fontWeight: 700, lineHeight: 1.5, color: '#fff' };
-const scrollBtnStyle: CSSProperties = { width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(255,255,255,.22)', background: 'rgba(255,255,255,.06)', color: '#fff', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' };
-const phoneWrapStyle: CSSProperties = { position: 'absolute', inset: 0, borderRadius: 46, overflow: 'hidden', boxShadow: '0 30px 80px rgba(0,0,0,.6)', background: '#000' };
-const iframeStyle: CSSProperties = { width: '100%', height: '100%', border: 'none', background: '#fff', display: 'block' };
-const loadingStyle: CSSProperties = { position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#888', fontSize: 14, background: '#fff' };
+const hintCardStyle: CSSProperties = { background: 'rgba(var(--color-mint-rgb),.12)', border: '1px solid rgba(var(--color-mint-rgb),.4)', borderRadius: 'var(--radius-lg)', padding: '14px 16px', maxWidth: 240 };
+const hintLabelStyle: CSSProperties = { fontSize: 'var(--font-size-2xs)', fontWeight: 800, letterSpacing: '.04em', color: 'var(--im-mint)' };
+const hintTextStyle: CSSProperties = { marginTop: 8, fontSize: 'var(--font-size-sm)', fontWeight: 700, lineHeight: 'var(--line-height-normal)', color: 'var(--im-white)' };
+const scrollBtnStyle: CSSProperties = { width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(var(--color-white-rgb),.22)', background: 'rgba(var(--color-white-rgb),.06)', color: 'var(--im-white)', fontSize: 'var(--font-size-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' };
+const phoneWrapStyle: CSSProperties = { position: 'absolute', inset: 0, borderRadius: 46, overflow: 'hidden', boxShadow: '0 30px 80px rgba(0,0,0,.6)', background: 'var(--color-hero-deep)' };
+const iframeStyle: CSSProperties = { width: '100%', height: '100%', border: 'none', background: 'var(--im-white)', display: 'block' };
+const loadingStyle: CSSProperties = { position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--color-60-text-secondary)', fontSize: 'var(--font-size-sm)', background: 'var(--im-white)' };

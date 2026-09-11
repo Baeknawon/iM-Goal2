@@ -34,10 +34,10 @@ export function MileageScreen() {
       <section className="insight-section"><div className="insight-section-heading"><h2>점수의 변화</h2><div className="insight-segment"><button aria-pressed={!recent} onClick={()=>{setRecent(false);setSelection(null);}}>전체</button><button aria-pressed={recent} onClick={()=>{setRecent(true);setSelection(null);}}>최근 3건</button></div></div>
         <div className="insight-trend-summary"><b>{change>=0?'+':''}{change}점</b><span>선택 구간 변화</span></div>
         <svg className="insight-trend" viewBox="0 0 320 166" role="img" aria-label={`FCPS ${visible[0].balance}점에서 ${visible.at(-1)!.balance}점으로 변화`}>
-          {[min,(min+max)/2,max].map(v=><g key={v}><line x1="12" x2="288" y1={y(v)} y2={y(v)} stroke="#E8ECEB"/><text x="292" y={y(v)+4} fontSize="12" fill="#666">{v}</text></g>)}
-          <polygon points={`12,140 ${path} 288,140`} fill="#F0F7F6"/>
-          <polyline points={path} fill="none" stroke="#008F7A" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"/>
-          <circle cx={x(index)} cy={y(selected.balance)} r="5" fill="#008F7A" stroke="white" strokeWidth="2"/>
+          {[min,(min+max)/2,max].map(v=><g key={v}><line x1="12" x2="288" y1={y(v)} y2={y(v)} stroke="var(--color-60-border)"/><text x="292" y={y(v)+4} fontSize="12" fill="var(--color-60-text-secondary)">{v}</text></g>)}
+          <polygon points={`12,140 ${path} 288,140`} fill="var(--color-30-surface-sub)"/>
+          <polyline points={path} fill="none" stroke="var(--color-accent-text)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"/>
+          <circle cx={x(index)} cy={y(selected.balance)} r="5" fill="var(--color-accent-text)" stroke="var(--color-60-bg-surface)" strokeWidth="2"/>
         </svg>
         <div className="insight-chart-dates"><span>{visible[0].date}</span><span>{visible.at(-1)!.date}</span></div>
         <label className="insight-point-label" htmlFor="fcps-point">{selected.date} · {selected.title}<b>{selected.balance}점</b></label>

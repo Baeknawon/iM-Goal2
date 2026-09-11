@@ -58,7 +58,8 @@ export function HomeScreen() {
 
         <div style={{ flex: 1, overflow: 'auto', padding: 'var(--space-2) var(--screen-padding-x) 120px' }}>
           <TicketShell
-              watermark={{ width: 300, opacity: 0.13, zIndex: 2 }}
+              bottomBg="var(--color-action-bg)"
+              watermark={{ width: 240, opacity: 0.10, zIndex: 2, top: '44%' }}
               top={
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -115,29 +116,29 @@ export function HomeScreen() {
               }
               bottom={
                 <>
-                  {/* 오늘 예산 · D-day — 보조 정보(작게) */}
+                  {/* 오늘 예산 · D-day — 민트 하단 위이므로 흰색 계열로 표기 */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-1-5)' }}>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'var(--color-60-text-secondary)' }}>
+                      <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.06em', color: 'rgba(var(--color-white-rgb),.85)' }}>
                         {over ? '오늘 예산 초과' : '오늘 남은 예산'}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginTop: 'var(--space-0-5)', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', color: over ? 'var(--color-danger)' : color.ink }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginTop: 'var(--space-0-5)', whiteSpace: 'nowrap', color: 'var(--im-white)' }}>
+                    <span style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)', color: over ? 'var(--color-danger-on-dark)' : 'var(--im-white)' }}>
                       {over ? '-' + Math.abs(remaining).toLocaleString() : remaining.toLocaleString()}
                     </span>
                         <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)' }}>원</span>
-                        <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-60-text-secondary)', marginLeft: 2 }}>/ 하루 {P.dailyBudget.toLocaleString()}</span>
+                        <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'rgba(var(--color-white-rgb),.8)', marginLeft: 2 }}>/ 하루 {P.dailyBudget.toLocaleString()}</span>
                       </div>
                     </div>
                     <div style={{ flex: 'none', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'var(--color-60-text-secondary)' }}>SEAT</div>
-                      <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em', marginTop: 'var(--space-0-5)' }}>{dday}</div>
+                      <div style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: '.08em', color: 'rgba(var(--color-white-rgb),.85)' }}>SEAT</div>
+                      <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', letterSpacing: '-.02em', marginTop: 'var(--space-0-5)', color: 'var(--im-white)' }}>{dday}</div>
                     </div>
                   </div>
-                  <div style={{ marginTop: 10, height: 8, borderRadius: 'var(--radius-pill)', background: 'var(--color-30-tab-bg)', overflow: 'hidden' }}>
-                    <div style={{ width: `${fuelPct}%`, height: '100%', borderRadius: 'var(--radius-pill)', transition: 'width .5s ease', background: over ? 'var(--color-danger)' : 'rgba(var(--color-ink-rgb),.28)' }} />
+                  <div style={{ marginTop: 10, height: 8, borderRadius: 'var(--radius-pill)', background: 'rgba(var(--color-white-rgb),.32)', overflow: 'hidden' }}>
+                    <div style={{ width: `${fuelPct}%`, height: '100%', borderRadius: 'var(--radius-pill)', transition: 'width .5s ease', background: over ? 'var(--color-danger)' : 'var(--color-60-bg-surface)' }} />
                   </div>
-                  <CtaButton height={52} bg="var(--color-action-bg)" fg="var(--color-action-text)" arrowBg="var(--color-action-text)" style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-sm)' }} onClick={() => navigate('/detail')}>
+                  <CtaButton height={52} bg="var(--color-30-surface-sub)" fg="var(--color-action-text)" arrowBg="var(--color-action-text)" style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-size-sm)' }} onClick={() => navigate('/detail')}>
                     여정 상세 보기
                   </CtaButton>
                 </>
@@ -152,7 +153,7 @@ export function HomeScreen() {
                   style={{
                     position: 'relative', marginTop: 'var(--space-2)', borderRadius: 'var(--radius-xl)', padding: '20px 22px', cursor: 'pointer', overflow: 'hidden',
                     background: 'var(--color-hero)', color: 'var(--im-white)',
-                    boxShadow: '0 10px 26px rgba(var(--color-mint-rgb),.34)',
+                    boxShadow: 'var(--shadow-card)',
                   }}
               >
                 {/* 반짝이는 데코 원 */}
@@ -166,9 +167,9 @@ export function HomeScreen() {
                     </div>
                     <div style={{ marginTop: 10, fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', letterSpacing: 'var(--letter-spacing-heading)' }}>급여가 감지되었어요</div>
                     <div style={{ marginTop: 4, fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-on-dark-muted)' }}>월소득 {AP.total}원 · 생활비와 목표 저축을 나눠볼까요?</div>
-                    <div style={{ marginTop: 'var(--space-1-5)', display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', padding: '9px 16px', borderRadius: 'var(--radius-pill)', background: 'var(--color-hero)', color: 'var(--im-white)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>
+                    <div style={{ marginTop: 'var(--space-1-5)', display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', padding: '9px 16px', borderRadius: 'var(--radius-pill)', background: color.mint, color: color.ink, fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)' }}>
                       분배 확인하기
-                      <span style={{ width: 22, height: 22, borderRadius: '50%', background: color.mint, color: color.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>›</span>
+                      <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--color-hero)', color: color.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-xs)' }}>›</span>
                     </div>
                   </div>
                   <img
@@ -192,7 +193,7 @@ export function HomeScreen() {
                 </div>
             )}
 
-            <div onClick={() => navigate('/accounts')} style={{ background: 'var(--color-60-bg-surface)', border: '1px solid var(--color-60-border)', borderRadius: 'var(--radius-xl)', padding: '18px 20px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(var(--color-ink-rgb),.05)' }}>
+            <div onClick={() => navigate('/accounts')} style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl)', padding: '18px 20px', cursor: 'pointer', boxShadow: 'var(--shadow-subtle)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)' }}>
                 <div style={{ flex: 'none', width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', background: fueled ? color.mint : 'rgba(var(--color-ink-rgb),.10)', color: color.ink }}>
                   {fueled ? '✓' : '▤'}

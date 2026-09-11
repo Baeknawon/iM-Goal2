@@ -118,27 +118,33 @@ export function ScreenBody({ children, padBottom = 120, style }: { children: Rea
  * `watermark` overlays the faint climb logo behind the whole ticket (opacity/size vary by screen).
  */
 export function TicketShell({
-  top, bottom, watermark,
-}: { top: ReactNode; bottom: ReactNode; watermark?: { width?: number; opacity?: number; zIndex?: number } }) {
+  top, bottom, watermark, topBg = 'var(--color-60-bg-surface)', bottomBg = 'var(--color-60-bg-surface)',
+}: {
+  top: ReactNode; bottom: ReactNode;
+  topBg?: string; bottomBg?: string;
+  watermark?: { width?: number; opacity?: number; zIndex?: number; top?: number | string };
+}) {
   return (
     <div className="ticket-shell" style={{ position: 'relative' }}>
       {watermark && (
         <img
           src="/assets/climb_logo.png" alt=""
           style={{
-            position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)',
+            position: 'absolute', left: '50%', top: watermark.top ?? '50%', transform: 'translate(-50%,-50%)',
             width: watermark.width ?? 180, height: 'auto', opacity: watermark.opacity ?? 0.06,
             pointerEvents: 'none', zIndex: watermark.zIndex,
           }}
         />
       )}
-      <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0', padding: 'var(--card-padding-x)', color: color.ink, position: 'relative' }}>{top}</div>
-      <div style={{ position: 'relative', height: 26, background: 'var(--color-60-bg-surface)', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', left: -13, width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
-        <div style={{ position: 'absolute', right: -13, width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
+      <div style={{ background: topBg, borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0', padding: 'var(--card-padding-x)', color: color.ink, position: 'relative' }}>{top}</div>
+      {/* 절취선 행: 위 절반은 상단색, 아래 절반은 하단색으로 나눠서 색 경계가 행의 '정중앙'에 오게 한다.
+          점선과 좌우 노치(반원)의 중심도 이 정중앙에 놓여, 노치 한가운데를 절취선이 지나가도록 정렬한다. */}
+      <div style={{ position: 'relative', height: 26, background: `linear-gradient(${topBg} 0 50%, ${bottomBg} 50% 100%)`, display: 'flex', alignItems: 'center' }}>
+        <div style={{ position: 'absolute', left: -13, top: '50%', transform: 'translateY(-50%)', width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
+        <div style={{ position: 'absolute', right: -13, top: '50%', transform: 'translateY(-50%)', width: 26, height: 26, borderRadius: '50%', background: color.bg }} />
         <div style={{ flex: 1, margin: '0 20px', height: 2, background: 'repeating-linear-gradient(90deg,var(--color-60-border) 0 6px,transparent 6px 12px)' }} />
       </div>
-      <div style={{ background: 'var(--color-60-bg-surface)', borderRadius: '0 0 var(--radius-xl) var(--radius-xl)', padding: 'var(--card-padding-x)', color: color.ink }}>{bottom}</div>
+      <div style={{ background: bottomBg, borderRadius: '0 0 var(--radius-xl) var(--radius-xl)', padding: 'var(--card-padding-x)', color: color.ink }}>{bottom}</div>
     </div>
   );
 }

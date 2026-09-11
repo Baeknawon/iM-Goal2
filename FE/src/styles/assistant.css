@@ -5,7 +5,7 @@
 .assistant-launcher span { font-size: 12px; font-weight: 600; }
 .assistant-overlay { position: absolute; inset: 0; pointer-events: auto; }
 .assistant-backdrop { position: absolute; inset: 0; background: rgba(31,41,55,.32); }
-.assistant-sheet { position: absolute; bottom: 0; left: 0; right: 0; height: min(80%, 700px); display: flex; flex-direction: column; min-height: 0; padding: 0 0 28px; background: var(--color-60-bg-base); border-radius: 24px 24px 0 0; overflow: hidden; box-shadow: 0 -8px 32px rgba(31,41,55,.12); }
+.assistant-sheet { position: absolute; bottom: 0; left: 0; right: 0; height: min(80%, 700px); display: flex; flex-direction: column; min-height: 0; padding: 0 0 28px; background: var(--color-60-bg-base); border-radius: var(--radius-2xl) var(--radius-2xl) 0 0; overflow: hidden; box-shadow: 0 -8px 32px rgba(31,41,55,.12); }
 .assistant-header { display: flex; align-items: center; gap: 10px; flex: none; padding: 16px 16px 8px; background: var(--color-60-bg-surface); }
 .assistant-header > img { width: 40px; height: 40px; object-fit: contain; }
 .assistant-header > div { flex: 1; min-width: 0; }
@@ -19,14 +19,14 @@
 .assistant-message.user { margin-left: auto; }
 .assistant-speaker { display: block; margin: 0 4px 5px; font-size: 12px; color: var(--color-60-text-secondary); }
 .assistant-message.user .assistant-speaker { text-align: right; }
-.assistant-message p { margin: 0; padding: 14px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; border-radius: 16px; background: var(--color-60-bg-surface); color: var(--color-60-text-primary); }
+.assistant-message p { margin: 0; padding: 14px; font-size: var(--font-size-sm); line-height: var(--line-height-relaxed); white-space: pre-wrap; overflow-wrap: anywhere; border-radius: var(--radius-lg); background: var(--color-60-bg-surface); color: var(--color-60-text-primary); }
 .assistant-message.user p { background: var(--color-30-surface-sub); }
-.assistant-action { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 12px 14px; margin-top: 8px; width: 100%; border-radius: 16px; font-size: 14px; font-weight: 600; background: var(--im-mint); color: var(--im-gray-dark); }
+.assistant-action { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 12px 14px; margin-top: 8px; width: 100%; border-radius: var(--radius-lg); font-size: var(--font-size-sm); font-weight: 600; background: var(--im-mint); color: var(--im-gray-dark); }
 .assistant-suggestions { display: flex; overflow-x: auto; flex: none; gap: 8px; padding: 8px 20px; }
-.assistant-suggestions button { flex: none; min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-60-border); border-radius: 16px; background: var(--color-60-bg-surface); font-size: 12px; color: var(--color-accent-text); }
+.assistant-suggestions button { flex: none; min-height: var(--touch-target-min); padding: 10px 14px; border: 1px solid var(--color-60-border); border-radius: var(--radius-lg); background: var(--color-60-bg-surface); font-size: 12px; color: var(--color-accent-text); }
 .assistant-compose { display: flex; align-items: center; flex: none; gap: 8px; padding: 8px 20px; }
-.assistant-compose input { flex: 1; width: 0; min-width: 0; min-height: 48px; border: 1px solid var(--color-60-border); border-radius: 16px; padding: 12px; background: var(--color-60-bg-surface); font-size: 16px; }
-.assistant-compose button { flex: none; width: 48px; height: 48px; border-radius: 16px; background: var(--im-mint); color: var(--im-gray-dark); text-align: center; font-size: 24px; }
+.assistant-compose input { flex: 1; width: 0; min-width: 0; min-height: 48px; border: 1px solid var(--color-60-border); border-radius: var(--radius-lg); padding: 12px; background: var(--color-60-bg-surface); font-size: var(--font-size-md); }
+.assistant-compose button { flex: none; width: 48px; height: 48px; border-radius: var(--radius-lg); background: var(--im-mint); color: var(--im-gray-dark); text-align: center; font-size: 24px; }
 .assistant-host button:disabled { opacity: .45; cursor: default; }
 .assistant-footnote { flex: none; margin: 0; padding: 0 20px; font-size: 12px; line-height: 1.5; color: var(--color-60-text-secondary); }
 .assistant-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
